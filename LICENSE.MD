@@ -109,14 +109,16 @@ The Licensee must include a copy of such notices and a copy of the Licence with
 every copy of the Work he/she distributes and/or communicates. The Licensee must
 cause any Derivative Work to carry prominent notices stating that the Work has been
 modified and the date of modification.
-Copyleft clause: If the Licensee distributes and/or communicates copies of the
+
+**Copyleft clause:** If the Licensee distributes and/or communicates copies of the
 Original Works or Derivative Works based upon the Original Work, this Distribution
 and/or Communication will be done under the terms of this Licence or of a later
 version of this Licence unless the Original Work is expressly distributed only under
 this version of the Licence. The Licensee (becoming Licensor) cannot offer or impose
 any additional terms or conditions on the Work or Derivative Work that alter or
 restrict the terms of the Licence.
-Compatibility clause: If the Licensee Distributes and/or Communicates Derivative
+
+**Compatibility clause:** If the Licensee Distributes and/or Communicates Derivative
 Works or copies thereof based upon both the Original Work and another work
 licensed under a Compatible Licence, this Distribution and/or Communication can be
 done under the terms of this Compatible Licence. For the sake of this clause,
@@ -124,11 +126,13 @@ done under the terms of this Compatible Licence. For the sake of this clause,
 Licence. Should the Licensee’s obligations under the Compatible Licence conflict
 with his/her obligations under this Licence, the obligations of the Compatible Licence
 shall prevail.
-Provision of Source Code: When distributing and/or communicating copies of the
+
+**Provision of Source Code:** When distributing and/or communicating copies of the
 Work, the Licensee will provide a machine-readable copy of the Source Code or
 indicate a repository where this Source will be easily and freely available for as long
 as the Licensee continues to distribute and/or communicate the Work.
-Legal Protection: This Licence does not grant permission to use the trade names,
+
+**Legal Protection:** This Licence does not grant permission to use the trade names,
 trademarks, service marks, or names of the Licensor, except as required for
 reasonable and customary use in describing the origin of the Work and reproducing
 the content of the copyright notice. 
@@ -138,9 +142,11 @@ the content of the copyright notice.
 The original Licensor warrants that the copyright in the Original Work granted
 hereunder is owned by him/her or licensed to him/her and that he/she has the power
 and authority to grant the Licence.
+
 Each Contributor warrants that the copyright in the modifications he/she brings to the
 Work are owned by him/her or licensed to him/her and that he/she has the power and
 authority to grant the Licence.
+
 Each time You accept the Licence, the original Licensor and subsequent Contributors
 grant You a licence to their contributions to the Work, under the terms of this
 Licence.
@@ -150,11 +156,13 @@ Licence.
 The Work is a work in progress, which is continuously improved by numerous
 contributors. It is not a finished work and may therefore contain defects or “bugs”
 inherent to this type of software development.
+
 For the above reason, the Work is provided under the Licence on an “as is” basis and
 without warranties of any kind concerning the Work, including without limitation
 merchantability, fitness for a particular purpose, absence of defects or errors,
 accuracy, non-infringement of intellectual property rights other than copyright as
 stated in Article 6 of this Licence.
+
 This disclaimer of warranty is an essential part of the Licence and a condition for the
 grant of any rights to the Work.
 
@@ -186,6 +194,7 @@ placed under the bottom of a window displaying the text of this Licence or by
 affirming consent in any other similar way, in accordance with the rules of applicable
 law. Clicking on that icon indicates your clear and irrevocable acceptance of this
 Licence and all of its terms and conditions.
+
 Similarly, you irrevocably accept this Licence and all of its terms and conditions by
 exercising any rights granted to You by Article 2 of this Licence, such as the use of
 the Work, the creation by You of a Derivative Work or the Distribution and/or
@@ -204,6 +213,7 @@ reproduced by the Licensee.
 
 The Licence and the rights granted hereunder will terminate automatically upon any
 breach by the Licensee of the terms of the Licence.
+
 Such a termination will not terminate the licences of any person who has received the
 Work from the Licensee under the Licence, provided such persons remain in full
 compliance with the Licence.
@@ -212,21 +222,26 @@ compliance with the Licence.
 
 Without prejudice of Article 9 above, the Licence represents the complete agreement
 between the Parties as to the Work licensed hereunder.
+
 If any provision of the Licence is invalid or unenforceable under applicable law, this
 will not affect the validity or enforceability of the Licence as a whole. Such provision
 will be construed and/or reformed so as necessary to make it valid and enforceable.
+
 The European Commission may publish other linguistic versions and/or new versions
 of this Licence, so far this is required and reasonable, without reducing the scope of
 the rights granted by the Licence. New versions of the Licence will be published with
 a unique version number.
+
 All linguistic versions of this Licence, approved by the European Commission, have
 identical value. Parties can take advantage of the linguistic version of their choice. 
 
 ##14. Jurisdiction
+
 Any litigation resulting from the interpretation of this License, arising between the
 European Commission, as a Licensor, and any Licensee, will be subject to the
 jurisdiction of the Court of Justice of the European Communities, as laid down in
 article 238 of the Treaty establishing the European Community.
+
 Any litigation arising between Parties, other than the European Commission, and
 resulting from the interpretation of this License, will be subject to the exclusive
 jurisdiction of the competent court where the Licensor resides or conducts its primary
@@ -236,6 +251,7 @@ business.
 
 This Licence shall be governed by the law of the European Union country where the
 Licensor resides or has his registered office.
+
 This licence shall be governed by the Belgian law if:
 - a litigation arises between the European Commission, as a Licensor, and any
 Licensee;
@@ -244,7 +260,8 @@ registered office inside a European Union country.
 
 
 === 
-Appendix
+
+##Appendix
 “Compatible Licences” according to article 5 EUPL are:
 - GNU General Public License (GNU GPL) v. 2
 - Open Software License (OSL) v. 2.1, v. 3.0
