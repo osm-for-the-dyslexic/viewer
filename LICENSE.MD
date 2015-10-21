@@ -1,4 +1,4 @@
-<p align="center" style="font-size:13;">European Union Public Licence</p>
+#European Union Public Licence
 <p align="center">V. 1.1</p>
 
 <p align="center">EUPL © the European Community 2007</p>
