@@ -1,5 +1,3 @@
-TODO
-
 #European Union Public Licence
 
 V. 1.1
@@ -71,11 +69,14 @@ the Work,
 - distribute the Work or copies thereof,
 - lend and rent the Work or copies thereof,
 - sub-license rights in the Work or copies thereof.
+
 Those rights can be exercised on any media, supports and formats, whether now
 known or later invented, as far as the applicable law permits so.
+
 In the countries where moral rights apply, the Licensor waives his right to exercise his
 moral right to the extent allowed by law in order to make effective the licence of the
 economic rights here above listed.
+
 The Licensor grants to the Licensee royalty-free, non exclusive usage rights to any
 patents held by the Licensor, to the extent necessary to make use of the rights granted
 on the Work under this Licence.
@@ -101,7 +102,8 @@ thereto.
 
 The grant of the rights mentioned above is subject to some restrictions and obligations
 imposed on the Licensee. Those obligations are the following:
-Attribution right: the Licensee shall keep intact all copyright, patent or trademarks
+
+**Attribution right:** the Licensee shall keep intact all copyright, patent or trademarks
 notices and all notices that refer to the Licence and to the disclaimer of warranties.
 The Licensee must include a copy of such notices and a copy of the Licence with
 every copy of the Work he/she distributes and/or communicates. The Licensee must
