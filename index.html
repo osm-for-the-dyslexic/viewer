@@ -1,1 +1,19 @@
-test
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+        <link rel="stylesheet" href="./css/reset.css">
+        <link rel="stylesheet" href="./css/main.css">
+        <title>Frontend test v 0.0.3</title>
+    </head>    
+    <body>
+        <script src="./js/touch-emulator.js"></script>
+        <script> TouchEmulator(); </script>
+        <script src="./js/hammer.js"></script>
+        <script src="./js/polyfill.js"></script>
+        <script src="./js/gesture-manager.js"></script>
+        <script src="./js/frontend-manager.js"></script>
+        <div id="map"></div>
+        <script> FrontendManager("map"); </script>
+    </body>
+</html>

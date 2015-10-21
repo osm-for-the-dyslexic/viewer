@@ -1,0 +1,48 @@
+* {/*cursor:none;*/}
+html{height:100%;width:100%;}
+body{position: relative;height:100%;width:100%;overflow:hidden;}
+#map{zIndex:3;}
+#map-canvas{
+    position: absolute; 
+    -webkit-backface-visibility: hidden;
+}
+#id-canvas{
+    position: absolute; 
+    -webkit-backface-visibility: hidden;
+}
+#buttons-div{
+    position: absolute; 
+    -webkit-backface-visibility: hidden;
+    background:#333333;
+}
+
+#button-go-back{
+    position: absolute; 
+    background-image: url(High-contrast-go-previous.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#button-menu{
+    position: absolute; 
+    background-image: url(High-contrast-applications-system.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#button-help{
+    position: absolute; 
+    background-image: url(High-contrast-help-browser.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#button-voice{
+    position: absolute; 
+    background-image: url(High-contrast-audio-volume-high.svg);
+    /*background-image: url(High-contrast-audio-volume-muted.svg);*/
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+

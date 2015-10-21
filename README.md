@@ -1,2 +1,3 @@
 # viewer
-HTML pagees of the project1
+
+A GIS application to make OpenStreetMap accessible by dyslexics, mitigating common reading errors.
