@@ -11,10 +11,13 @@ This European Union Public Licence (the “EUPL”) applies to the Work or Softw
 (as defined below) which is provided under the terms of this Licence. Any use of the
 Work, other than as authorised under this Licence is prohibited (to the extent such use
 is covered by a right of the copyright holder of the Work).
+
 The Original Work is provided under the terms of this Licence when the Licensor (as
 defined below) has placed the following notice immediately following the copyright
 notice for the Original Work:
+
 Licensed under the EUPL V.1.1
+
 or has expressed by any other mean his willingness to license under the EUPL.
 1. Definitions
 In this Licence, the following terms have the following meaning:
