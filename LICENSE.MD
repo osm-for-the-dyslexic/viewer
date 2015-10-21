@@ -19,8 +19,10 @@ notice for the Original Work:
 Licensed under the EUPL V.1.1
 
 or has expressed by any other mean his willingness to license under the EUPL.
+
 1. Definitions
 In this Licence, the following terms have the following meaning:
+
 - The Licence: this Licence.
 - The Original Work or the Software: the software distributed and/or communicated
 by the Licensor under this Licence, available as Source Code and also as Executable
