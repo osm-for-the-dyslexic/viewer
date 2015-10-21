@@ -14,7 +14,7 @@ The Original Work is provided under the terms of this Licence when the Licensor 
 defined below) has placed the following notice immediately following the copyright
 notice for the Original Work:
 
-<p align="center">Licensed under the EUPL V.1.1</p>
+*<p align="center">Licensed under the EUPL V.1.1</p>*
 
 or has expressed by any other mean his willingness to license under the EUPL.
 
