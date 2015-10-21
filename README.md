@@ -1,2 +1,2 @@
-# viewer web
+# viewer
 Master branch should not be used
