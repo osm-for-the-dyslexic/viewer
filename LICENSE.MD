@@ -20,7 +20,7 @@ Licensed under the EUPL V.1.1
 
 or has expressed by any other mean his willingness to license under the EUPL.
 
-1. Definitions
+*1. Definitions*
 In this Licence, the following terms have the following meaning:
 
 - The Licence: this Licence.
