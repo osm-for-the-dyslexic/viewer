@@ -1,8 +1,8 @@
 #European Union Public Licence
 
-V. 1.1
+<p align="center">V. 1.1</p>
 
-EUPL © the European Community 2007
+<p align="center">EUPL © the European Community 2007</p>
 
 
 This European Union Public Licence (the “EUPL”) applies to the Work or Software
@@ -14,7 +14,7 @@ The Original Work is provided under the terms of this Licence when the Licensor 
 defined below) has placed the following notice immediately following the copyright
 notice for the Original Work:
 
-Licensed under the EUPL V.1.1
+<p align="center">Licensed under the EUPL V.1.1</p>
 
 or has expressed by any other mean his willingness to license under the EUPL.
 
