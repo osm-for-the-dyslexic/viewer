@@ -1,7 +1,7 @@
 TODO
 
 <p align="center">
-European Union Public Licence
+<h1>European Union Public Licence</h1>
 <br>
 V. 1.1
 <br>
