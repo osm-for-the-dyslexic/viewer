@@ -1,7 +1,15 @@
 TODO
+
+<p align="center">
 European Union Public Licence
+<br>
 V. 1.1
+<br>
+<br>
 EUPL © the European Community 2007
+</p>
+
+
 This European Union Public Licence (the “EUPL”) applies to the Work or Software
 (as defined below) which is provided under the terms of this Licence. Any use of the
 Work, other than as authorised under this Licence is prohibited (to the extent such use
