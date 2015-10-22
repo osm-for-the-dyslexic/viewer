@@ -10,6 +10,31 @@ body{position: relative;height:100%;width:100%;overflow:hidden;}
     position: absolute; 
     -webkit-backface-visibility: hidden;
 }
+
+#div-go-back{
+    position: absolute; 
+    -webkit-backface-visibility: hidden;
+    background:#AAAAAA;
+}
+
+#div-menu{
+    position: absolute; 
+    -webkit-backface-visibility: hidden;
+    background:#999999;
+}
+
+#div-help{
+    position: absolute; 
+    -webkit-backface-visibility: hidden;
+    background:#EEEEEE;
+}
+
+#div-voice{
+    position: absolute; 
+    -webkit-backface-visibility: hidden;
+    background:#CCCCCC;
+}
+
 #buttons-div{
     position: absolute; 
     -webkit-backface-visibility: hidden;

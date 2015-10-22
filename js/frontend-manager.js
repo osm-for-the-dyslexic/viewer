@@ -1,6 +1,9 @@
 (function(window, document, exportName, undefined) {
     "use strict";
+    // http://www.movable-type.co.uk/scripts/latlong.html - some functions on latlog and distance
     
+    
+    // Html elements of the page
     var mapCanvas = null;
     var idCanvas = null;
     var buttonsDiv = null;
@@ -8,35 +11,58 @@
     var buttonMenu = null;
     var buttonHelp = null;
     var buttonVoice = null;
+    var divGoBack = null;
+    var divMenu = null;
+    var divHelp = null;
+    var divVoice = null;
+    
+
+    // characteristics of the viewport
     var viewportWidth = null;
     var viewportHeight = null;
+    
+    // characteristics of the map
     var minZoomLevel = 0;
     var maxZoomLevel = 19;
+    var tilesNumCols = 0;
+    var tilesNumRows = 0;
+    
+    // Current position
     var zoomLevel = minZoomLevel;
     var xTile = 0;
     var yTile = 0;
     var xPosIntoTile = 128;
     var yPosIntoTile = 128;
+    
+    // URLs for tiles
     var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/","http://b.tile.openstreetmap.org/","http://c.tile.openstreetmap.org/"];
-    var tileIdBaseUrl = "";
+    var tileIdBaseUrls = ["http://a.tile.openstreetmap.org/"];
 
+    // TileCache
+    var tileCache = {};
+    var tileCacheLength = 0;
+    var tileCacheMaxLength = 150;
     
-    var tilesNumCols = 0;
-    var tilesNumRows = 0;
-    
-    //var renderTimeout = null;
-    
+    /**
+     * return a random element of a vector
+     */
     function getRandomElement(aVector) {
         var max = aVector.length - 1;
         return aVector[Math.floor(Math.random() * (max - 0 + 1)) + 0];
     }
     
+    /**
+     * return either 1 (yes) or 0 (no)
+     */
     function randomYesNo(){
         return Math.floor((Math.random() * 2) + 0);
     }
     
+    /**
+     * Cleanup tile cache using proximity as parameter
+     */
     function cleanupTileCache(){
-        console.log("before cleanup tilecache is "+ tileCacheLength + " long");
+        //console.log("before cleanup tilecache is "+ tileCacheLength + " long");
         var currentTileZ = 0;
         var currentTileX = 0;
         var currentTileY = 0;
@@ -69,15 +95,12 @@
                 }
             } 
         }
-        console.log("after cleanup tilecache is "+ tileCacheLength + " long");
+        //console.log("after cleanup tilecache is "+ tileCacheLength + " long");
     }
     
-    // ------------------------------------------------------------------------
-    // tile cache
-    // ------------------------------------------------------------------------
-    var tileCache = {};
-    var tileCacheLength = 0;
-    var tileCacheMaxLength = 150;
+    /**
+     * Load a tile asyncronously into the tile cache
+     */
     function getTileImage(mapType,z,x,y){
         // check if tile id is valid
         // X goes from 0 to 2^zoom − 1 
@@ -109,37 +132,19 @@
                 //clearTimeout(renderTimeout);
                 //renderTimeout = setTimeout(redrawMapCanvas,300); // 300ms
             }
-            // todo switch map type for url
-            imgElement.src = getRandomElement(tileMapBaseUrls) + tileName + ".png" ;        
+            // switch map type for url
+            var baseUrls = null;
+            if (mapType === "MAP"){
+                baseUrls = tileMapBaseUrls;
+            }else{
+                // IDS
+                baseUrls = tileIdBaseUrls;
+            }
+            imgElement.src = getRandomElement(baseUrls) + tileName + ".png" ;        
             return null;
         }
         return imgElement;
     }
-    
-    /*
-    function printPositionMessage(){
-        var tileId = deg2num(latDeg, lonDeg, zoomLevel);
-        var deltaLonLatTile = deltaLonLat4aTile(tileId.z,tileId.y,tileId.x);
-        var positionIntoTile = deg2pixel(latDeg, lonDeg, zoomLevel);
-        var message = "";
-        message += "---------------------------" + "\n";
-        message += "zoomLevel       : " + zoomLevel + "\n";
-        message += "latDeg          : " + latDeg + "\n";
-        message += "lonDeg          : " + lonDeg + "\n";
-        message += "---------------------------" + "\n";
-        message += "central tile ID : " + tileId.z + "/" + tileId.y + "/" + tileId.x + "\n";
-        message += "dLonForTile     : " + deltaLonLatTile.dLon + "\n";
-        message += "dLatForTile     : " + deltaLonLatTile.dLat + "\n";
-        message += "YposIntoTile    : " + positionIntoTile.dy + "\n";
-        message += "XposIntoTile    : " + positionIntoTile.dx + "\n";
-        message += "viewportWidth   : " + viewportWidth + "\n";
-        message += "viewportHeight  : " + viewportHeight + "\n";
-        message += "---------------------------" + "\n";
-        //message += Date();
-        //printMessageOnMapCanvas("Function: "+"onZoom(" + deltaZ +")\n" + Date());    
-        printMessageOnMapCanvas(message);
-    }
-    */
     
     function onPan(deltaX,deltaY){
         xPosIntoTile -= deltaX;
@@ -214,12 +219,70 @@
         redrawMapCanvas(operation);
     }
     
+    /**
+     * utility method to check if an aement is visble or not
+     */
+    function isVisible(elem) {
+        return (elem.style.visibility != "hidden");
+    }
+    
+    /**
+     * utility method to set visbility on an html element
+     */
+    function setVisible(elem,yesNo){
+        if (yesNo){
+            elem.style.visibility = "visible";
+        }else{
+            elem.style.visibility = "hidden";
+        }
+    }
+    
+    /**
+     * utility method to switch visbility of an html element
+     */
+    function switchVisible(elem){
+        setVisible(elem,!isVisible(elem));
+    }
+    
+    
     function onIdentify(canvasPosX,canvasPosY){
         redrawMapCanvas("onIdentify");
         printMessageOnMapCanvas("Function: "+"onIdentify(" + canvasPosX + "," + canvasPosY + ")\n" + Date());
     }
     
     function onButton(buttonId){
+        switch(buttonId) {
+            case "button-go-back":
+                switchVisible(divGoBack);
+                setVisible(divMenu,false);
+                setVisible(divHelp,false);
+                setVisible(divVoice,false);
+            break;
+            case "button-menu":
+                setVisible(divGoBack,false);
+                switchVisible(divMenu);
+                setVisible(divHelp,false);
+                setVisible(divVoice,false);
+            break;
+            case "button-help":
+                setVisible(divGoBack,false);
+                setVisible(divMenu,false);
+                switchVisible(divHelp);
+                setVisible(divVoice,false);
+            break;
+            case "button-voice":
+                setVisible(divGoBack,false);
+                setVisible(divMenu,false);
+                setVisible(divHelp,false);
+                switchVisible(divVoice);
+            break;
+            default:
+                // should never happen - all invisible
+                setVisible(divGoBack,false);
+                setVisible(divMenu,false);
+                setVisible(divHelp,false);
+                setVisible(divVoice,false);
+        }
         redrawMapCanvas("onButton");
         printMessageOnMapCanvas("Function onButton(" + buttonId + ")\n" + Date());
     }
@@ -237,57 +300,8 @@
         return { width : e[ a+'Width' ] , height : e[ a+'Height' ] };
     }
     
-    /*
-    // utility methods currently unused
-    
-    function deltaLonLat4aTile(zoom,y,x){
-        var pos1 = num2deg(x, y, zoom);
-        var pos2 = num2deg(x+1, y+1, zoom);
-        var deltaLat = pos2.lat - pos1.lat;
-        var deltaLon = pos2.lon - pos1.lon;
-        return {dLat:deltaLat,dLon:deltaLon};
-    }
-    
-    function deg2num (_latDeg, _lonDeg, _zoom){
-        // From http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-        // and http://stackoverflow.com/questions/135909/what-is-the-method-for-converting-radians-to-degrees
-        // Lat = Y Lon = X
-        var latRad = _latDeg * (Math.PI / 180.0);
-        var n = Math.pow(2,_zoom);
-        var xtile = Math.floor((_lonDeg + 180.0)/360.0*n);
-        var ytile = Math.floor((1.0 - Math.log(Math.tan(latRad) + (1 / Math.cos(latRad))) / Math.PI) / 2.0 * n);
-        return {z:_zoom,y:ytile,x:xtile};
-        
-    }
-
-    function deg2pixel(_latDeg, _lonDeg, _zoom){
-        // From https://help.openstreetmap.org/questions/747/given-a-latlon-how-do-i-find-the-precise-position-on-the-tile
-        // The fractional part indicates the position within the tile. As a tile is 256 pixel wide, 
-        // multiplying the fractional part with 256 will give you the pixel position from the top left.
-        // Lat = Y Lon = X
-        var latRad = _latDeg * (Math.PI / 180.0);
-        var n = Math.pow(2,_zoom);
-        var deltaX = Math.round((((_lonDeg + 180.0)/360.0*n)%1)*255);
-        var deltaY = Math.round((((1.0 - Math.log(Math.tan(latRad) + (1 / Math.cos(latRad))) / Math.PI) / 2.0 * n)%1)*255);
-        return {dy:deltaY,dx:deltaX};
-    }
-    
-    function num2deg(xtile, ytile, zoom){
-        // From http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-        // and http://stackoverflow.com/questions/135909/what-is-the-method-for-converting-radians-to-degrees
-        // Lat = Y Lon = X
-        var n = Math.pow(2,zoom);
-        var lonDeg = xtile / n * 360.0 - 180.0;
-        // Math.sinh(x)  <==> (exp(x) - exp(-x))/2.
-        var latRad = Math.atan(Math.sinh(Math.PI * (1 - 2 * ytile / n)));
-        var latDeg = latRad * (180.0 / Math.PI);
-        return {lat:latDeg, lon:lonDeg};
-    }
-    */
-    
-    
     /**
-     * Create Map canvas and Id canvas
+     * Create Map canvas, Id canvas, buttons and other html elements
      */
     function createChilds(mainElementId){
         var mainElement = document.getElementById(mainElementId);
@@ -318,6 +332,28 @@
         
         mainElement.appendChild(idCanvas);
         mainElement.appendChild(mapCanvas);
+        
+        divGoBack = document.createElement("div");
+        divGoBack.id = "div-go-back";
+        setVisible(divGoBack,false);
+        
+        divMenu = document.createElement("div");
+        divMenu.id = "div-menu";
+        setVisible(divMenu,false);
+
+        divHelp = document.createElement("div");
+        divHelp.id = "div-help";
+        setVisible(divHelp,false);
+
+        divVoice = document.createElement("div");
+        divVoice.id = "div-voice";
+        setVisible(divVoice,false);
+        
+        mainElement.appendChild(divGoBack);
+        mainElement.appendChild(divMenu);
+        mainElement.appendChild(divHelp);
+        mainElement.appendChild(divVoice);
+
     }
     
     /**
@@ -570,17 +606,85 @@
             break;
             default:
                 // should never happen, all gaps same dimension
-                alert("default: "+ (gapsSpace - minGapSpace*5));
-        }        
+                if (viewportWidth > viewportHeight){
+                    // buttons on right
+                    buttonGoBack.style.top = "" + (minGapSpace*1+buttonsDimension*0) + "px";
+                    buttonGoBack.style.left = "" + (0) + "px";
+                    buttonMenu.style.top = "" + (minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonMenu.style.left = "" + (0) + "px";
+                    buttonHelp.style.top = "" + (minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonHelp.style.left = "" + (0) + "px";
+                    buttonVoice.style.top = "" + (minGapSpace*4+buttonsDimension*3) + "px";
+                    buttonVoice.style.left = "" + (0) + "px";
+                } else {
+                    // buttons on bottom
+                    buttonGoBack.style.top = "" + (0) + "px";
+                    buttonGoBack.style.left = "" + (minGapSpace*1+buttonsDimension*0) + "px";
+                    buttonMenu.style.top = "" + (0) + "px";
+                    buttonMenu.style.left = "" + (minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonHelp.style.top = "" + (0) + "px";
+                    buttonHelp.style.left = "" + (minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonVoice.style.top = "" + (0) + "px";
+                    buttonVoice.style.left = "" + (minGapSpace*4+buttonsDimension*3) + "px";
+                }                  
+                //alert("default: "+ (gapsSpace - minGapSpace*5));
+        }
+        // Arrange information divs
+        if (viewportWidth > viewportHeight){
+            // div 1/2 of the screen (minus buttons)
+            divGoBack.style.top = "" + 0 + "px";
+            divGoBack.style.left = "" + viewportWidth/2 + "px";
+            divGoBack.style.height = "" + (viewportHeight) + "px";
+            divGoBack.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
+
+            divMenu.style.top = "" + 0 + "px";
+            divMenu.style.left = "" + viewportWidth/2 + "px";
+            divMenu.style.height = "" + (viewportHeight) + "px";
+            divMenu.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
+            
+            divHelp.style.top = "" + 0 + "px";
+            divHelp.style.left = "" + viewportWidth/2 + "px";
+            divHelp.style.height = "" + (viewportHeight) + "px";
+            divHelp.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
+
+            divVoice.style.top = "" + 0 + "px";
+            divVoice.style.left = "" + viewportWidth/2 + "px";
+            divVoice.style.height = "" + (viewportHeight) + "px";
+            divVoice.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
+            
+        }else{
+            // div full screen (minus buttons)
+            divGoBack.style.top = "" + 0 + "px";
+            divGoBack.style.left = "" + 0 + "px";
+            divGoBack.style.height = "" + (viewportHeight - buttonsDimension) + "px";
+            divGoBack.style.width = "" + (viewportWidth) + "px";
+            
+            divMenu.style.top = "" + 0 + "px";
+            divMenu.style.left = "" + 0 + "px";
+            divMenu.style.height = "" + (viewportHeight - buttonsDimension) + "px";
+            divMenu.style.width = "" + (viewportWidth) + "px";
+
+            divHelp.style.top = "" + 0 + "px";
+            divHelp.style.left = "" + 0 + "px";
+            divHelp.style.height = "" + (viewportHeight - buttonsDimension) + "px";
+            divHelp.style.width = "" + (viewportWidth) + "px";
+
+            divVoice.style.top = "" + 0 + "px";
+            divVoice.style.left = "" + 0 + "px";
+            divVoice.style.height = "" + (viewportHeight - buttonsDimension) + "px";
+            divVoice.style.width = "" + (viewportWidth) + "px";
+        }
+
+        
         //printMessageOnMapCanvas("Function: "+"arrangeGui" + "\n" + Date());
         //printPositionMessage();
     }
     
     /**
-     * Support method to completly erase the map canvas
+     * Method to repaint map and Id canvas
      */
     function redrawMapCanvas(operation){
-        // operation not used yed
+        // operation not used yet
         var mapContext = mapCanvas.getContext("2d");
         var idContext = idCanvas.getContext("2d");
         mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
@@ -590,7 +694,6 @@
         var currentXtile = xTile - ((tilesNumCols-1)/2);  // is always an integer since tilesNumCols is odd
         var currentYtile = yTile - ((tilesNumRows-1)/2);  // is always an integer since tilesNumRows is odd
         var imageTile = null;
-        //var tileName = null;
         for (var i = 0; i < tilesNumRows; i++){      // on X
             for (var j = 0; j < tilesNumCols; j++){  // on Y
                 
@@ -629,17 +732,20 @@
         }
     }
     
+    /**
+     * Calculate rows and cols for the tile map using viewport as parameter
+     */
     function configureTileMap(){
         // to be called always after arrangeGui()
         var nCols = Math.ceil(viewportWidth/256)+1;
         tilesNumCols = (nCols%2===0?nCols+1:nCols);
         var nRows = Math.ceil(viewportHeight/256)+1;
         tilesNumRows =(nRows%2===0?nRows+1:nRows);
-        
-        console.log("now tilMap is C:" +  tilesNumCols + "x R:" + tilesNumRows);
     }
     
-    
+    /**
+     * Called at the beginning and after eache page resize (viewport resize)
+     */
     function onResize(){
         arrangeGui();
         configureTileMap();
@@ -667,7 +773,6 @@
         onResize();
         window.addEventListener("resize", onResize);
         GestureManager(mapCanvas,onPan,onZoom,onIdentify,[buttonGoBack,buttonMenu,buttonHelp,buttonVoice],onButton);
-        //MapManager(mapCanvas)
         return;
     }
     
