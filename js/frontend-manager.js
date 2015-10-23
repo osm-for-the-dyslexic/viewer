@@ -368,6 +368,12 @@
         viewportWidth = parseInt(""+viewport().width,10);
         viewportHeight = parseInt(""+viewport().height,10);
         
+        // resize html and body
+        document.documentElement.style.width = "" + viewportWidth + "px";
+        document.documentElement.style.height = "" + viewportHeight + "px";
+        document.body.style.width = "" + viewportWidth + "px";
+        document.body.style.height = "" + viewportHeight + "px";
+        
         var mapWidth = viewportWidth;
         var mapHeight = viewportHeight;
         var buttonWidth = viewportWidth;
