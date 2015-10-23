@@ -24,8 +24,8 @@
     // characteristics of the map
     var minZoomLevel = 0;
     var maxZoomLevel = 19;
-    var tilesNumCols = 0;
-    var tilesNumRows = 0;
+    var tilesNumCols = 1;
+    var tilesNumRows = 1;
     
     // Current position
     var zoomLevel = minZoomLevel;
@@ -62,7 +62,9 @@
      * Cleanup tile cache using proximity as parameter
      */
     function cleanupTileCache(){
-        //console.log("before cleanup tilecache is "+ tileCacheLength + " long");
+        var originalTileCacheLength = tileCacheLength;
+        //console.log("before cleanup tilecache is "+ tileCacheLength + " of " + tileCacheMaxLength + "- actual grid is " + tilesNumCols + "x"+ tilesNumRows);
+        var max = Math.pow(2,zoomLevel) - 1;
         var currentTileZ = 0;
         var currentTileX = 0;
         var currentTileY = 0;
@@ -75,12 +77,14 @@
                     currentTileZ = parseInt(tmpSplit[0]);
                     currentTileX = parseInt(tmpSplit[1]);
                     currentTileY = parseInt(tmpSplit[2]);
-                    if ((currentTileZ < zoomLevel -1)
-                      ||(currentTileZ > zoomLevel +1)
-                      ||(currentTileX < xTile -((tilesNumCols-1)/2))
-                      ||(currentTileX > xTile +((tilesNumCols-1)/2))
-                      ||(currentTileY < yTile -((tilesNumRows-1)/2))
-                      ||(currentTileY > yTile +((tilesNumRows-1)/2))
+                    //if ((currentTileZ < zoomLevel -1)
+                    //  ||(currentTileZ > zoomLevel +1)
+                    if ((currentTileZ < zoomLevel)
+                      ||(currentTileZ > zoomLevel)
+                      ||(currentTileX < ((xTile%(max+1)+max+1)%(max+1)) -((tilesNumCols-1)/2) - 1)
+                      ||(currentTileX > ((xTile%(max+1)+max+1)%(max+1)) +((tilesNumCols-1)/2) - 1)
+                      ||(currentTileY < yTile -((tilesNumRows-1)/2) - 1)
+                      ||(currentTileY > yTile +((tilesNumRows-1)/2) - 1)
                       ){
                         try {
                             delete tileCache[name];
@@ -95,7 +99,7 @@
                 }
             } 
         }
-        //console.log("after cleanup tilecache is "+ tileCacheLength + " long");
+        console.log("after cleanup tilecache went from " + originalTileCacheLength + " to "+ tileCacheLength + " - max is " + tileCacheMaxLength + " actual grid is " + tilesNumCols + "x"+ tilesNumRows);
     }
     
     /**
@@ -741,6 +745,7 @@
         tilesNumCols = (nCols%2===0?nCols+1:nCols);
         var nRows = Math.ceil(viewportHeight/256)+1;
         tilesNumRows =(nRows%2===0?nRows+1:nRows);
+        tileCacheMaxLength = Math.max((tilesNumCols+2)*(tilesNumRows+2)*2,50);
     }
     
     /**
