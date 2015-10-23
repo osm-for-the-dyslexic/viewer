@@ -1,38 +1,44 @@
 * {/*cursor:none;*/}
-html{height:100px;width:100px;}
-body{position: relative;height:100px;width:100px;overflow:hidden;}
-#map{zIndex:3;overflow:hidden;}
+html{height:100px;width:100px;outline: 0;}
+body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;}
+#map{zIndex:3;overflow:hidden;outline: 0;}
 #map-canvas{
     position: absolute; 
     -webkit-backface-visibility: hidden;
+    outline: 0;
 }
 #id-canvas{
     position: absolute; 
     -webkit-backface-visibility: hidden;
+    outline: 0;
 }
 
 #div-go-back{
     position: absolute; 
     -webkit-backface-visibility: hidden;
     background:#AAAAAA;
+    outline: 0;
 }
 
 #div-menu{
     position: absolute; 
     -webkit-backface-visibility: hidden;
     background:#999999;
+    outline: 0;
 }
 
 #div-help{
     position: absolute; 
     -webkit-backface-visibility: hidden;
     background:#EEEEEE;
+    outline: 0;
 }
 
 #div-voice{
     position: absolute; 
     -webkit-backface-visibility: hidden;
     background:#CCCCCC;
+    outline: 0;
 }
 
 #buttons-div{
@@ -40,6 +46,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;}
     -webkit-backface-visibility: hidden;
     background:#333333;
     overflow:hidden;
+    outline: 0;
 }
 
 #button-go-back{
@@ -47,6 +54,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;}
     background-image: url(High-contrast-go-previous.svg);
     background-repeat: no-repeat;
     background-size: cover;
+    outline: 0;
 }
 
 #button-menu{
@@ -54,6 +62,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;}
     background-image: url(High-contrast-applications-system.svg);
     background-repeat: no-repeat;
     background-size: cover;
+    outline: 0;
 }
 
 #button-help{
@@ -61,6 +70,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;}
     background-image: url(High-contrast-help-browser.svg);
     background-repeat: no-repeat;
     background-size: cover;
+    outline: 0;
 }
 
 #button-voice{
@@ -69,6 +79,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;}
     /*background-image: url(High-contrast-audio-volume-muted.svg);*/
     background-repeat: no-repeat;
     background-size: cover;
+    outline: 0;
 }
 
 
