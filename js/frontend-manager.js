@@ -162,8 +162,8 @@
                 // IDS
                 baseUrls = tileIdBaseUrls;
             }
-            imgElement.src = getRandomElement(baseUrls) + tileName + ".png" ;        
             imgElement.setAttribute('crossOrigin','anonymous');
+            imgElement.src = getRandomElement(baseUrls) + tileName + ".png" ;        
             //imgElement.crossOrigin = "Anonymous";
             return null;
         }
