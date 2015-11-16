@@ -299,8 +299,8 @@
             // each point has 4 bytes RGBA (A unused for us)
             var k = 0;
             var found = false;
-            for (var i=0; i<7||!found;i++){
-                for (var j=0;j<7||!found;j++){
+            for (var i=0; i<7&&!found;i++){
+                for (var j=0;j<7&&!found;j++){
                     // start index
                     k = (i*7+j)*4;
                     //message += pad("00000000",points.data[k].toString(2)) + " ";
