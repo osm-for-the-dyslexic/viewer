@@ -36,7 +36,7 @@
     //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/","http://b.tile.openstreetmap.org/","http://c.tile.openstreetmap.org/"];
     // var tileMapBaseUrls = ["http://www.develost.com/maps/osm4dys/"];
     
-    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/viewer/map/osm4dys/"];
+    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/viewer/map/osm4dys_id/"];
     //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/"];
     //var tileIdBaseUrls = ["http://a.tile.openstreetmap.org/"];
     //var tileIdBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
@@ -302,10 +302,14 @@
                 for (var j=0;j<7;j++){
                     // start index
                     k = (i*7+j)*4;
-                    var redChannel = pad("00000000",points.data[k].toString(2))
-                    if (redChannel[0] === '1'){
-                        message += "found in " + i + "," + j ;
-                    }
+                    message += pad("00000000",points.data[k].toString(2)) + " ";
+                    message += pad("00000000",points.data[k+1].toString(2)) + " ";
+                    message += pad("00000000",points.data[k+2].toString(2)) + " ";
+                    message += pad("00000000",points.data[k+3].toString(2)) + "\n";
+                    //var redChannel = pad("00000000",points.data[k].toString(2))
+                    //if (redChannel[0] === '1'){
+                    //    message += "found in " + i + "," + j ;
+                    //}
                     //message += pad("00000000",points.data[k].toString(2)) + " ";
                     //message += pad("00000000",points.data[k+1].toString(2)) + " ";
                     //message += pad("00000000",points.data[k+2].toString(2)) + " ";
