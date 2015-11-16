@@ -298,8 +298,9 @@
             message += "points.data.length = " + points.data.length + "\n";
             // each point has 4 bytes RGBA (A unused for us)
             var k = 0;
-            for (var i=0; i<7;i++){
-                for (var j=0;j<7;j++){
+            var found = false;
+            for (var i=0; i<7||!found;i++){
+                for (var j=0;j<7||!found;j++){
                     // start index
                     k = (i*7+j)*4;
                     //message += pad("00000000",points.data[k].toString(2)) + " ";
@@ -309,6 +310,7 @@
                     var redChannel = pad("00000000",points.data[k].toString(2))
                     if (redChannel[0] === '1'){
                         message += "found in " + i + "," + j ;
+                        found = true;
                     }
                     //message += pad("00000000",points.data[k].toString(2)) + " ";
                     //message += pad("00000000",points.data[k+1].toString(2)) + " ";
