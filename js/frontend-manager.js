@@ -2,7 +2,6 @@
     "use strict";
     // http://www.movable-type.co.uk/scripts/latlong.html - some functions on latlog and distance
     
-    
     // Html elements of the page
     var mapCanvas = null;
     var idCanvas = null;
@@ -15,7 +14,6 @@
     var divMenu = null;
     var divHelp = null;
     var divVoice = null;
-    
 
     // characteristics of the viewport
     var viewportWidth = null;
@@ -23,7 +21,7 @@
     
     // characteristics of the map
     var minZoomLevel = 0;
-    var maxZoomLevel = 19;
+    var maxZoomLevel = 5;
     var tilesNumCols = 1;
     var tilesNumRows = 1;
     
@@ -35,10 +33,14 @@
     var yPosIntoTile = 128;
     
     // URLs for tiles
-    var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/","http://b.tile.openstreetmap.org/","http://c.tile.openstreetmap.org/"];
-    var tileIdBaseUrls = ["http://a.tile.openstreetmap.org/"];
+    //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/","http://b.tile.openstreetmap.org/","http://c.tile.openstreetmap.org/"];
+    var tileMapBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
+    //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/"];
+    //var tileIdBaseUrls = ["http://a.tile.openstreetmap.org/"];
+    var tileIdBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
 
     // TileCache
+    var defaultImage = new Image();
     var tileCache = {};
     var tileCacheLength = 0;
     var tileCacheMaxLength = 150;
@@ -58,6 +60,11 @@
         return Math.floor((Math.random() * 2) + 0);
     }
     
+    function initializeMap(){
+        // a 256x256 png r=173 g=222 b=255  #ADDEFF same as osm color for ocean
+        defaultImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAMhSURBVHhe7dQxAcAwDMCwbPyplNKoZE9ZWHrMwM/5dgdIem+BIAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOArJkfkUEFibeMV7cAAAAASUVORK5CYII=";
+    }
+
     /**
      * Cleanup tile cache using proximity as parameter
      */
@@ -125,6 +132,16 @@
             tileCache[""+mapType+"_"+tileName] = null;
             tileCacheLength ++;
             imgElement = new Image();
+            //imgElement.onerror = function(){
+            //    tileCache[""+mapType+"_"+tileName] = defaultImage;
+            //    if (z === zoomLevel){
+            //        redrawMapCanvas("onTile");
+            //    }
+            //    if (tileCacheLength > tileCacheMaxLength){
+            //        cleanupTileCache();
+            //    }
+            //}
+            
             imgElement.onload = function(){
                 tileCache[""+mapType+"_"+tileName] = this;
                 if (z === zoomLevel){
@@ -136,6 +153,7 @@
                 //clearTimeout(renderTimeout);
                 //renderTimeout = setTimeout(redrawMapCanvas,300); // 300ms
             }
+            
             // switch map type for url
             var baseUrls = null;
             if (mapType === "MAP"){
@@ -145,6 +163,8 @@
                 baseUrls = tileIdBaseUrls;
             }
             imgElement.src = getRandomElement(baseUrls) + tileName + ".png" ;        
+            imgElement.setAttribute('crossOrigin','anonymous');
+            imgElement.crossOrigin = "Anonymous";
             return null;
         }
         return imgElement;
@@ -223,8 +243,19 @@
         redrawMapCanvas(operation);
     }
     
+    
+    function pad (_pad, str, padLeft) {
+        if (typeof str === 'undefined') return _pad;
+        if (padLeft) {
+            return (_pad + str).slice(-_pad.length);
+        } else {
+            return (str + _pad).substring(0, _pad.length);
+       }
+    }    
+    
+    
     /**
-     * utility method to check if an aement is visble or not
+     * utility method to check if an element is visble or not
      */
     function isVisible(elem) {
         return (elem.style.visibility != "hidden");
@@ -251,7 +282,34 @@
     
     function onIdentify(canvasPosX,canvasPosY){
         redrawMapCanvas("onIdentify");
-        printMessageOnMapCanvas("Function: "+"onIdentify(" + canvasPosX + "," + canvasPosY + ")\n" + Date());
+        var idContext = idCanvas.getContext("2d");
+        var idWidth = idCanvas.width;
+        var idHeight = idCanvas.height;
+        if ((canvasPosX < 3) || (canvasPosX > idWidth - 3)) {return;}
+        if ((canvasPosY < 3) || (canvasPosY > idHeight - 3)) {return;}
+        var points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7); 
+        // find the starting point
+        var message = "";
+        message += "points.data.length = " + points.data.length + "\n";
+        // each point has 4 bytes RGBA (A unused for us)
+        message += pad("00000000",points.data[0].toString(2)) + " ";
+        message += pad("00000000",points.data[1].toString(2)) + " ";
+        message += pad("00000000",points.data[2].toString(2)) + " ";
+        message += pad("00000000",points.data[3].toString(2)) + " ";
+        // the starting point has to be into the first 8x8 ( 0->7 ) othewise not found - return
+        var startX = 0; // TODO calculate 
+        var startY = 0; // TODO calculate
+        //for (var i=0; i<8; i++ ){
+        //    for (var j=0; j<8; j++ ){
+        //        message +=  ((startX+i)*15)+startY+j + " ";
+        //    }
+        //    message += "\n";
+        //}
+        //message += pad("00",points.data[(i*4)+0].toString(16));
+        //message += pad("00",points.data[(i*4)+1].toString(16));
+        //message += pad("00",points.data[(i*4)+2].toString(16));
+        // i+3 id the alpha do not consider for now
+        printMessageOnMapCanvas(message);
     }
     
     function onButton(buttonId){
@@ -711,15 +769,15 @@
                 if (imageTile === null){
                     // render the replacement
                     //if ((i+j+currentXtile+currentYtile)%2===0){
-                        mapContext.fillStyle = "#DDDDDD";
+                    //    mapContext.fillStyle = "#DDDDDD";
                     //}else{
                     //    mapContext.fillStyle = "#EEEEEE";
                     //}
-                    
-                    mapContext.fillRect(currentPosXonCanvas,currentPosYonCanvas,256,256);
+                    // mapContext.fillRect(currentPosXonCanvas,currentPosYonCanvas,256,256);
                     //mapContext.font="15px Courier";
                     //mapContext.fillStyle = "#000000";
                     //mapContext.fillText("z: "+zoomLevel+" x: "+(currentXtile+j)+" y: "+(currentYtile+i),currentPosXonCanvas+10,currentPosYonCanvas+128);
+                    mapContext.drawImage(defaultImage, currentPosXonCanvas, currentPosYonCanvas,256,256);
                 }else{
                     // render the tile for Map Canvas
                     mapContext.drawImage(imageTile, currentPosXonCanvas, currentPosYonCanvas,256,256);
@@ -728,13 +786,12 @@
                 imageTile = getTileImage("IDS",zoomLevel,(currentXtile+j),(currentYtile+i));
                 if (imageTile === null){
                     // white replacemente for idCanvas
-                    idContext.fillStyle = "#DDDDDD";
+                    idContext.fillStyle = "#000000";
                     idContext.fillRect(currentPosXonCanvas,currentPosYonCanvas,256,256);
                 }else{
                     // render the tile for idCanvas
                     idContext.drawImage(imageTile, currentPosXonCanvas, currentPosYonCanvas,256,256);
                 }
-                
                 currentPosXonCanvas += 256; 
             }
             currentPosXonCanvas = Math.floor(mapCanvas.width / 2) - xPosIntoTile - (256 *((tilesNumCols-1)/2));
@@ -769,7 +826,7 @@
     function printMessageOnMapCanvas(message){
         var lines = message.split("\n");
         var context=mapCanvas.getContext("2d");
-        context.font="15px Courier";
+        context.font="10px Courier";
         context.fillStyle = "#000000";
         for (var i = 0; i < lines.length; i++) {
             context.fillText(lines[i],10,50+i*25);
@@ -781,6 +838,7 @@
      */
     function FrontendManager(mainElementId) {
         createChilds(mainElementId);
+        initializeMap();
         onResize();
         window.addEventListener("resize", onResize);
         GestureManager(mapCanvas,onPan,onZoom,onIdentify,[buttonGoBack,buttonMenu,buttonHelp,buttonVoice],onButton);
