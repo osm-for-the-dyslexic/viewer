@@ -294,10 +294,25 @@
             // find the starting point
             message += "points.data.length = " + points.data.length + "\n";
             // each point has 4 bytes RGBA (A unused for us)
-            for (var i=0; i<points.data.length; i++ ){
-                if (i%4 === 0){message += "\n";}
-                message += pad("00000000",points.data[0].toString(2)) + " ";
+            var k = 0;
+            for (var i=0; i<7;i++){
+                for (var j=0;j<7;j++){
+                    // start index
+                    k = i*j*4;
+                    var redChannel = pad("00000000",points.data[k].toString(2))
+                    if (redChannel[0] === '1'){
+                        message += "found in " + i + "," + j ;
+                    }
+                    //message += pad("00000000",points.data[k].toString(2)) + " ";
+                    //message += pad("00000000",points.data[k+1].toString(2)) + " ";
+                    //message += pad("00000000",points.data[k+2].toString(2)) + " ";
+                    //message += pad("00000000",points.data[k+3].toString(2)) + " ";
+                }
             }
+            //for (var i=0; i<points.data.length; i++ ){
+            //    if (i%4 === 0){message += "\n";}
+            //    message += pad("00000000",points.data[0].toString(2)) + " ";
+            //}
             // message += pad("00000000",points.data[0].toString(2)) + " ";
             // message += pad("00000000",points.data[1].toString(2)) + " ";
             // message += pad("00000000",points.data[2].toString(2)) + " ";
