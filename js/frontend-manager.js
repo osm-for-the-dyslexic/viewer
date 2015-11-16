@@ -34,10 +34,13 @@
     
     // URLs for tiles
     //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/","http://b.tile.openstreetmap.org/","http://c.tile.openstreetmap.org/"];
-    var tileMapBaseUrls = ["http://www.develost.com/maps/osm4dys/"];
+    // var tileMapBaseUrls = ["http://www.develost.com/maps/osm4dys/"];
+    
+    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/viewer/map/osm4dys/"];
     //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/"];
     //var tileIdBaseUrls = ["http://a.tile.openstreetmap.org/"];
-    var tileIdBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
+    //var tileIdBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
+    var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/viewer/map/osm4dys_id/"];
 
     // TileCache
     var defaultImage = new Image();
