@@ -36,7 +36,7 @@
     //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/","http://b.tile.openstreetmap.org/","http://c.tile.openstreetmap.org/"];
     // var tileMapBaseUrls = ["http://www.develost.com/maps/osm4dys/"];
     
-    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/viewer/map/osm4dys_id/"];
+    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/viewer/map/osm4dys/"];
     //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/"];
     //var tileIdBaseUrls = ["http://a.tile.openstreetmap.org/"];
     //var tileIdBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
@@ -299,46 +299,34 @@
             // each point has 4 bytes RGBA (A unused for us)
             var k = 0;
             var found = false;
+            var foundI = 0;
+            var foundJ = 0;
             for (var i=0; i<7&&!found;i++){
                 for (var j=0;j<7&&!found;j++){
                     // start index
                     k = (i*7+j)*4;
-                    //message += pad("00000000",points.data[k].toString(2)) + " ";
-                    //message += pad("00000000",points.data[k+1].toString(2)) + " ";
-                    //message += pad("00000000",points.data[k+2].toString(2)) + " ";
-                    //message += pad("00000000",points.data[k+3].toString(2)) + "\n";
-                    var redChannel = pad("00000000",points.data[k].toString(2))
+                    var redChannel = pad("00000000",points.data[k].toString(2),true)
                     if (redChannel[0] === '1'){
-                        message += "found in " + i + "," + j ;
+                        foundI = i;
+                        foundJ = j;
                         found = true;
                     }
-                    //message += pad("00000000",points.data[k].toString(2)) + " ";
-                    //message += pad("00000000",points.data[k+1].toString(2)) + " ";
-                    //message += pad("00000000",points.data[k+2].toString(2)) + " ";
-                    //message += pad("00000000",points.data[k+3].toString(2)) + " ";
                 }
             }
-            //for (var i=0; i<points.data.length; i++ ){
-            //    if (i%4 === 0){message += "\n";}
-            //    message += pad("00000000",points.data[0].toString(2)) + " ";
-            //}
-            // message += pad("00000000",points.data[0].toString(2)) + " ";
-            // message += pad("00000000",points.data[1].toString(2)) + " ";
-            // message += pad("00000000",points.data[2].toString(2)) + " ";
-            // message += pad("00000000",points.data[3].toString(2)) + " ";
-            // the starting point has to be into the first 8x8 ( 0->7 ) othewise not found - return
-            var startX = 0; // TODO calculate 
-            var startY = 0; // TODO calculate
-            //for (var i=0; i<8; i++ ){
-            //    for (var j=0; j<8; j++ ){
-            //        message +=  ((startX+i)*15)+startY+j + " ";
-            //    }
-            //    message += "\n";
-            //}
-            //message += pad("00",points.data[(i*4)+0].toString(16));
-            //message += pad("00",points.data[(i*4)+1].toString(16));
-            //message += pad("00",points.data[(i*4)+2].toString(16));
-            // i+3 id the alpha do not consider for now
+            var bitstring = ""
+            for (var i = foundI; i<foundI+4;i++){
+                for (var j = foundJ; j<foundJ+4;j++){
+                    k = (i*7+j)*4;
+                    var r = pad("000",points.data[k].toString(10),true)
+                    var g = pad("000",points.data[k+1].toString(10),true)
+                    var b = pad("000",points.data[k+2].toString(10),true)
+                    message += "" +r + "-" + g + "-" + b +"\n";
+                    bitstring += pad("00000000",points.data[k].toString(2),true)
+                    bitstring += pad("00000000",points.data[k+1].toString(2),true)
+                    bitstring += pad("00000000",points.data[k+2].toString(2),true)
+                }
+            }
+
         } catch(e) {
             message = "Exception";
         }
