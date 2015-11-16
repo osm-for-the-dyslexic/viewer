@@ -288,32 +288,36 @@
         var idHeight = idCanvas.height;
         if ((canvasPosX < 3) || (canvasPosX > idWidth - 3)) {return;}
         if ((canvasPosY < 3) || (canvasPosY > idHeight - 3)) {return;}
-        var points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7); 
-        // find the starting point
         var message = "";
-        message += "points.data.length = " + points.data.length + "\n";
-        // each point has 4 bytes RGBA (A unused for us)
-        for (var i=0; i<points.data.length; i++ ){
-            message += pad("00000000",points.data[0].toString(2)) + " ";
-            if (i%4 === 0){message += "\n";}
+        try {
+            var points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7); 
+            // find the starting point
+            message += "points.data.length = " + points.data.length + "\n";
+            // each point has 4 bytes RGBA (A unused for us)
+            for (var i=0; i<points.data.length; i++ ){
+                message += pad("00000000",points.data[0].toString(2)) + " ";
+                if (i%4 === 0){message += "\n";}
+            }
+            // message += pad("00000000",points.data[0].toString(2)) + " ";
+            // message += pad("00000000",points.data[1].toString(2)) + " ";
+            // message += pad("00000000",points.data[2].toString(2)) + " ";
+            // message += pad("00000000",points.data[3].toString(2)) + " ";
+            // the starting point has to be into the first 8x8 ( 0->7 ) othewise not found - return
+            var startX = 0; // TODO calculate 
+            var startY = 0; // TODO calculate
+            //for (var i=0; i<8; i++ ){
+            //    for (var j=0; j<8; j++ ){
+            //        message +=  ((startX+i)*15)+startY+j + " ";
+            //    }
+            //    message += "\n";
+            //}
+            //message += pad("00",points.data[(i*4)+0].toString(16));
+            //message += pad("00",points.data[(i*4)+1].toString(16));
+            //message += pad("00",points.data[(i*4)+2].toString(16));
+            // i+3 id the alpha do not consider for now
+        } catch(e) {
+            message = "Exception";
         }
-        // message += pad("00000000",points.data[0].toString(2)) + " ";
-        // message += pad("00000000",points.data[1].toString(2)) + " ";
-        // message += pad("00000000",points.data[2].toString(2)) + " ";
-        // message += pad("00000000",points.data[3].toString(2)) + " ";
-        // the starting point has to be into the first 8x8 ( 0->7 ) othewise not found - return
-        var startX = 0; // TODO calculate 
-        var startY = 0; // TODO calculate
-        //for (var i=0; i<8; i++ ){
-        //    for (var j=0; j<8; j++ ){
-        //        message +=  ((startX+i)*15)+startY+j + " ";
-        //    }
-        //    message += "\n";
-        //}
-        //message += pad("00",points.data[(i*4)+0].toString(16));
-        //message += pad("00",points.data[(i*4)+1].toString(16));
-        //message += pad("00",points.data[(i*4)+2].toString(16));
-        // i+3 id the alpha do not consider for now
         printMessageOnMapCanvas(message);
     }
     
