@@ -295,8 +295,8 @@
             message += "points.data.length = " + points.data.length + "\n";
             // each point has 4 bytes RGBA (A unused for us)
             for (var i=0; i<points.data.length; i++ ){
-                message += pad("00000000",points.data[0].toString(2)) + " ";
                 if (i%4 === 0){message += "\n";}
+                message += pad("00000000",points.data[0].toString(2)) + " ";
             }
             // message += pad("00000000",points.data[0].toString(2)) + " ";
             // message += pad("00000000",points.data[1].toString(2)) + " ";
