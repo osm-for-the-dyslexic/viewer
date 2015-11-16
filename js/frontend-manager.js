@@ -292,10 +292,14 @@
         var message = "";
         message += "points.data.length = " + points.data.length + "\n";
         // each point has 4 bytes RGBA (A unused for us)
-        message += pad("00000000",points.data[0].toString(2)) + " ";
-        message += pad("00000000",points.data[1].toString(2)) + " ";
-        message += pad("00000000",points.data[2].toString(2)) + " ";
-        message += pad("00000000",points.data[3].toString(2)) + " ";
+        for (var i=0; i<points.data.length; i++ ){
+            message += pad("00000000",points.data[0].toString(2)) + " ";
+            if (i%4 === 0){message += "\n";}
+        }
+        // message += pad("00000000",points.data[0].toString(2)) + " ";
+        // message += pad("00000000",points.data[1].toString(2)) + " ";
+        // message += pad("00000000",points.data[2].toString(2)) + " ";
+        // message += pad("00000000",points.data[3].toString(2)) + " ";
         // the starting point has to be into the first 8x8 ( 0->7 ) othewise not found - return
         var startX = 0; // TODO calculate 
         var startY = 0; // TODO calculate
