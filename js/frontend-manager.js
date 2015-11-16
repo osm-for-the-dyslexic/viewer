@@ -302,7 +302,7 @@
                 for (var j=0;j<7;j++){
                     // start index
                     k = (i*7+j)*4;
-                    message += pad("00000000",points.data[k].toString(2)) + " ";
+                    //message += pad("00000000",points.data[k].toString(2)) + " ";
                     //message += pad("00000000",points.data[k+1].toString(2)) + " ";
                     //message += pad("00000000",points.data[k+2].toString(2)) + " ";
                     //message += pad("00000000",points.data[k+3].toString(2)) + "\n";
