@@ -34,7 +34,7 @@
     
     // URLs for tiles
     //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/","http://b.tile.openstreetmap.org/","http://c.tile.openstreetmap.org/"];
-    var tileMapBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
+    var tileMapBaseUrls = ["http://www.develost.com/maps/osm4dys/"];
     //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/"];
     //var tileIdBaseUrls = ["http://a.tile.openstreetmap.org/"];
     var tileIdBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
@@ -162,6 +162,7 @@
                 // IDS
                 baseUrls = tileIdBaseUrls;
             }
+            // mandatory set it before src
             imgElement.setAttribute('crossOrigin','anonymous');
             imgElement.src = getRandomElement(baseUrls) + tileName + ".png" ;        
             //imgElement.crossOrigin = "Anonymous";
