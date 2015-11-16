@@ -298,7 +298,7 @@
             for (var i=0; i<7;i++){
                 for (var j=0;j<7;j++){
                     // start index
-                    k = i*j*4;
+                    k = (i*7+j)*4;
                     var redChannel = pad("00000000",points.data[k].toString(2))
                     if (redChannel[0] === '1'){
                         message += "found in " + i + "," + j ;
