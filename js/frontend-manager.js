@@ -164,7 +164,7 @@
             }
             imgElement.src = getRandomElement(baseUrls) + tileName + ".png" ;        
             imgElement.setAttribute('crossOrigin','anonymous');
-            imgElement.crossOrigin = "Anonymous";
+            //imgElement.crossOrigin = "Anonymous";
             return null;
         }
         return imgElement;
