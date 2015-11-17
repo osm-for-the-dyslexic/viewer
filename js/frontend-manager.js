@@ -371,7 +371,7 @@
                 }
             }
             //message += "Found " + counter + " features, len:" + interestingBits.length; ;
-            message += "FOUND " + counter + " FEATURE" + (counter>1 ? 's':'') + "\n";
+            message += "IDENTIFIED " + counter + " FEATURE" + (counter===1 ? '':'S') + "\n";
 
             // from interesting bits to binRepresentation
             var binRepresentation = "";
@@ -406,9 +406,9 @@
             uuid2 = uuid1.substring(0,9) + "-" + uuid2.substring(9,12) + "-" + uuid2.substring(12,16) + "-" + uuid2.substring(16,20) + "-" + uuid2.substring(20,32);
             uuid3 = uuid1.substring(0,9) + "-" + uuid3.substring(9,12) + "-" + uuid3.substring(12,16) + "-" + uuid3.substring(16,20) + "-" + uuid3.substring(20,32);
             
-            if (counter >= 1){message += "1: " + uuid1 + "\n";}
-            if (counter >= 2){message += "2: " + uuid2 + "\n";}
-            if (counter >= 3){message += "3: " + uuid3 + "\n";}
+            if (counter >= 1){message += "1: " + uuid1.toUpperCase() + "\n";}
+            if (counter >= 2){message += "2: " + uuid2.toUpperCase() + "\n";}
+            if (counter >= 3){message += "3: " + uuid3.toUpperCase() + "\n";}
             
             
         } catch(e) {
@@ -930,13 +930,18 @@
      */
     function printMessageOnMapCanvas(message){
         var lines = message.split("\n");
-        var context=mapCanvas.getContext("2d");
-        context.font="10px Courier";
-        context.fillStyle = "#000000";
+        var context = mapCanvas.getContext("2d");
+        var width = mapCanvas.width;
+        
+        context.fillStyle = "#333333";
+        context.fillRect(0,0,width,lines.length*15);        
+        
+        context.font="12px Arial";
+        context.fillStyle = "#FF0000";
         for (var i = 0; i < lines.length; i++) {
             context.fillText(lines[i],10,20+i*15);
-        } 
-    }    
+        }
+    }
     
     /**
      * Main method of the module FrontendManager
