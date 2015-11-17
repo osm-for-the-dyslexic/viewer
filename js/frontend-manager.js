@@ -33,14 +33,10 @@
     var yPosIntoTile = 128;
     
     // URLs for tiles
-    //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/","http://b.tile.openstreetmap.org/","http://c.tile.openstreetmap.org/"];
     // var tileMapBaseUrls = ["http://www.develost.com/maps/osm4dys/"];
-    
-    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/viewer/map/osm4dys/"];
-    //var tileMapBaseUrls = ["http://a.tile.openstreetmap.org/"];
-    //var tileIdBaseUrls = ["http://a.tile.openstreetmap.org/"];
+    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/basemap/osm4dys/"];
     //var tileIdBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
-    var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/viewer/map/osm4dys_id/"];
+    var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
 
     // TileCache
     var defaultImage = new Image();
@@ -295,7 +291,7 @@
         try {
             var points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7); 
             // find the starting point
-            message += "points.data.length = " + points.data.length + "\n";
+            // message += "points.data.length = " + points.data.length + "\n";
             // each point has 4 bytes RGBA (A unused for us)
             var k = 0;
             var found = false;
@@ -320,12 +316,53 @@
                     var r = pad("000",points.data[k].toString(10),true)
                     var g = pad("000",points.data[k+1].toString(10),true)
                     var b = pad("000",points.data[k+2].toString(10),true)
-                    message += "" +r + "-" + g + "-" + b +"\n";
+                    //message += "" +r + "-" + g + "-" + b +"\n";
                     bitstring += pad("00000000",points.data[k].toString(2),true)
                     bitstring += pad("00000000",points.data[k+1].toString(2),true)
                     bitstring += pad("00000000",points.data[k+2].toString(2),true)
                 }
             }
+            // from bitstring to interesting bits
+            var counterBin = bitstring.substring(1,3);
+            var counter = parseInt(counterBin,2);
+            
+            var i = 3;
+            var j = 8;
+            var k = 0;
+            var interestingBits = bitstring.substring(i,j);
+            for (var k=1; k<48;k++){
+                i=j;
+                j+=8;
+                if (k%3 === 0){
+                    interestingBits += bitstring.substring(i+1,j);
+                }else{
+                    interestingBits += bitstring.substring(i,j);
+                }
+            }
+            message += "Found " + counter + " features, len:" + interestingBits.length; ;
+            
+            // from interesting bits to binRepresentation
+            var binRepresentation = "";
+            binRepresentation += interestingBits.substring(0,48);
+            binRepresentation += "0100";
+            binRepresentation += interestingBits.substring(48,60);
+            binRepresentation += "01";
+            binRepresentation += interestingBits.substring(60,122);
+
+            binRepresentation += interestingBits.substring(122+0,122+48);
+            binRepresentation += "0100";
+            binRepresentation += interestingBits.substring(122+48,122+60);
+            binRepresentation += "01";
+            binRepresentation += interestingBits.substring(122+60,122+122);
+
+            binRepresentation += interestingBits.substring(122+0,122+48);
+            binRepresentation += "0100";
+            binRepresentation += interestingBits.substring(122+48,122+60);
+            binRepresentation += "01";
+            binRepresentation += interestingBits.substring(122+60,122+122);
+            
+            
+            
 
         } catch(e) {
             message = "Exception";
