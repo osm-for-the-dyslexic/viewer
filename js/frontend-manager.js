@@ -21,7 +21,7 @@
     
     // characteristics of the map
     var minZoomLevel = 0;
-    var maxZoomLevel = 5;
+    var maxZoomLevel = 1;
     var tilesNumCols = 1;
     var tilesNumRows = 1;
     
@@ -253,6 +253,37 @@
        }
     }    
     
+    /**
+     * utility function to convert a binary string to a hex string
+     */
+    function bin2hex(str){
+        var retval = "";
+        var temp4bits = "";
+        for (var i=0;i<str.length;i+=4){
+            temp4bits = str.substring(i,i+4);
+            switch(temp4bits) {
+                case '0000': retval+= '0'; break;
+                case '0001': retval+= '1'; break;
+                case '0010': retval+= '2'; break;
+                case '0011': retval+= '3'; break;
+                case '0100': retval+= '4'; break;
+                case '0101': retval+= '5'; break;
+                case '0110': retval+= '6'; break;
+                case '0111': retval+= '7'; break;
+                case '1000': retval+= '8'; break;
+                case '1001': retval+= '9'; break;
+                case '1010': retval+= 'a'; break;
+                case '1011': retval+= 'b'; break;
+                case '1100': retval+= 'c'; break;
+                case '1101': retval+= 'd'; break;
+                case '1110': retval+= 'e'; break;
+                case '1111': retval+= 'f'; break;
+                default: break;
+            } 
+        }
+        return retval;
+    }
+    
     
     /**
      * utility method to check if an element is visble or not
@@ -313,9 +344,9 @@
             for (var i = foundI; i<foundI+4;i++){
                 for (var j = foundJ; j<foundJ+4;j++){
                     k = (i*7+j)*4;
-                    var r = pad("000",points.data[k].toString(10),true)
-                    var g = pad("000",points.data[k+1].toString(10),true)
-                    var b = pad("000",points.data[k+2].toString(10),true)
+                    //var r = pad("000",points.data[k].toString(10),true)
+                    //var g = pad("000",points.data[k+1].toString(10),true)
+                    //var b = pad("000",points.data[k+2].toString(10),true)
                     //message += "" +r + "-" + g + "-" + b +"\n";
                     bitstring += pad("00000000",points.data[k].toString(2),true)
                     bitstring += pad("00000000",points.data[k+1].toString(2),true)
@@ -339,8 +370,9 @@
                     interestingBits += bitstring.substring(i,j);
                 }
             }
-            message += "Found " + counter + " features, len:" + interestingBits.length; ;
-            
+            //message += "Found " + counter + " features, len:" + interestingBits.length; ;
+            message += "FOUND " + counter + " FEATURE" + (counter>1 ? 's':'') + "\n";
+
             // from interesting bits to binRepresentation
             var binRepresentation = "";
             binRepresentation += interestingBits.substring(0,48);
@@ -361,9 +393,24 @@
             binRepresentation += "01";
             binRepresentation += interestingBits.substring(122+60,122+122);
             
+            // from binRepresentation to 3 UUID version 4
+            var uuid1bin = binRepresentation.substring(0,128);
+            var uuid2bin = binRepresentation.substring(128,256);
+            var uuid3bin = binRepresentation.substring(256,384);
+            
+            var uuid1 = bin2hex(uuid1bin);
+            var uuid2 = bin2hex(uuid2bin);
+            var uuid3 = bin2hex(uuid3bin);
+            
+            uuid1 = uuid1.substring(0,9) + "-" + uuid1.substring(9,12) + "-" + uuid1.substring(12,16) + "-" + uuid1.substring(16,20) + "-" + uuid1.substring(20,32);
+            uuid2 = uuid1.substring(0,9) + "-" + uuid2.substring(9,12) + "-" + uuid2.substring(12,16) + "-" + uuid2.substring(16,20) + "-" + uuid2.substring(20,32);
+            uuid3 = uuid1.substring(0,9) + "-" + uuid3.substring(9,12) + "-" + uuid3.substring(12,16) + "-" + uuid3.substring(16,20) + "-" + uuid3.substring(20,32);
+            
+            if (counter >= 1){message += "1: " + uuid1 + "\n";}
+            if (counter >= 2){message += "2: " + uuid2 + "\n";}
+            if (counter >= 3){message += "3: " + uuid3 + "\n";}
             
             
-
         } catch(e) {
             message = "Exception";
         }
@@ -887,7 +934,7 @@
         context.font="10px Courier";
         context.fillStyle = "#000000";
         for (var i = 0; i < lines.length; i++) {
-            context.fillText(lines[i],10,50+i*25);
+            context.fillText(lines[i],10,20+i*15);
         } 
     }    
     
