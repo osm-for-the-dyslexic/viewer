@@ -9,6 +9,12 @@
     var deltaX = 0;
     var deltaY = 0;
     var zoomCounter = 0;
+    var zoomEnabled = true;
+    var zoomEnabledTimer;
+    
+    function enableZoom(){
+        zoomEnabled = true;
+    }
     
     function onPan(ev){
         var currDeltaX = ev.deltaX - deltaX;
@@ -33,7 +39,11 @@
         zoomCounter -= 1;
         if (10 < Math.abs(zoomCounter)){
             zoomCounter = 0;
-            onZoomFunction(1);
+            if (zoomEnabled) {
+                zoomEnabled = false;
+                onZoomFunction(1);
+                zoomEnabledTimer = setTimeout(enableZoom, 1000);
+            }
         }
     }
 
@@ -41,7 +51,11 @@
         zoomCounter += 1;
         if (10 < Math.abs(zoomCounter)){
             zoomCounter = 0;
-            onZoomFunction(-1);
+            if (zoomEnabled) {
+                zoomEnabled = false;
+                onZoomFunction(-1);
+                zoomEnabledTimer = setTimeout(enableZoom, 1000);
+            }
         }
     }
     
