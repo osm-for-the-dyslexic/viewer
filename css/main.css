@@ -37,10 +37,9 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     -webkit-backface-visibility: hidden;
     background:#EEEEEE;
     outline: 0;
-    overflow:scroll;
-    overflow-x:hidden;
-    overflow-y:scroll;
+    overflow:auto;
 }
+
 #div-data p{
     
 }
@@ -56,7 +55,13 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 
 #div-data table td {
     padding: 15px;
-} 
+}
+
+#div-data table td.key {
+    padding: 15px;
+    font-weight: bold;
+}
+ 
 
 #div-data table tr:nth-child(even) {
     background-color: #eee;
