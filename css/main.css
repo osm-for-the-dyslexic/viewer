@@ -37,16 +37,16 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     -webkit-backface-visibility: hidden;
     background:#EEEEEE;
     outline: 0;
-    overflow-x:hidden;
-    overflow-y:scroll;
+    overflow:hidden;
 }
 
-#div-data p{
-    
+#div-data > div{
+    overflow-y:scroll;
+    height:100%;
 }
+
 #div-data table{
     width:100%;
-    padding-bottom: 10px;
 }
 #div-data table th {
     color: white;

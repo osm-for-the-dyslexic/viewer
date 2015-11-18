@@ -426,8 +426,8 @@
         var request = new Http.Get(requestUrl, true);  // true = async
         request.start().then(function(response) {
             var newHtml = "";
-            newHtml += "<p><table>";
-            newHtml += "<tr><th colspan=\"2\">" + (""+response["table_name"]).toUpperCase() + "</th></tr>"
+            newHtml += "<div><table>";
+            newHtml += "<thead><tr><th colspan=\"2\">" + (""+response["table_name"]).toUpperCase() + "</th></tr></thead><tbody>"
             for (var key in response) {
                 if (response.hasOwnProperty(key)) {
                     if (key !== 'table_name'){
@@ -435,8 +435,9 @@
                     }
                 }
             }
-            newHtml += "</table></p>";
+            newHtml += "</tbody></table></div>";
             divData.innerHTML = divData.innerHTML + newHtml;
+            //var myScroll = new IScroll(divData,{mouseWheel: true});            
         });
     }
     
@@ -533,7 +534,7 @@
 
         divData = document.createElement("div");
         divData.id = "div-data";
-        divData.innerHTML = "DATA";
+        divData.innerHTML = "DATA"; // hack to precharge font
         setVisible(divData,false);
 
         divVoice = document.createElement("div");
@@ -544,7 +545,6 @@
         mainElement.appendChild(divMenu);
         mainElement.appendChild(divData);
         mainElement.appendChild(divVoice);
-
     }
     
     /**
