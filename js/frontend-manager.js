@@ -427,11 +427,11 @@
         request.start().then(function(response) {
             var newHtml = "";
             newHtml += "<p><table>";
-            newHtml += "<tr><th colspan=\"2\">" + response["table_name"].toUpperCase() + "</th></tr>"
+            newHtml += "<tr><th colspan=\"2\">" + (""+response["table_name"]).toUpperCase() + "</th></tr>"
             for (var key in response) {
                 if (response.hasOwnProperty(key)) {
                     if (key !== 'table_name'){
-                        newHtml += "<tr><td class=\"key\">" + key.toUpperCase() + "</td><td>" + response[key].toUpperCase() + "</td></tr>";
+                        newHtml += "<tr><td class=\"key\">" + (""+key).toUpperCase() + "</td><td>" + (""+response[key]).toUpperCase() + "</td></tr>";
                     }
                 }
             }
