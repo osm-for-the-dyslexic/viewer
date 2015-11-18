@@ -37,7 +37,9 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     -webkit-backface-visibility: hidden;
     background:#EEEEEE;
     outline: 0;
-    overflow:auto;
+    overflow-x:hidden;
+    overflow-y:scroll;
+     -webkit-overflow-scrolling: touch
 }
 
 #div-data p{
@@ -57,7 +59,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     padding: 15px;
 }
 
-#div-data table td.key {
+#div-data .key {
     padding: 15px;
     font-weight: bold;
 }
