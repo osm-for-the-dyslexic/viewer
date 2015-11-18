@@ -42,6 +42,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 
 #div-data > div{
     overflow-y:scroll;
+    overflow-x:hidden;
     height:100%;
 }
 

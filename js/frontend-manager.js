@@ -13,6 +13,7 @@
     var divGoBack = null;
     var divMenu = null;
     var divData = null;
+    var divDataChild = null;
     var divVoice = null;
 
     // characteristics of the viewport
@@ -371,62 +372,75 @@
                 }
             }
             //message += "Found " + counter + " features, len:" + interestingBits.length; ;
-            message += "IDENTIFIED " + counter + " FEATURE" + (counter===1 ? '':'S') + "\n";
+            if (counter > 0){
+                message += "IDENTIFIED " + counter + " FEATURE" + (counter===1 ? '':'S') + "\n";
+                // from interesting bits to binRepresentation
+                var binRepresentation = "";
+                binRepresentation += interestingBits.substring(0,48);
+                binRepresentation += "0100";
+                binRepresentation += interestingBits.substring(48,60);
+                binRepresentation += "10";  // this is constant part
+                binRepresentation += interestingBits.substring(60,122);
 
-            // from interesting bits to binRepresentation
-            var binRepresentation = "";
-            binRepresentation += interestingBits.substring(0,48);
-            binRepresentation += "0100";
-            binRepresentation += interestingBits.substring(48,60);
-            binRepresentation += "10";  // this is constant part
-            binRepresentation += interestingBits.substring(60,122);
+                binRepresentation += interestingBits.substring(122+0,122+48);
+                binRepresentation += "0100";
+                binRepresentation += interestingBits.substring(122+48,122+60);
+                binRepresentation += "10";
+                binRepresentation += interestingBits.substring(122+60,122+122);
 
-            binRepresentation += interestingBits.substring(122+0,122+48);
-            binRepresentation += "0100";
-            binRepresentation += interestingBits.substring(122+48,122+60);
-            binRepresentation += "10";
-            binRepresentation += interestingBits.substring(122+60,122+122);
+                binRepresentation += interestingBits.substring(122+0,122+48);
+                binRepresentation += "0100";
+                binRepresentation += interestingBits.substring(122+48,122+60);
+                binRepresentation += "10";
+                binRepresentation += interestingBits.substring(122+60,122+122);
+                
+                // from binRepresentation to 3 UUID version 4
+                var uuid1bin = binRepresentation.substring(0,128);
+                var uuid2bin = binRepresentation.substring(128,256);
+                var uuid3bin = binRepresentation.substring(256,384);
+                
+                var uuid1 = bin2hex(uuid1bin);
+                var uuid2 = bin2hex(uuid2bin);
+                var uuid3 = bin2hex(uuid3bin);
+                
+                uuid1 = uuid1.substring(0,8) + "-" + uuid1.substring(8,12) + "-" + uuid1.substring(12,16) + "-" + uuid1.substring(16,20) + "-" + uuid1.substring(20,32);
+                uuid2 = uuid1.substring(0,8) + "-" + uuid2.substring(8,12) + "-" + uuid2.substring(12,16) + "-" + uuid2.substring(16,20) + "-" + uuid2.substring(20,32);
+                uuid3 = uuid1.substring(0,8) + "-" + uuid3.substring(8,12) + "-" + uuid3.substring(12,16) + "-" + uuid3.substring(16,20) + "-" + uuid3.substring(20,32);
+                
+                
+                var uuids;
+                if (counter === 1){
+                    uuids = [uuid1];
+                    // test
+                    //uuids = [uuid1,uuid1,uuid1];
+                }else if (counter === 2){
+                    uuids = [uuid1,uuid2];
+                }else if (counter === 3){
+                    uuids = [uuid1,uuid2,uuid3];
+                }
+                populateDataDiv(uuids,0);
+                
+            }else{
+                message += "NOTHING HERE\n";
+            }
 
-            binRepresentation += interestingBits.substring(122+0,122+48);
-            binRepresentation += "0100";
-            binRepresentation += interestingBits.substring(122+48,122+60);
-            binRepresentation += "10";
-            binRepresentation += interestingBits.substring(122+60,122+122);
-            
-            // from binRepresentation to 3 UUID version 4
-            var uuid1bin = binRepresentation.substring(0,128);
-            var uuid2bin = binRepresentation.substring(128,256);
-            var uuid3bin = binRepresentation.substring(256,384);
-            
-            var uuid1 = bin2hex(uuid1bin);
-            var uuid2 = bin2hex(uuid2bin);
-            var uuid3 = bin2hex(uuid3bin);
-            
-            uuid1 = uuid1.substring(0,8) + "-" + uuid1.substring(8,12) + "-" + uuid1.substring(12,16) + "-" + uuid1.substring(16,20) + "-" + uuid1.substring(20,32);
-            uuid2 = uuid1.substring(0,8) + "-" + uuid2.substring(8,12) + "-" + uuid2.substring(12,16) + "-" + uuid2.substring(16,20) + "-" + uuid2.substring(20,32);
-            uuid3 = uuid1.substring(0,8) + "-" + uuid3.substring(8,12) + "-" + uuid3.substring(12,16) + "-" + uuid3.substring(16,20) + "-" + uuid3.substring(20,32);
-            
-            
-            divData.innerHTML = "";
-            if (counter >= 1){message += "1: " + uuid1.toUpperCase() + "\n";populateDataDiv(uuid1);}
-            if (counter >= 2){message += "2: " + uuid2.toUpperCase() + "\n";populateDataDiv(uuid2);}
-            if (counter >= 3){message += "3: " + uuid3.toUpperCase() + "\n";populateDataDiv(uuid3);}
             
         } catch(e) {
-            message = "Exception";
+            message = "Exception" + e;
         }
         printMessageOnMapCanvas(message);
     }
     
-    function populateDataDiv(uuid){
-        
+    function populateDataDiv(uuids,index){
+        console.log("request start");
         var requestUrl = getRandomElement(dataBaseUrls);
-        requestUrl += uuid.substring(0,3) + "/";
-        requestUrl += uuid + ".json";
+        requestUrl += (""+uuids[index]).substring(0,3) + "/";
+        requestUrl += uuids[index] + ".json";
+        var tempDiv = document.createElement("div");
         var request = new Http.Get(requestUrl, true);  // true = async
         request.start().then(function(response) {
             var newHtml = "";
-            newHtml += "<div><table>";
+            newHtml += "<table>";
             newHtml += "<thead><tr><th colspan=\"2\">" + (""+response["table_name"]).toUpperCase() + "</th></tr></thead><tbody>"
             for (var key in response) {
                 if (response.hasOwnProperty(key)) {
@@ -435,9 +449,22 @@
                     }
                 }
             }
-            newHtml += "</tbody></table></div>";
-            divData.innerHTML = divData.innerHTML + newHtml;
-            //var myScroll = new IScroll(divData,{mouseWheel: true});            
+            newHtml += "</tbody></table>";
+            tempDiv.innerHTML = newHtml;
+            if (index===0){
+                // this is a new request, clear old data
+                divDataChild.innerHTML = "";
+                while (divDataChild.hasChildNodes()) {
+                    divDataChild.removeChild(divDataChild.lastChild);
+                }            
+            }
+            
+            divDataChild.appendChild(tempDiv);
+            console.log("request arrived");
+            if (uuids.length > index + 1){
+                // recursive
+                populateDataDiv(uuids,index+1)
+            }
         });
     }
     
@@ -534,7 +561,9 @@
 
         divData = document.createElement("div");
         divData.id = "div-data";
-        divData.innerHTML = "DATA"; // hack to precharge font
+        divDataChild = document.createElement("div");
+        divDataChild.innerHTML = "YOU HAVEN'T IDENTIFIED ANYTHING YET"; // hack to precharge font
+        divData.appendChild(divDataChild);
         setVisible(divData,false);
 
         divVoice = document.createElement("div");
