@@ -533,6 +533,7 @@
 
         divData = document.createElement("div");
         divData.id = "div-data";
+        divData.innerHTML = "DATA";
         setVisible(divData,false);
 
         divVoice = document.createElement("div");
