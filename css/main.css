@@ -50,7 +50,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 }
 #div-data table th {
     color: white;
-    background-color: black;
+    background-color: red;
     padding: 15px;
 }
 
