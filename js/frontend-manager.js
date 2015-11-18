@@ -8,11 +8,11 @@
     var buttonsDiv = null;
     var buttonGoBack = null;
     var buttonMenu = null;
-    var buttonHelp = null;
+    var buttonData = null;
     var buttonVoice = null;
     var divGoBack = null;
     var divMenu = null;
-    var divHelp = null;
+    var divData = null;
     var divVoice = null;
 
     // characteristics of the viewport
@@ -37,6 +37,7 @@
     var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/basemap/osm4dys/"];
     //var tileIdBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
     var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
+    var dataBaseUrls = ["http://osm-for-the-dyslexic.github.io/data/"];
 
     // TileCache
     var defaultImage = new Image();
@@ -310,7 +311,6 @@
         setVisible(elem,!isVisible(elem));
     }
     
-    
     function onIdentify(canvasPosX,canvasPosY){
         redrawMapCanvas("onIdentify");
         var idContext = idCanvas.getContext("2d");
@@ -378,19 +378,19 @@
             binRepresentation += interestingBits.substring(0,48);
             binRepresentation += "0100";
             binRepresentation += interestingBits.substring(48,60);
-            binRepresentation += "01";
+            binRepresentation += "10";  // this is constant part
             binRepresentation += interestingBits.substring(60,122);
 
             binRepresentation += interestingBits.substring(122+0,122+48);
             binRepresentation += "0100";
             binRepresentation += interestingBits.substring(122+48,122+60);
-            binRepresentation += "01";
+            binRepresentation += "10";
             binRepresentation += interestingBits.substring(122+60,122+122);
 
             binRepresentation += interestingBits.substring(122+0,122+48);
             binRepresentation += "0100";
             binRepresentation += interestingBits.substring(122+48,122+60);
-            binRepresentation += "01";
+            binRepresentation += "10";
             binRepresentation += interestingBits.substring(122+60,122+122);
             
             // from binRepresentation to 3 UUID version 4
@@ -402,14 +402,15 @@
             var uuid2 = bin2hex(uuid2bin);
             var uuid3 = bin2hex(uuid3bin);
             
-            uuid1 = uuid1.substring(0,9) + "-" + uuid1.substring(9,12) + "-" + uuid1.substring(12,16) + "-" + uuid1.substring(16,20) + "-" + uuid1.substring(20,32);
-            uuid2 = uuid1.substring(0,9) + "-" + uuid2.substring(9,12) + "-" + uuid2.substring(12,16) + "-" + uuid2.substring(16,20) + "-" + uuid2.substring(20,32);
-            uuid3 = uuid1.substring(0,9) + "-" + uuid3.substring(9,12) + "-" + uuid3.substring(12,16) + "-" + uuid3.substring(16,20) + "-" + uuid3.substring(20,32);
+            uuid1 = uuid1.substring(0,8) + "-" + uuid1.substring(8,12) + "-" + uuid1.substring(12,16) + "-" + uuid1.substring(16,20) + "-" + uuid1.substring(20,32);
+            uuid2 = uuid1.substring(0,8) + "-" + uuid2.substring(8,12) + "-" + uuid2.substring(12,16) + "-" + uuid2.substring(16,20) + "-" + uuid2.substring(20,32);
+            uuid3 = uuid1.substring(0,8) + "-" + uuid3.substring(8,12) + "-" + uuid3.substring(12,16) + "-" + uuid3.substring(16,20) + "-" + uuid3.substring(20,32);
             
-            if (counter >= 1){message += "1: " + uuid1.toUpperCase() + "\n";}
-            if (counter >= 2){message += "2: " + uuid2.toUpperCase() + "\n";}
-            if (counter >= 3){message += "3: " + uuid3.toUpperCase() + "\n";}
             
+            divData.innerHTML = "";
+            if (counter >= 1){message += "1: " + uuid1.toUpperCase() + "\n";populateDataDiv(uuid1);}
+            if (counter >= 2){message += "2: " + uuid2.toUpperCase() + "\n";populateDataDiv(uuid2);}
+            if (counter >= 3){message += "3: " + uuid3.toUpperCase() + "\n";populateDataDiv(uuid3);}
             
         } catch(e) {
             message = "Exception";
@@ -417,41 +418,63 @@
         printMessageOnMapCanvas(message);
     }
     
+    function populateDataDiv(uuid){
+        
+        var requestUrl = getRandomElement(dataBaseUrls);
+        requestUrl += uuid.substring(0,3) + "/";
+        requestUrl += uuid + ".json";
+        var request = new Http.Get(requestUrl, true);  // true = async
+        request.start().then(function(response) {
+            var newHtml = "";
+            newHtml += "<p><table>";
+            newHtml += "<tr><th colspan=\"2\">" + response["table_name"] + "</th></tr>"
+            for (var key in response) {
+                if (response.hasOwnProperty(key)) {
+                    if (key !== 'table_name'){
+                        newHtml += "<tr><td>" + key + "</td><td>" + response[key] + "</td></tr>";
+                    }
+                }
+            }
+            newHtml += "</table></p>";
+            divData.innerHTML = divData.innerHTML + newHtml;
+        });
+    }
+    
     function onButton(buttonId){
         switch(buttonId) {
             case "button-go-back":
                 switchVisible(divGoBack);
                 setVisible(divMenu,false);
-                setVisible(divHelp,false);
+                setVisible(divData,false);
                 setVisible(divVoice,false);
             break;
             case "button-menu":
                 setVisible(divGoBack,false);
                 switchVisible(divMenu);
-                setVisible(divHelp,false);
+                setVisible(divData,false);
                 setVisible(divVoice,false);
             break;
-            case "button-help":
+            case "button-data":
                 setVisible(divGoBack,false);
                 setVisible(divMenu,false);
-                switchVisible(divHelp);
+                switchVisible(divData);
                 setVisible(divVoice,false);
             break;
             case "button-voice":
                 setVisible(divGoBack,false);
                 setVisible(divMenu,false);
-                setVisible(divHelp,false);
+                setVisible(divData,false);
                 switchVisible(divVoice);
             break;
             default:
                 // should never happen - all invisible
                 setVisible(divGoBack,false);
                 setVisible(divMenu,false);
-                setVisible(divHelp,false);
+                setVisible(divData,false);
                 setVisible(divVoice,false);
         }
-        redrawMapCanvas("onButton");
-        printMessageOnMapCanvas("Function onButton(" + buttonId + ")\n" + Date());
+        //redrawMapCanvas("onButton");
+        //printMessageOnMapCanvas("Function onButton(" + buttonId + ")\n" + Date());
     }
     
     /**
@@ -485,15 +508,15 @@
         buttonMenu = document.createElement("div");
         buttonMenu.id = "button-menu";
 
-        buttonHelp = document.createElement("div");
-        buttonHelp.id = "button-help";
+        buttonData = document.createElement("div");
+        buttonData.id = "button-data";
 
         buttonVoice = document.createElement("div");
         buttonVoice.id = "button-voice";
         
         buttonsDiv.appendChild(buttonGoBack);
         buttonsDiv.appendChild(buttonMenu);
-        buttonsDiv.appendChild(buttonHelp);
+        buttonsDiv.appendChild(buttonData);
         buttonsDiv.appendChild(buttonVoice);
         mainElement.appendChild(buttonsDiv);
         
@@ -508,9 +531,9 @@
         divMenu.id = "div-menu";
         setVisible(divMenu,false);
 
-        divHelp = document.createElement("div");
-        divHelp.id = "div-help";
-        setVisible(divHelp,false);
+        divData = document.createElement("div");
+        divData.id = "div-data";
+        setVisible(divData,false);
 
         divVoice = document.createElement("div");
         divVoice.id = "div-voice";
@@ -518,7 +541,7 @@
         
         mainElement.appendChild(divGoBack);
         mainElement.appendChild(divMenu);
-        mainElement.appendChild(divHelp);
+        mainElement.appendChild(divData);
         mainElement.appendChild(divVoice);
 
     }
@@ -586,8 +609,8 @@
         buttonGoBack.style.width = "" + (buttonsDimension) + "px";
         buttonMenu.style.height = "" + (buttonsDimension) + "px";
         buttonMenu.style.width = "" + (buttonsDimension) + "px";
-        buttonHelp.style.height = "" + (buttonsDimension) + "px";
-        buttonHelp.style.width = "" + (buttonsDimension) + "px";
+        buttonData.style.height = "" + (buttonsDimension) + "px";
+        buttonData.style.width = "" + (buttonsDimension) + "px";
         buttonVoice.style.height = "" + (buttonsDimension) + "px";
         buttonVoice.style.width = "" + (buttonsDimension) + "px";
         
@@ -617,8 +640,8 @@
                     buttonGoBack.style.left = "" + (0) + "px";
                     buttonMenu.style.top = "" + (minGapSpace*2+buttonsDimension*1) + "px";
                     buttonMenu.style.left = "" + (0) + "px";
-                    buttonHelp.style.top = "" + (minGapSpace*3+buttonsDimension*2) + "px";
-                    buttonHelp.style.left = "" + (0) + "px";
+                    buttonData.style.top = "" + (minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (minGapSpace*4+buttonsDimension*3) + "px";
                     buttonVoice.style.left = "" + (0) + "px";
                 } else {
@@ -627,8 +650,8 @@
                     buttonGoBack.style.left = "" + (minGapSpace*1+buttonsDimension*0) + "px";
                     buttonMenu.style.top = "" + (0) + "px";
                     buttonMenu.style.left = "" + (minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonHelp.style.top = "" + (0) + "px";
-                    buttonHelp.style.left = "" + (minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.top = "" + (0) + "px";
+                    buttonData.style.left = "" + (minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
                     buttonVoice.style.left = "" + (minGapSpace*4+buttonsDimension*3) + "px";
                 }                
@@ -653,8 +676,8 @@
                     buttonGoBack.style.left = "" + (0) + "px";
                     buttonMenu.style.top = "" + (minGapSpace*2+buttonsDimension*1) + "px";
                     buttonMenu.style.left = "" + (0) + "px";
-                    buttonHelp.style.top = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
-                    buttonHelp.style.left = "" + (0) + "px";
+                    buttonData.style.top = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (1+minGapSpace*4+buttonsDimension*3) + "px";
                     buttonVoice.style.left = "" + (0) + "px";
                 } else {
@@ -663,8 +686,8 @@
                     buttonGoBack.style.left = "" + (minGapSpace*1+buttonsDimension*0) + "px";
                     buttonMenu.style.top = "" + (0) + "px";
                     buttonMenu.style.left = "" + (minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonHelp.style.top = "" + (0) + "px";
-                    buttonHelp.style.left = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.top = "" + (0) + "px";
+                    buttonData.style.left = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
                     buttonVoice.style.left = "" + (1+minGapSpace*4+buttonsDimension*3) + "px";
                 }                
@@ -689,8 +712,8 @@
                     buttonGoBack.style.left = "" + (0) + "px";
                     buttonMenu.style.top = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
                     buttonMenu.style.left = "" + (0) + "px";
-                    buttonHelp.style.top = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
-                    buttonHelp.style.left = "" + (0) + "px";
+                    buttonData.style.top = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (1+minGapSpace*4+buttonsDimension*3) + "px";
                     buttonVoice.style.left = "" + (0) + "px";
                 } else {
@@ -699,8 +722,8 @@
                     buttonGoBack.style.left = "" + (1+minGapSpace*1+buttonsDimension*0) + "px";
                     buttonMenu.style.top = "" + (0) + "px";
                     buttonMenu.style.left = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonHelp.style.top = "" + (0) + "px";
-                    buttonHelp.style.left = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.top = "" + (0) + "px";
+                    buttonData.style.left = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
                     buttonVoice.style.left = "" + (1+minGapSpace*4+buttonsDimension*3) + "px";
                 }                
@@ -725,8 +748,8 @@
                     buttonGoBack.style.left = "" + (0) + "px";
                     buttonMenu.style.top = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
                     buttonMenu.style.left = "" + (0) + "px";
-                    buttonHelp.style.top = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
-                    buttonHelp.style.left = "" + (0) + "px";
+                    buttonData.style.top = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (2+minGapSpace*4+buttonsDimension*3) + "px";
                     buttonVoice.style.left = "" + (0) + "px";
                 } else {
@@ -735,8 +758,8 @@
                     buttonGoBack.style.left = "" + (1+minGapSpace*1+buttonsDimension*0) + "px";
                     buttonMenu.style.top = "" + (0) + "px";
                     buttonMenu.style.left = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonHelp.style.top = "" + (0) + "px";
-                    buttonHelp.style.left = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.top = "" + (0) + "px";
+                    buttonData.style.left = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
                     buttonVoice.style.left = "" + (2+minGapSpace*4+buttonsDimension*3) + "px";
                 }                
@@ -761,8 +784,8 @@
                     buttonGoBack.style.left = "" + (0) + "px";
                     buttonMenu.style.top = "" + (2+minGapSpace*2+buttonsDimension*1) + "px";
                     buttonMenu.style.left = "" + (0) + "px";
-                    buttonHelp.style.top = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
-                    buttonHelp.style.left = "" + (0) + "px";
+                    buttonData.style.top = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (3+minGapSpace*4+buttonsDimension*3) + "px";
                     buttonVoice.style.left = "" + (0) + "px";
                 } else {
@@ -771,8 +794,8 @@
                     buttonGoBack.style.left = "" + (1+minGapSpace*1+buttonsDimension*0) + "px";
                     buttonMenu.style.top = "" + (0) + "px";
                     buttonMenu.style.left = "" + (2+minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonHelp.style.top = "" + (0) + "px";
-                    buttonHelp.style.left = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.top = "" + (0) + "px";
+                    buttonData.style.left = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
                     buttonVoice.style.left = "" + (3+minGapSpace*4+buttonsDimension*3) + "px";
                 }                
@@ -785,8 +808,8 @@
                     buttonGoBack.style.left = "" + (0) + "px";
                     buttonMenu.style.top = "" + (minGapSpace*2+buttonsDimension*1) + "px";
                     buttonMenu.style.left = "" + (0) + "px";
-                    buttonHelp.style.top = "" + (minGapSpace*3+buttonsDimension*2) + "px";
-                    buttonHelp.style.left = "" + (0) + "px";
+                    buttonData.style.top = "" + (minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (minGapSpace*4+buttonsDimension*3) + "px";
                     buttonVoice.style.left = "" + (0) + "px";
                 } else {
@@ -795,8 +818,8 @@
                     buttonGoBack.style.left = "" + (minGapSpace*1+buttonsDimension*0) + "px";
                     buttonMenu.style.top = "" + (0) + "px";
                     buttonMenu.style.left = "" + (minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonHelp.style.top = "" + (0) + "px";
-                    buttonHelp.style.left = "" + (minGapSpace*3+buttonsDimension*2) + "px";
+                    buttonData.style.top = "" + (0) + "px";
+                    buttonData.style.left = "" + (minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
                     buttonVoice.style.left = "" + (minGapSpace*4+buttonsDimension*3) + "px";
                 }                  
@@ -815,10 +838,10 @@
             divMenu.style.height = "" + (viewportHeight) + "px";
             divMenu.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
             
-            divHelp.style.top = "" + 0 + "px";
-            divHelp.style.left = "" + viewportWidth/2 + "px";
-            divHelp.style.height = "" + (viewportHeight) + "px";
-            divHelp.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
+            divData.style.top = "" + 0 + "px";
+            divData.style.left = "" + viewportWidth/2 + "px";
+            divData.style.height = "" + (viewportHeight) + "px";
+            divData.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
 
             divVoice.style.top = "" + 0 + "px";
             divVoice.style.left = "" + viewportWidth/2 + "px";
@@ -837,10 +860,10 @@
             divMenu.style.height = "" + (viewportHeight - buttonsDimension) + "px";
             divMenu.style.width = "" + (viewportWidth) + "px";
 
-            divHelp.style.top = "" + 0 + "px";
-            divHelp.style.left = "" + 0 + "px";
-            divHelp.style.height = "" + (viewportHeight - buttonsDimension) + "px";
-            divHelp.style.width = "" + (viewportWidth) + "px";
+            divData.style.top = "" + 0 + "px";
+            divData.style.left = "" + 0 + "px";
+            divData.style.height = "" + (viewportHeight - buttonsDimension) + "px";
+            divData.style.width = "" + (viewportWidth) + "px";
 
             divVoice.style.top = "" + 0 + "px";
             divVoice.style.left = "" + 0 + "px";
@@ -936,7 +959,7 @@
         context.fillStyle = "#333333";
         context.fillRect(0,0,width,lines.length*15);        
         
-        context.font="12px Arial";
+        context.font="12px OpenDyslexic";
         context.fillStyle = "#FF0000";
         for (var i = 0; i < lines.length; i++) {
             context.fillText(lines[i],10,20+i*15);
@@ -951,7 +974,7 @@
         initializeMap();
         onResize();
         window.addEventListener("resize", onResize);
-        GestureManager(mapCanvas,onPan,onZoom,onIdentify,[buttonGoBack,buttonMenu,buttonHelp,buttonVoice],onButton);
+        GestureManager(mapCanvas,onPan,onZoom,onIdentify,[buttonGoBack,buttonMenu,buttonData,buttonVoice],onButton);
         return;
     }
     

@@ -1,6 +1,11 @@
+@font-face {
+font-family: 'OpenDyslexic';
+src: url("OpenDyslexicAlta-Regular.otf") format("opentype");
+}
+
 * {  -webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-tap-highlight-color: transparent; /* For some Androids */}
 html{height:100px;width:100px;outline: 0;}
-body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;}
+body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font-family:'OpenDyslexic',Verdana;}
 #map{zIndex:3;overflow:hidden;outline: 0;}
 #map-canvas{
     position: absolute; 
@@ -27,12 +32,41 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;}
     outline: 0;
 }
 
-#div-help{
+#div-data{
     position: absolute; 
     -webkit-backface-visibility: hidden;
     background:#EEEEEE;
     outline: 0;
+    overflow:scroll;
+    overflow-x:hidden;
+    overflow-y:scroll;
 }
+#div-data p{
+    
+}
+#div-data table{
+    width:100%;
+    padding-bottom: 10px;
+}
+#div-data table th {
+    color: white;
+    background-color: black;
+    padding: 15px;
+}
+
+#div-data table td {
+    padding: 15px;
+} 
+
+#div-data table tr:nth-child(even) {
+    background-color: #eee;
+    padding: 10px;
+}
+#div-data table tr:nth-child(odd) {
+    background-color: #fff;
+    padding: 10px;
+}
+
 
 #div-voice{
     position: absolute; 
@@ -65,7 +99,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;}
     outline: 0;
 }
 
-#button-help{
+#button-data{
     position: absolute; 
     background-image: url(High-contrast-help-browser.svg);
     background-repeat: no-repeat;
