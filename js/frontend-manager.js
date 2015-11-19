@@ -45,6 +45,7 @@
     var tileCache = {};
     var tileCacheLength = 0;
     var tileCacheMaxLength = 150;
+    var canvasMessage = "";
     
     /**
      * return a random element of a vector
@@ -432,7 +433,7 @@
     }
     
     function populateDataDiv(uuids,index){
-        console.log("request start");
+        //	console.log("request start");
         var requestUrl = getRandomElement(dataBaseUrls);
         requestUrl += (""+uuids[index]).substring(0,3) + "/";
         requestUrl += uuids[index] + ".json";
@@ -441,7 +442,13 @@
         request.start().then(function(response) {
             var newHtml = "";
             newHtml += "<table>";
-            newHtml += "<thead><tr><th colspan=\"2\">" + (""+response["table_name"]).toUpperCase() + "</th></tr></thead><tbody>"
+            newHtml += "<thead><tr><th colspan=\"2\">" + (""+response["table_name"]).toUpperCase() + "</th></tr></thead><tbody>";
+            var newMessage = (""+response["table_name"]).toUpperCase();
+            try{
+                newMessage += ": " + (""+response["Name"]).toUpperCase();
+            }catch(err){
+                // nothing to do, if name not present print only the table_name
+            }
             for (var key in response) {
                 if (response.hasOwnProperty(key)) {
                     if (key !== 'table_name'){
@@ -456,14 +463,19 @@
                 divDataChild.innerHTML = "";
                 while (divDataChild.hasChildNodes()) {
                     divDataChild.removeChild(divDataChild.lastChild);
-                }            
+                }
+                canvasMessage = "";
             }
             
             divDataChild.appendChild(tempDiv);
-            console.log("request arrived");
+            //console.log("request arrived");
+            canvasMessage += newMessage + "\n";
             if (uuids.length > index + 1){
                 // recursive
                 populateDataDiv(uuids,index+1)
+            }else{
+                // print final message on canvas
+                printMessageOnMapCanvas(canvasMessage);
             }
         });
     }
