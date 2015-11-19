@@ -423,13 +423,15 @@
                 
             }else{
                 message += "NOTHING HERE\n";
+                printMessageOnMapCanvas(message);
             }
 
             
         } catch(e) {
             message = "Exception" + e;
+            printMessageOnMapCanvas(message);
         }
-        printMessageOnMapCanvas(message);
+        //printMessageOnMapCanvas(message);
     }
     
     function populateDataDiv(uuids,index){
