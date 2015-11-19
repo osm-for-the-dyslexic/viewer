@@ -388,11 +388,11 @@
                 binRepresentation += "10";
                 binRepresentation += interestingBits.substring(122+60,122+122);
 
-                binRepresentation += interestingBits.substring(122+0,122+48);
+                binRepresentation += interestingBits.substring(122+122+0,122+122+48);
                 binRepresentation += "0100";
-                binRepresentation += interestingBits.substring(122+48,122+60);
+                binRepresentation += interestingBits.substring(122+122+48,122+122+60);
                 binRepresentation += "10";
-                binRepresentation += interestingBits.substring(122+60,122+122);
+                binRepresentation += interestingBits.substring(122+122+60,122+122+122);
                 
                 // from binRepresentation to 3 UUID version 4
                 var uuid1bin = binRepresentation.substring(0,128);
