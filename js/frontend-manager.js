@@ -46,22 +46,7 @@
     var tileCacheLength = 0;
     var tileCacheMaxLength = 150;
     var canvasMessage = "";
-    
-    /**
-     * return a random element of a vector
-     */
-    function getRandomElement(aVector) {
-        var max = aVector.length - 1;
-        return aVector[Math.floor(Math.random() * (max - 0 + 1)) + 0];
-    }
-    
-    /**
-     * return either 1 (yes) or 0 (no)
-     */
-    function randomYesNo(){
-        return Math.floor((Math.random() * 2) + 0);
-    }
-    
+
     function initializeMap(){
         // a 256x256 png r=173 g=222 b=255  #ADDEFF same as osm color for ocean
         defaultImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAMhSURBVHhe7dQxAcAwDMCwbPyplNKoZE9ZWHrMwM/5dgdIem+BIAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOArJkfkUEFibeMV7cAAAAASUVORK5CYII=";
@@ -166,7 +151,7 @@
             }
             // mandatory set it before src
             imgElement.setAttribute('crossOrigin','anonymous');
-            imgElement.src = getRandomElement(baseUrls) + tileName + ".png" ;        
+            imgElement.src = utils.getRandomElement(baseUrls) + tileName + ".png" ;        
             //imgElement.crossOrigin = "Anonymous";
             return null;
         }
@@ -246,73 +231,6 @@
         redrawMapCanvas(operation);
     }
     
-    
-    function pad (_pad, str, padLeft) {
-        if (typeof str === 'undefined') return _pad;
-        if (padLeft) {
-            return (_pad + str).slice(-_pad.length);
-        } else {
-            return (str + _pad).substring(0, _pad.length);
-       }
-    }    
-    
-    /**
-     * utility function to convert a binary string to a hex string
-     */
-    function bin2hex(str){
-        var retval = "";
-        var temp4bits = "";
-        for (var i=0;i<str.length;i+=4){
-            temp4bits = str.substring(i,i+4);
-            switch(temp4bits) {
-                case '0000': retval+= '0'; break;
-                case '0001': retval+= '1'; break;
-                case '0010': retval+= '2'; break;
-                case '0011': retval+= '3'; break;
-                case '0100': retval+= '4'; break;
-                case '0101': retval+= '5'; break;
-                case '0110': retval+= '6'; break;
-                case '0111': retval+= '7'; break;
-                case '1000': retval+= '8'; break;
-                case '1001': retval+= '9'; break;
-                case '1010': retval+= 'a'; break;
-                case '1011': retval+= 'b'; break;
-                case '1100': retval+= 'c'; break;
-                case '1101': retval+= 'd'; break;
-                case '1110': retval+= 'e'; break;
-                case '1111': retval+= 'f'; break;
-                default: break;
-            } 
-        }
-        return retval;
-    }
-    
-    
-    /**
-     * utility method to check if an element is visble or not
-     */
-    function isVisible(elem) {
-        return (elem.style.visibility != "hidden");
-    }
-    
-    /**
-     * utility method to set visbility on an html element
-     */
-    function setVisible(elem,yesNo){
-        if (yesNo){
-            elem.style.visibility = "visible";
-        }else{
-            elem.style.visibility = "hidden";
-        }
-    }
-    
-    /**
-     * utility method to switch visbility of an html element
-     */
-    function switchVisible(elem){
-        setVisible(elem,!isVisible(elem));
-    }
-    
     function onIdentify(canvasPosX,canvasPosY){
         redrawMapCanvas("onIdentify");
         var idContext = idCanvas.getContext("2d");
@@ -334,7 +252,7 @@
                 for (var j=0;j<7&&!found;j++){
                     // start index
                     k = (i*7+j)*4;
-                    var redChannel = pad("00000000",points.data[k].toString(2),true)
+                    var redChannel = utils.pad("00000000",points.data[k].toString(2),true)
                     if (redChannel[0] === '1'){
                         foundI = i;
                         foundJ = j;
@@ -347,13 +265,13 @@
                 for (var i = foundI; i<foundI+4;i++){
                     for (var j = foundJ; j<foundJ+4;j++){
                         k = (i*7+j)*4;
-                        //var r = pad("000",points.data[k].toString(10),true)
-                        //var g = pad("000",points.data[k+1].toString(10),true)
-                        //var b = pad("000",points.data[k+2].toString(10),true)
+                        //var r = utils.pad("000",points.data[k].toString(10),true)
+                        //var g = utils.pad("000",points.data[k+1].toString(10),true)
+                        //var b = utils.pad("000",points.data[k+2].toString(10),true)
                         //message += "" +r + "-" + g + "-" + b +"\n";
-                        bitstring += pad("00000000",points.data[k].toString(2),true)
-                        bitstring += pad("00000000",points.data[k+1].toString(2),true)
-                        bitstring += pad("00000000",points.data[k+2].toString(2),true)
+                        bitstring += utils.pad("00000000",points.data[k].toString(2),true)
+                        bitstring += utils.pad("00000000",points.data[k+1].toString(2),true)
+                        bitstring += utils.pad("00000000",points.data[k+2].toString(2),true)
                     }
                 }
                 // from bitstring to interesting bits
@@ -401,9 +319,9 @@
                     var uuid2bin = binRepresentation.substring(128,256);
                     var uuid3bin = binRepresentation.substring(256,384);
                     
-                    var uuid1 = bin2hex(uuid1bin);
-                    var uuid2 = bin2hex(uuid2bin);
-                    var uuid3 = bin2hex(uuid3bin);
+                    var uuid1 = utils.bin2hex(uuid1bin);
+                    var uuid2 = utils.bin2hex(uuid2bin);
+                    var uuid3 = utils.bin2hex(uuid3bin);
                     
                     uuid1 = uuid1.substring(0,8) + "-" + uuid1.substring(8,12) + "-" + uuid1.substring(12,16) + "-" + uuid1.substring(16,20) + "-" + uuid1.substring(20,32);
                     uuid2 = uuid1.substring(0,8) + "-" + uuid2.substring(8,12) + "-" + uuid2.substring(12,16) + "-" + uuid2.substring(16,20) + "-" + uuid2.substring(20,32);
@@ -441,7 +359,7 @@
     
     function populateDataDiv(uuids,index){
         //	console.log("request start");
-        var requestUrl = getRandomElement(dataBaseUrls);
+        var requestUrl = utils.getRandomElement(dataBaseUrls);
         requestUrl += (""+uuids[index]).substring(0,3) + "/";
         requestUrl += uuids[index] + ".json";
         var tempDiv = document.createElement("div");
@@ -490,51 +408,38 @@
     function onButton(buttonId){
         switch(buttonId) {
             case "button-go-back":
-                switchVisible(divGoBack);
-                setVisible(divMenu,false);
-                setVisible(divData,false);
-                setVisible(divVoice,false);
+                utils.switchVisible(divGoBack);
+                utils.setVisible(divMenu,false);
+                utils.setVisible(divData,false);
+                utils.setVisible(divVoice,false);
             break;
             case "button-menu":
-                setVisible(divGoBack,false);
-                switchVisible(divMenu);
-                setVisible(divData,false);
-                setVisible(divVoice,false);
+                utils.setVisible(divGoBack,false);
+                utils.switchVisible(divMenu);
+                utils.setVisible(divData,false);
+                utils.setVisible(divVoice,false);
             break;
             case "button-data":
-                setVisible(divGoBack,false);
-                setVisible(divMenu,false);
-                switchVisible(divData);
-                setVisible(divVoice,false);
+                utils.setVisible(divGoBack,false);
+                utils.setVisible(divMenu,false);
+                utils.switchVisible(divData);
+                utils.setVisible(divVoice,false);
             break;
             case "button-voice":
-                setVisible(divGoBack,false);
-                setVisible(divMenu,false);
-                setVisible(divData,false);
-                switchVisible(divVoice);
+                utils.setVisible(divGoBack,false);
+                utils.setVisible(divMenu,false);
+                utils.setVisible(divData,false);
+                utils.switchVisible(divVoice);
             break;
             default:
                 // should never happen - all invisible
-                setVisible(divGoBack,false);
-                setVisible(divMenu,false);
-                setVisible(divData,false);
-                setVisible(divVoice,false);
+                utils.setVisible(divGoBack,false);
+                utils.setVisible(divMenu,false);
+                utils.setVisible(divData,false);
+                utils.setVisible(divVoice,false);
         }
         //redrawMapCanvas("onButton");
         //printMessageOnMapCanvas("Function onButton(" + buttonId + ")\n" + Date());
-    }
-    
-    /**
-     * viewport height and width
-     * support method
-     */
-    function viewport() {
-        var e = window, a = 'inner';
-        if (!('innerWidth' in window )) {
-            a = 'client';
-            e = document.documentElement || document.body;
-        }
-        return { width : e[ a+'Width' ] , height : e[ a+'Height' ] };
     }
     
     /**
@@ -572,22 +477,22 @@
         
         divGoBack = document.createElement("div");
         divGoBack.id = "div-go-back";
-        setVisible(divGoBack,false);
+        utils.setVisible(divGoBack,false);
         
         divMenu = document.createElement("div");
         divMenu.id = "div-menu";
-        setVisible(divMenu,false);
+        utils.setVisible(divMenu,false);
 
         divData = document.createElement("div");
         divData.id = "div-data";
         divDataChild = document.createElement("div");
         divDataChild.innerHTML = "YOU HAVEN'T IDENTIFIED ANYTHING YET"; // hack to precharge font
         divData.appendChild(divDataChild);
-        setVisible(divData,false);
+        utils.setVisible(divData,false);
 
         divVoice = document.createElement("div");
         divVoice.id = "div-voice";
-        setVisible(divVoice,false);
+        utils.setVisible(divVoice,false);
         
         mainElement.appendChild(divGoBack);
         mainElement.appendChild(divMenu);
@@ -600,8 +505,8 @@
      */
     function arrangeGui(){
         var buttonsDimension = 100; // now dynamic
-        viewportWidth = parseInt(""+viewport().width,10);
-        viewportHeight = parseInt(""+viewport().height,10);
+        viewportWidth = parseInt(""+utils.viewport().width,10);
+        viewportHeight = parseInt(""+utils.viewport().height,10);
         
         // resize html and body
         document.documentElement.style.width = "" + viewportWidth + "px";
@@ -919,8 +824,6 @@
             divVoice.style.height = "" + (viewportHeight - buttonsDimension) + "px";
             divVoice.style.width = "" + (viewportWidth) + "px";
         }
-
-        
         //printMessageOnMapCanvas("Function: "+"arrangeGui" + "\n" + Date());
         //printPositionMessage();
     }
