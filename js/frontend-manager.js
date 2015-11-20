@@ -509,10 +509,13 @@
         viewportHeight = parseInt(""+utils.viewport().height,10);
         
         // resize html and body
-        document.documentElement.style.width = "" + viewportWidth + "px";
-        document.documentElement.style.height = "" + viewportHeight + "px";
-        document.body.style.width = "" + viewportWidth + "px";
-        document.body.style.height = "" + viewportHeight + "px";
+        //document.documentElement.style.width = "" + viewportWidth + "px";
+        //document.documentElement.style.height = "" + viewportHeight + "px";
+        utils.setTLHWpx(document.documentElement,null,null,viewportHeight,viewportWidth);
+        
+        //document.body.style.width = "" + viewportWidth + "px";
+        //document.body.style.height = "" + viewportHeight + "px";
+        utils.setTLHWpx(document.body,null,null,viewportHeight,viewportWidth);
         
         var mapWidth = viewportWidth;
         var mapHeight = viewportHeight;
@@ -543,30 +546,41 @@
             availableSpace = viewportWidth;
         }
         
-        mapCanvas.style.width = "" + mapWidth + "px";
-        mapCanvas.style.height = "" + mapHeight + "px";
+        //mapCanvas.style.width = "" + mapWidth + "px";
+        //mapCanvas.style.height = "" + mapHeight + "px";
+        utils.setTLHWpx(mapCanvas,null,null,mapHeight,mapWidth);
         var context = mapCanvas.getContext("2d");
         context.canvas.width  = "" + mapWidth + "";
         context.canvas.height = "" + mapHeight + "";
-        idCanvas.style.width = "" + mapWidth + "px";
-        idCanvas.style.height = "" + mapHeight + "px";
+        
+        //idCanvas.style.width = "" + mapWidth + "px";
+        //idCanvas.style.height = "" + mapHeight + "px";
+        utils.setTLHWpx(idCanvas,null,null,mapHeight,mapWidth);
         var context2 = idCanvas.getContext("2d");
         context2.canvas.width  = "" + mapWidth + "";
         context2.canvas.height = "" + mapHeight + "";
         redrawMapCanvas("arrangeGui");
-        buttonsDiv.style.height = "" + buttonHeight + "px";
-        buttonsDiv.style.width = "" + buttonWidth + "px";
-        buttonsDiv.style.top = "" + buttonTop + "px";
-        buttonsDiv.style.left = "" + buttonLeft + "px";
+        //buttonsDiv.style.height = "" + buttonHeight + "px";
+        //buttonsDiv.style.width = "" + buttonWidth + "px";
+        //buttonsDiv.style.top = "" + buttonTop + "px";
+        //buttonsDiv.style.left = "" + buttonLeft + "px";
+        utils.setTLHWpx(buttonsDiv,buttonTop,buttonLeft,buttonHeight,buttonWidth);
         
-        buttonGoBack.style.height = "" + (buttonsDimension) + "px";
-        buttonGoBack.style.width = "" + (buttonsDimension) + "px";
-        buttonMenu.style.height = "" + (buttonsDimension) + "px";
-        buttonMenu.style.width = "" + (buttonsDimension) + "px";
-        buttonData.style.height = "" + (buttonsDimension) + "px";
-        buttonData.style.width = "" + (buttonsDimension) + "px";
-        buttonVoice.style.height = "" + (buttonsDimension) + "px";
-        buttonVoice.style.width = "" + (buttonsDimension) + "px";
+        //buttonGoBack.style.height = "" + (buttonsDimension) + "px";
+        //buttonGoBack.style.width = "" + (buttonsDimension) + "px";
+        utils.setTLHWpx(buttonGoBack,null,null,buttonsDimension,buttonsDimension);
+        
+        //buttonMenu.style.height = "" + (buttonsDimension) + "px";
+        //buttonMenu.style.width = "" + (buttonsDimension) + "px";
+        utils.setTLHWpx(buttonMenu,null,null,buttonsDimension,buttonsDimension);
+        
+        //buttonData.style.height = "" + (buttonsDimension) + "px";
+        //buttonData.style.width = "" + (buttonsDimension) + "px";
+        utils.setTLHWpx(buttonData,null,null,buttonsDimension,buttonsDimension);
+        
+        //buttonVoice.style.height = "" + (buttonsDimension) + "px";
+        //buttonVoice.style.width = "" + (buttonsDimension) + "px";
+        utils.setTLHWpx(buttonVoice,null,null,buttonsDimension,buttonsDimension);
         
         gapsSpace = availableSpace - (4 * buttonsDimension);
         minGapSpace = Math.floor(gapsSpace/5.0);
@@ -782,47 +796,65 @@
         // Arrange information divs
         if (viewportWidth > viewportHeight){
             // div 1/2 of the screen (minus buttons)
-            divGoBack.style.top = "" + 0 + "px";
-            divGoBack.style.left = "" + viewportWidth/2 + "px";
-            divGoBack.style.height = "" + (viewportHeight) + "px";
-            divGoBack.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
-
-            divMenu.style.top = "" + 0 + "px";
-            divMenu.style.left = "" + viewportWidth/2 + "px";
-            divMenu.style.height = "" + (viewportHeight) + "px";
-            divMenu.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
+            var divTop = 0;
+            var divLeft = viewportWidth/2;
+            var divHeight = viewportHeight;
+            var divWidth = viewportWidth - (viewportWidth/2) - buttonsDimension;
+            utils.setTLHWpx(divGoBack,divTop,divLeft,divHeight,divWidth);
+            utils.setTLHWpx(divMenu,divTop,divLeft,divHeight,divWidth);
+            utils.setTLHWpx(divData,divTop,divLeft,divHeight,divWidth);
+            utils.setTLHWpx(divVoice,divTop,divLeft,divHeight,divWidth);
             
-            divData.style.top = "" + 0 + "px";
-            divData.style.left = "" + viewportWidth/2 + "px";
-            divData.style.height = "" + (viewportHeight) + "px";
-            divData.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
+            //divGoBack.style.top = "" + 0 + "px";
+            //divGoBack.style.left = "" + viewportWidth/2 + "px";
+            //divGoBack.style.height = "" + (viewportHeight) + "px";
+            //divGoBack.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
 
-            divVoice.style.top = "" + 0 + "px";
-            divVoice.style.left = "" + viewportWidth/2 + "px";
-            divVoice.style.height = "" + (viewportHeight) + "px";
-            divVoice.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
+            //divMenu.style.top = "" + 0 + "px";
+            //divMenu.style.left = "" + viewportWidth/2 + "px";
+            //divMenu.style.height = "" + (viewportHeight) + "px";
+            //divMenu.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
+            
+            //divData.style.top = "" + 0 + "px";
+            //divData.style.left = "" + viewportWidth/2 + "px";
+            //divData.style.height = "" + (viewportHeight) + "px";
+            //divData.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
+
+            //divVoice.style.top = "" + 0 + "px";
+            //divVoice.style.left = "" + viewportWidth/2 + "px";
+            //divVoice.style.height = "" + (viewportHeight) + "px";
+            //divVoice.style.width = "" + (viewportWidth - (viewportWidth/2) - buttonsDimension) + "px";
             
         }else{
             // div full screen (minus buttons)
-            divGoBack.style.top = "" + 0 + "px";
-            divGoBack.style.left = "" + 0 + "px";
-            divGoBack.style.height = "" + (viewportHeight - buttonsDimension) + "px";
-            divGoBack.style.width = "" + (viewportWidth) + "px";
+            var divTop = 0;
+            var divLeft = 0;
+            var divHeight = viewportHeight - buttonsDimension;
+            var divWidth = viewportWidth;
+            utils.setTLHWpx(divGoBack,divTop,divLeft,divHeight,divWidth);
+            utils.setTLHWpx(divMenu,divTop,divLeft,divHeight,divWidth);
+            utils.setTLHWpx(divData,divTop,divLeft,divHeight,divWidth);
+            utils.setTLHWpx(divVoice,divTop,divLeft,divHeight,divWidth);            
             
-            divMenu.style.top = "" + 0 + "px";
-            divMenu.style.left = "" + 0 + "px";
-            divMenu.style.height = "" + (viewportHeight - buttonsDimension) + "px";
-            divMenu.style.width = "" + (viewportWidth) + "px";
+            //divGoBack.style.top = "" + 0 + "px";
+            //divGoBack.style.left = "" + 0 + "px";
+            //divGoBack.style.height = "" + (viewportHeight - buttonsDimension) + "px";
+            //divGoBack.style.width = "" + (viewportWidth) + "px";
+            
+            //divMenu.style.top = "" + 0 + "px";
+            //divMenu.style.left = "" + 0 + "px";
+            //divMenu.style.height = "" + (viewportHeight - buttonsDimension) + "px";
+            //divMenu.style.width = "" + (viewportWidth) + "px";
 
-            divData.style.top = "" + 0 + "px";
-            divData.style.left = "" + 0 + "px";
-            divData.style.height = "" + (viewportHeight - buttonsDimension) + "px";
-            divData.style.width = "" + (viewportWidth) + "px";
+            //divData.style.top = "" + 0 + "px";
+            //divData.style.left = "" + 0 + "px";
+            //divData.style.height = "" + (viewportHeight - buttonsDimension) + "px";
+            //divData.style.width = "" + (viewportWidth) + "px";
 
-            divVoice.style.top = "" + 0 + "px";
-            divVoice.style.left = "" + 0 + "px";
-            divVoice.style.height = "" + (viewportHeight - buttonsDimension) + "px";
-            divVoice.style.width = "" + (viewportWidth) + "px";
+            //divVoice.style.top = "" + 0 + "px";
+            //divVoice.style.left = "" + 0 + "px";
+            //divVoice.style.height = "" + (viewportHeight - buttonsDimension) + "px";
+            //divVoice.style.width = "" + (viewportWidth) + "px";
         }
         //printMessageOnMapCanvas("Function: "+"arrangeGui" + "\n" + Date());
         //printPositionMessage();

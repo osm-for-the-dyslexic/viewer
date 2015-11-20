@@ -37,6 +37,25 @@ var utils = (function () {
     }
 
     /*********************************************************************************************
+     * Method to set top, leftheight and width of an element
+     * if T,L,H,W argument null keeps original value
+     *********************************************************************************************/
+    _utils.setTLHWpx = function(elem,theTop,theLeft,theHeight,theWidth){
+        if(theTop !== null){
+            elem.style.top = "" + theTop + "px";
+        }
+        if(theLeft !== null){
+            elem.style.left = "" + theLeft + "px";
+        }
+        if(theHeight !== null){
+            elem.style.height = "" + theHeight + "px";
+        }
+        if(theWidth !== null){
+            elem.style.width = "" + theWidth + "px";
+        }
+    }
+    
+    /*********************************************************************************************
      * Method to get information about the viewport height and width
      *********************************************************************************************/
     _utils.viewport = function() {
