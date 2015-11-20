@@ -44,6 +44,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     overflow-y:scroll;
     overflow-x:hidden;
     height:100%;
+    width:100%;
 }
 
 #div-data table{
