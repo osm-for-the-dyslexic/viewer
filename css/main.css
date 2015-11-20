@@ -45,10 +45,15 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     overflow-x:hidden;
     height:100%;
     width:100%;
+    margin: 0px;
+    padding: 0px;
+    outline: 0;    
 }
 
 #div-data table{
     width:100%;
+    margin: 0px;
+    padding: 0px; 
 }
 #div-data table th {
     color: white;
