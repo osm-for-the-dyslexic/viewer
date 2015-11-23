@@ -22,7 +22,7 @@
     
     // characteristics of the map
     var minZoomLevel = 0;
-    var maxZoomLevel = 5;
+    var maxZoomLevel = 6;
     var tilesNumCols = 1;
     var tilesNumRows = 1;
     
