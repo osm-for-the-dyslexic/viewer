@@ -1,0 +1,25 @@
+.icon-list-container{overflow:hidden;display: block;width: 100%;height:auto;}
+.icon-list-container > .icon-list {zoom: 1;list-style-type: none;width: 100%;}
+.icon-list-container > .icon-list  > .row {}
+.icon-list-container > .icon-list  > .row > a {text-decoration: none;color: #000000;}
+.icon-list-container > .icon-list  > .row > a > div {height:100%;}
+.icon-list-container > .icon-list  > .row > a > div > h3 {width:230px;overflow:hidden;}
+.icon-list-container > .icon-list  > .row > a > div > img {float: left;margin: 0 15px 0 0;}
+.icon-list-container > .icon-list  > .row > a > div > p {}
+.icon-list-container > .icon-list  > .row {width: 350px;padding: 10px;overflow: auto;float: left;height:100px;overflow:hidden;}
+.icon-list-container > .icon-list  > .row:hover {background: #EEEEEE;cursor: pointer;}
+
+<div class="icon-list-container">
+    <ol class="icon-list">
+        <li class="row">
+            <a href="#">
+                <div>
+                    <img src="#">
+                    <h3>TITLE</h3>
+                    <p>BODY</p>
+                </div>
+            </a>
+        </li>
+    </ol>
+</div>
+

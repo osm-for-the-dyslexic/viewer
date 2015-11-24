@@ -53,16 +53,19 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 #div-data table{
     width:100%;
     margin: 0px;
-    padding: 0px; 
+    padding: 0px;
+    overflow:hidden;    
 }
 #div-data table th {
     color: white;
     background-color: red;
     padding: 15px;
+    overflow:hidden;
 }
 
 #div-data table td {
     padding: 15px;
+    overflow:hidden;    
 }
 
 .key {
