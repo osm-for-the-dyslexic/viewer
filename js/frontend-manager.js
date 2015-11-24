@@ -119,15 +119,15 @@
             tileCache[""+mapType+"_"+tileName] = null;
             tileCacheLength ++;
             imgElement = new Image();
-            //imgElement.onerror = function(){
-            //    tileCache[""+mapType+"_"+tileName] = defaultImage;
-            //    if (z === zoomLevel){
-            //        redrawMapCanvas("onTile");
-            //    }
-            //    if (tileCacheLength > tileCacheMaxLength){
-            //        cleanupTileCache();
-            //    }
-            //}
+            imgElement.onerror = function(){
+                tileCache[""+mapType+"_"+tileName] = defaultImage;
+                if (z === zoomLevel){
+                    redrawMapCanvas("onTile");
+                }
+                if (tileCacheLength > tileCacheMaxLength){
+                    cleanupTileCache();
+                }
+            }
             
             imgElement.onload = function(){
                 tileCache[""+mapType+"_"+tileName] = this;
