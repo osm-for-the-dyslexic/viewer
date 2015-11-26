@@ -366,18 +366,27 @@
         var request = new Http.Get(requestUrl, true);  // true = async
         request.start().then(function(response) {
             var newHtml = "";
+            var content = "";
             newHtml += "<table>";
             newHtml += "<thead><tr><th colspan=\"2\">" + (""+response["table_name"]).toUpperCase() + "</th></tr></thead><tbody>";
             var newMessage = (""+response["table_name"]).toUpperCase();
             try{
-                newMessage += ": " + (""+response["Name"]).toUpperCase();
+                content = ""+response["Name"];
+                if ( (content !== null) && (content !== 'null') && (content !== "" )){
+                    newMessage += ": " + content.toUpperCase();   
+                }else{
+                    newMessage += " (NO NAME PROVIDED)";
+                }
             }catch(err){
-                // nothing to do, if name not present print only the table_name
+                newMessage += " (NO NAME PROVIDED)";
             }
             for (var key in response) {
                 if (response.hasOwnProperty(key)) {
                     if (key !== 'table_name'){
-                        newHtml += "<tr><td class=\"key\">" + (""+key).toUpperCase() + "</td><td>" + (""+response[key]).toUpperCase() + "</td></tr>";
+                        content = ""+response[key];
+                        if ( (content !== null) && (content !== 'null') && (content !== "" )){
+                            newHtml += "<tr><td class=\"key\">" + (""+key).toUpperCase() + "</td><td>" + content.toUpperCase() + "</td></tr>";
+                        }
                     }
                 }
             }
@@ -824,7 +833,7 @@
         tilesNumCols = (nCols%2===0?nCols+1:nCols);
         var nRows = Math.ceil(viewportHeight/256)+1;
         tilesNumRows =(nRows%2===0?nRows+1:nRows);
-        tileCacheMaxLength = Math.max((tilesNumCols+2)*(tilesNumRows+2)*2,50);
+        tileCacheMaxLength = Math.max((tilesNumCols+4)*(tilesNumRows+4)*3,50);
     }
     
     /**
