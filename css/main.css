@@ -24,13 +24,13 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     background:#11FF11;
     outline: 0;
 }
-
-#div-menu{
+/*
+#div-whereami{
     position: absolute; 
     -webkit-backface-visibility: hidden;
     background:#999999;
     outline: 0;
-}
+}*/
 
 #div-data{
     position: absolute; 
@@ -108,7 +108,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     outline: 0;
 }
 
-#button-menu{
+#button-whereami{
     position: absolute; 
     background-image: url(High-contrast-applications-system.svg);
     background-repeat: no-repeat;

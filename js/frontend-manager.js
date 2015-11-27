@@ -7,11 +7,12 @@
     var idCanvas = null;
     var buttonsDiv = null;
     var buttonGoBack = null;
-    var buttonMenu = null;
+    var buttonWhereAmI = null;
     var buttonData = null;
     var buttonVoice = null;
     var divGoBack = null;
-    var divMenu = null;
+    //var divWhereAmI = null;
+    var intoWhereAmI = false;
     var divData = null;
     var divDataChild = null;
     var divVoice = null;
@@ -159,6 +160,7 @@
     }
     
     function onPan(deltaX,deltaY){
+        //if (intoWhereAmI) {return;}
         xPosIntoTile -= deltaX;
         yPosIntoTile -= deltaY;
         var maxTile = Math.pow(2,zoomLevel) - 1;
@@ -192,10 +194,14 @@
             // do nothing
             return;
         }
+        if ((intoWhereAmI) && (targetZoomLevel+3 > maxZoomLevel) && (deltaZ > 0)){
+            return;
+        }
         var operation = "";
         if (deltaZ > 0){
             operation = "zoomIn";
-            zoomLevel += 1;
+            //zoomLevel += 1;
+            zoomLevel = targetZoomLevel;
             if (xPosIntoTile<128){
                 xTile = 2*xTile;
                 xPosIntoTile = 2*xPosIntoTile;
@@ -212,7 +218,8 @@
             }
         }else{
             operation = "zoomOut";
-            zoomLevel -= 1;
+            //zoomLevel -= 1;
+            zoomLevel = targetZoomLevel;
             if (xTile%2===0){
                 xTile = xTile / 2;
                 xPosIntoTile = Math.round(xPosIntoTile / 2);
@@ -327,7 +334,6 @@
                     uuid2 = uuid2.substring(0,8) + "-" + uuid2.substring(8,12) + "-" + uuid2.substring(12,16) + "-" + uuid2.substring(16,20) + "-" + uuid2.substring(20,32);
                     uuid3 = uuid3.substring(0,8) + "-" + uuid3.substring(8,12) + "-" + uuid3.substring(12,16) + "-" + uuid3.substring(16,20) + "-" + uuid3.substring(20,32);
                     
-                    
                     var uuids;
                     if (counter === 1){
                         uuids = [uuid1];
@@ -414,36 +420,62 @@
         });
     }
     
+    function onButtonWhereAmI(){
+        if (intoWhereAmI){
+            intoWhereAmI = false;
+            onZoom(1);onZoom(1);onZoom(1);
+        }else{
+            var targetZoomLevel = zoomLevel - 3;
+            if ((targetZoomLevel < minZoomLevel ) || (targetZoomLevel>maxZoomLevel)){
+                printMessageOnMapCanvas("NOT POSSIBLE AT THIS ZOOM LEVEL\nTRY TO ZOOM IN\n");
+            }else{     
+                intoWhereAmI = true;
+                onZoom(-1);onZoom(-1);onZoom(-1);
+            }
+        }
+    }
+    
+    function printWhereAmIRectangleOnMapCanvas(){
+        var context = mapCanvas.getContext("2d");
+        var halfWidth = parseInt(""+mapCanvas.width/2,10);
+        var halfHeight = parseInt(""+mapCanvas.height/2,10);
+        var partWidth = parseInt(""+mapCanvas.width/16,10);
+        var partHeight = parseInt(""+mapCanvas.height/16,10);
+        context.fillStyle = "rgba(255, 0, 0, 0.8)";
+        context.fillRect(halfWidth-partWidth,halfHeight-partHeight,partWidth*2,partHeight*2);
+    }
+    
     function onButton(buttonId){
         switch(buttonId) {
             case "button-go-back":
                 utils.switchVisible(divGoBack);
-                utils.setVisible(divMenu,false);
+                //utils.setVisible(divWhereAmI,false);
                 utils.setVisible(divData,false);
                 utils.setVisible(divVoice,false);
             break;
-            case "button-menu":
+            case "button-whereami":
                 utils.setVisible(divGoBack,false);
-                utils.switchVisible(divMenu);
+                //utils.switchVisible(divWhereAmI);
                 utils.setVisible(divData,false);
                 utils.setVisible(divVoice,false);
+                onButtonWhereAmI();
             break;
             case "button-data":
                 utils.setVisible(divGoBack,false);
-                utils.setVisible(divMenu,false);
+                //utils.setVisible(divWhereAmI,false);
                 utils.switchVisible(divData);
                 utils.setVisible(divVoice,false);
             break;
             case "button-voice":
                 utils.setVisible(divGoBack,false);
-                utils.setVisible(divMenu,false);
+                //utils.setVisible(divWhereAmI,false);
                 utils.setVisible(divData,false);
                 utils.switchVisible(divVoice);
             break;
             default:
                 // should never happen - all invisible
                 utils.setVisible(divGoBack,false);
-                utils.setVisible(divMenu,false);
+                //utils.setVisible(divWhereAmI,false);
                 utils.setVisible(divData,false);
                 utils.setVisible(divVoice,false);
         }
@@ -462,14 +494,14 @@
         buttonsDiv.id = "buttons-div";
         buttonGoBack = document.createElement("div");
         buttonGoBack.id = "button-go-back";
-        buttonMenu = document.createElement("div");
-        buttonMenu.id = "button-menu";
+        buttonWhereAmI = document.createElement("div");
+        buttonWhereAmI.id = "button-whereami";
         buttonData = document.createElement("div");
         buttonData.id = "button-data";
         buttonVoice = document.createElement("div");
         buttonVoice.id = "button-voice";
         buttonsDiv.appendChild(buttonGoBack);
-        buttonsDiv.appendChild(buttonMenu);
+        buttonsDiv.appendChild(buttonWhereAmI);
         buttonsDiv.appendChild(buttonData);
         buttonsDiv.appendChild(buttonVoice);
         mainElement.appendChild(buttonsDiv);
@@ -478,9 +510,9 @@
         divGoBack = document.createElement("div");
         divGoBack.id = "div-go-back";
         utils.setVisible(divGoBack,false);
-        divMenu = document.createElement("div");
-        divMenu.id = "div-menu";
-        utils.setVisible(divMenu,false);
+        //divWhereAmI = document.createElement("div");
+        //divWhereAmI.id = "div-whereami";
+        //utils.setVisible(divWhereAmI,false);
         divData = document.createElement("div");
         divData.id = "div-data";
         divDataChild = document.createElement("div");
@@ -491,7 +523,7 @@
         divVoice.id = "div-voice";
         utils.setVisible(divVoice,false);
         mainElement.appendChild(divGoBack);
-        mainElement.appendChild(divMenu);
+        //mainElement.appendChild(divWhereAmI);
         mainElement.appendChild(divData);
         mainElement.appendChild(divVoice);
     }
@@ -546,7 +578,7 @@
         redrawMapCanvas("arrangeGui");
         utils.setTLHWpx(buttonsDiv,buttonTop,buttonLeft,buttonHeight,buttonWidth);
         utils.setTLHWpx(buttonGoBack,null,null,buttonsDimension,buttonsDimension);
-        utils.setTLHWpx(buttonMenu,null,null,buttonsDimension,buttonsDimension);
+        utils.setTLHWpx(buttonWhereAmI,null,null,buttonsDimension,buttonsDimension);
         utils.setTLHWpx(buttonData,null,null,buttonsDimension,buttonsDimension);
         utils.setTLHWpx(buttonVoice,null,null,buttonsDimension,buttonsDimension);
         
@@ -571,8 +603,8 @@
                     // buttons on right
                     buttonGoBack.style.top = "" + (minGapSpace*1+buttonsDimension*0) + "px";
                     buttonGoBack.style.left = "" + (0) + "px";
-                    buttonMenu.style.top = "" + (minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonMenu.style.left = "" + (0) + "px";
+                    buttonWhereAmI.style.top = "" + (minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.left = "" + (0) + "px";
                     buttonData.style.top = "" + (minGapSpace*3+buttonsDimension*2) + "px";
                     buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (minGapSpace*4+buttonsDimension*3) + "px";
@@ -581,8 +613,8 @@
                     // buttons on bottom
                     buttonGoBack.style.top = "" + (0) + "px";
                     buttonGoBack.style.left = "" + (minGapSpace*1+buttonsDimension*0) + "px";
-                    buttonMenu.style.top = "" + (0) + "px";
-                    buttonMenu.style.left = "" + (minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.top = "" + (0) + "px";
+                    buttonWhereAmI.style.left = "" + (minGapSpace*2+buttonsDimension*1) + "px";
                     buttonData.style.top = "" + (0) + "px";
                     buttonData.style.left = "" + (minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
@@ -607,8 +639,8 @@
                     // buttons on right
                     buttonGoBack.style.top = "" + (minGapSpace*1+buttonsDimension*0) + "px";
                     buttonGoBack.style.left = "" + (0) + "px";
-                    buttonMenu.style.top = "" + (minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonMenu.style.left = "" + (0) + "px";
+                    buttonWhereAmI.style.top = "" + (minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.left = "" + (0) + "px";
                     buttonData.style.top = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (1+minGapSpace*4+buttonsDimension*3) + "px";
@@ -617,8 +649,8 @@
                     // buttons on bottom
                     buttonGoBack.style.top = "" + (0) + "px";
                     buttonGoBack.style.left = "" + (minGapSpace*1+buttonsDimension*0) + "px";
-                    buttonMenu.style.top = "" + (0) + "px";
-                    buttonMenu.style.left = "" + (minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.top = "" + (0) + "px";
+                    buttonWhereAmI.style.left = "" + (minGapSpace*2+buttonsDimension*1) + "px";
                     buttonData.style.top = "" + (0) + "px";
                     buttonData.style.left = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
@@ -643,8 +675,8 @@
                     // buttons on right
                     buttonGoBack.style.top = "" + (1+minGapSpace*1+buttonsDimension*0) + "px";
                     buttonGoBack.style.left = "" + (0) + "px";
-                    buttonMenu.style.top = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonMenu.style.left = "" + (0) + "px";
+                    buttonWhereAmI.style.top = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.left = "" + (0) + "px";
                     buttonData.style.top = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (1+minGapSpace*4+buttonsDimension*3) + "px";
@@ -653,8 +685,8 @@
                     // buttons on bottom
                     buttonGoBack.style.top = "" + (0) + "px";
                     buttonGoBack.style.left = "" + (1+minGapSpace*1+buttonsDimension*0) + "px";
-                    buttonMenu.style.top = "" + (0) + "px";
-                    buttonMenu.style.left = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.top = "" + (0) + "px";
+                    buttonWhereAmI.style.left = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
                     buttonData.style.top = "" + (0) + "px";
                     buttonData.style.left = "" + (1+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
@@ -679,8 +711,8 @@
                     // buttons on right
                     buttonGoBack.style.top = "" + (1+minGapSpace*1+buttonsDimension*0) + "px";
                     buttonGoBack.style.left = "" + (0) + "px";
-                    buttonMenu.style.top = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonMenu.style.left = "" + (0) + "px";
+                    buttonWhereAmI.style.top = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.left = "" + (0) + "px";
                     buttonData.style.top = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (2+minGapSpace*4+buttonsDimension*3) + "px";
@@ -689,8 +721,8 @@
                     // buttons on bottom
                     buttonGoBack.style.top = "" + (0) + "px";
                     buttonGoBack.style.left = "" + (1+minGapSpace*1+buttonsDimension*0) + "px";
-                    buttonMenu.style.top = "" + (0) + "px";
-                    buttonMenu.style.left = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.top = "" + (0) + "px";
+                    buttonWhereAmI.style.left = "" + (1+minGapSpace*2+buttonsDimension*1) + "px";
                     buttonData.style.top = "" + (0) + "px";
                     buttonData.style.left = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
@@ -715,8 +747,8 @@
                     // buttons on right
                     buttonGoBack.style.top = "" + (1+minGapSpace*1+buttonsDimension*0) + "px";
                     buttonGoBack.style.left = "" + (0) + "px";
-                    buttonMenu.style.top = "" + (2+minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonMenu.style.left = "" + (0) + "px";
+                    buttonWhereAmI.style.top = "" + (2+minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.left = "" + (0) + "px";
                     buttonData.style.top = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (3+minGapSpace*4+buttonsDimension*3) + "px";
@@ -725,8 +757,8 @@
                     // buttons on bottom
                     buttonGoBack.style.top = "" + (0) + "px";
                     buttonGoBack.style.left = "" + (1+minGapSpace*1+buttonsDimension*0) + "px";
-                    buttonMenu.style.top = "" + (0) + "px";
-                    buttonMenu.style.left = "" + (2+minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.top = "" + (0) + "px";
+                    buttonWhereAmI.style.left = "" + (2+minGapSpace*2+buttonsDimension*1) + "px";
                     buttonData.style.top = "" + (0) + "px";
                     buttonData.style.left = "" + (2+minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
@@ -739,8 +771,8 @@
                     // buttons on right
                     buttonGoBack.style.top = "" + (minGapSpace*1+buttonsDimension*0) + "px";
                     buttonGoBack.style.left = "" + (0) + "px";
-                    buttonMenu.style.top = "" + (minGapSpace*2+buttonsDimension*1) + "px";
-                    buttonMenu.style.left = "" + (0) + "px";
+                    buttonWhereAmI.style.top = "" + (minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.left = "" + (0) + "px";
                     buttonData.style.top = "" + (minGapSpace*3+buttonsDimension*2) + "px";
                     buttonData.style.left = "" + (0) + "px";
                     buttonVoice.style.top = "" + (minGapSpace*4+buttonsDimension*3) + "px";
@@ -749,8 +781,8 @@
                     // buttons on bottom
                     buttonGoBack.style.top = "" + (0) + "px";
                     buttonGoBack.style.left = "" + (minGapSpace*1+buttonsDimension*0) + "px";
-                    buttonMenu.style.top = "" + (0) + "px";
-                    buttonMenu.style.left = "" + (minGapSpace*2+buttonsDimension*1) + "px";
+                    buttonWhereAmI.style.top = "" + (0) + "px";
+                    buttonWhereAmI.style.left = "" + (minGapSpace*2+buttonsDimension*1) + "px";
                     buttonData.style.top = "" + (0) + "px";
                     buttonData.style.left = "" + (minGapSpace*3+buttonsDimension*2) + "px";
                     buttonVoice.style.top = "" + (0) + "px";
@@ -766,7 +798,7 @@
             var divHeight = viewportHeight;
             var divWidth = viewportWidth - (viewportWidth/2) - buttonsDimension;
             utils.setTLHWpx(divGoBack,divTop,divLeft,divHeight,divWidth);
-            utils.setTLHWpx(divMenu,divTop,divLeft,divHeight,divWidth);
+            //utils.setTLHWpx(divWhereAmI,divTop,divLeft,divHeight,divWidth);
             utils.setTLHWpx(divData,divTop,divLeft,divHeight,divWidth);
             utils.setTLHWpx(divVoice,divTop,divLeft,divHeight,divWidth);
         }else{
@@ -776,7 +808,7 @@
             var divHeight = viewportHeight - buttonsDimension;
             var divWidth = viewportWidth;
             utils.setTLHWpx(divGoBack,divTop,divLeft,divHeight,divWidth);
-            utils.setTLHWpx(divMenu,divTop,divLeft,divHeight,divWidth);
+            //utils.setTLHWpx(divWhereAmI,divTop,divLeft,divHeight,divWidth);
             utils.setTLHWpx(divData,divTop,divLeft,divHeight,divWidth);
             utils.setTLHWpx(divVoice,divTop,divLeft,divHeight,divWidth);            
         }
@@ -810,7 +842,7 @@
                 
                 imageTile = getTileImage("IDS",zoomLevel,(currentXtile+j),(currentYtile+i));
                 if (imageTile === null){
-                    // white replacemente for idCanvas, mandatory white
+                    // white replacemente for idCanvas, mandatory black
                     idContext.fillStyle = "#000000";
                     idContext.fillRect(currentPosXonCanvas,currentPosYonCanvas,256,256);
                 }else{
@@ -821,6 +853,9 @@
             }
             currentPosXonCanvas = Math.floor(mapCanvas.width / 2) - xPosIntoTile - (256 *((tilesNumCols-1)/2));
             currentPosYonCanvas += 256;
+        }
+        if (intoWhereAmI){
+            printWhereAmIRectangleOnMapCanvas();
         }
     }
     
@@ -869,7 +904,7 @@
         initializeMap();
         onResize();
         window.addEventListener("resize", onResize);
-        GestureManager(mapCanvas,onPan,onZoom,onIdentify,[buttonGoBack,buttonMenu,buttonData,buttonVoice],onButton);
+        GestureManager(mapCanvas,onPan,onZoom,onIdentify,[buttonGoBack,buttonWhereAmI,buttonData,buttonVoice],onButton);
         return;
     }
     
