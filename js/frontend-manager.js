@@ -200,39 +200,43 @@
         var operation = "";
         if (deltaZ > 0){
             operation = "zoomIn";
-            //zoomLevel += 1;
-            zoomLevel = targetZoomLevel;
-            if (xPosIntoTile<128){
-                xTile = 2*xTile;
-                xPosIntoTile = 2*xPosIntoTile;
-            }else{
-                xTile = 2*xTile+1;
-                xPosIntoTile = 2*(xPosIntoTile-128);
-            }
-            if (yPosIntoTile<128){
-                yTile = 2*yTile;
-                yPosIntoTile = 2*yPosIntoTile;
-            }else{
-                yTile = 2*yTile+1;
-                yPosIntoTile = 2*(yPosIntoTile-128);
+            for(var i=0;i<deltaZ;i++){
+                zoomLevel += 1;
+                //zoomLevel = targetZoomLevel;
+                if (xPosIntoTile<128){
+                    xTile = 2*xTile;
+                    xPosIntoTile = 2*xPosIntoTile;
+                }else{
+                    xTile = 2*xTile+1;
+                    xPosIntoTile = 2*(xPosIntoTile-128);
+                }
+                if (yPosIntoTile<128){
+                    yTile = 2*yTile;
+                    yPosIntoTile = 2*yPosIntoTile;
+                }else{
+                    yTile = 2*yTile+1;
+                    yPosIntoTile = 2*(yPosIntoTile-128);
+                }
             }
         }else{
             operation = "zoomOut";
-            //zoomLevel -= 1;
-            zoomLevel = targetZoomLevel;
-            if (xTile%2===0){
-                xTile = xTile / 2;
-                xPosIntoTile = Math.round(xPosIntoTile / 2);
-            }else{
-                xTile = Math.floor(xTile / 2);
-                xPosIntoTile = 128 + Math.round(xPosIntoTile / 2);
-            }
-            if (yTile%2===0){
-                yTile = yTile / 2;
-                yPosIntoTile = Math.round(yPosIntoTile / 2);
-            }else{
-                yTile = Math.floor(yTile / 2);
-                yPosIntoTile = 128 + Math.round(yPosIntoTile / 2);
+            for(var i=0;i<(-deltaZ);i++){
+                zoomLevel -= 1;
+                //zoomLevel = targetZoomLevel;
+                if (xTile%2===0){
+                    xTile = xTile / 2;
+                    xPosIntoTile = Math.round(xPosIntoTile / 2);
+                }else{
+                    xTile = Math.floor(xTile / 2);
+                    xPosIntoTile = 128 + Math.round(xPosIntoTile / 2);
+                }
+                if (yTile%2===0){
+                    yTile = yTile / 2;
+                    yPosIntoTile = Math.round(yPosIntoTile / 2);
+                }else{
+                    yTile = Math.floor(yTile / 2);
+                    yPosIntoTile = 128 + Math.round(yPosIntoTile / 2);
+                }
             }
         }
         redrawMapCanvas(operation);
@@ -423,14 +427,16 @@
     function onButtonWhereAmI(){
         if (intoWhereAmI){
             intoWhereAmI = false;
-            onZoom(1);onZoom(1);onZoom(1);
+            onZoom(3);
         }else{
             var targetZoomLevel = zoomLevel - 3;
-            if ((targetZoomLevel < minZoomLevel ) || (targetZoomLevel>maxZoomLevel)){
-                printMessageOnMapCanvas("NOT POSSIBLE AT THIS ZOOM LEVEL\nTRY TO ZOOM IN\n");
+            if (targetZoomLevel < minZoomLevel ){
+                var times = minZoomLevel - targetZoomLevel;
+                var message = "NOT POSSIBLE AT THIS ZOOM LEVEL\nTRY TO ZOOMIN " + times + " TIME" + (times===1 ? ' MORE':'S') + "\n";
+                printMessageOnMapCanvas(message);
             }else{     
                 intoWhereAmI = true;
-                onZoom(-1);onZoom(-1);onZoom(-1);
+                onZoom(-3);
             }
         }
     }
