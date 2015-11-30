@@ -13,6 +13,7 @@ var utils = (function () {
     
     /*********************************************************************************************
      * Method to check if an element is visble or not
+     * @param elem html element
      *********************************************************************************************/
 	_utils.isVisible = function (elem) {
 		return (elem.style.visibility != "hidden");
@@ -20,6 +21,8 @@ var utils = (function () {
     
     /*********************************************************************************************
      * Method to set visbility on an html element
+     * @param elem html element
+     * @param yesNo boolean
      *********************************************************************************************/
     _utils.setVisible = function (elem,yesNo){
         if (yesNo){
@@ -31,6 +34,7 @@ var utils = (function () {
     
     /*********************************************************************************************
      * Method to switch visbility of an html element
+     * @param elem html element
      *********************************************************************************************/
     _utils.switchVisible = function (elem){
         _utils.setVisible(elem,!_utils.isVisible(elem));
@@ -39,6 +43,11 @@ var utils = (function () {
     /*********************************************************************************************
      * Method to set top, leftheight and width of an element
      * if T,L,H,W argument null keeps original value
+     * @param elem html element
+     * @param theTop integer top in pixel
+     * @param theLeft integer left in pixel
+     * @param theHeight integer height in pixel
+     * @param theWidth integer width in pixel
      *********************************************************************************************/
     _utils.setTLHWpx = function(elem,theTop,theLeft,theHeight,theWidth){
         if(theTop !== null){
@@ -69,6 +78,7 @@ var utils = (function () {
     
     /*********************************************************************************************
      * Return a random element of a vector
+     * @param aVector a vector of items
      *********************************************************************************************/
     _utils.getRandomElement = function(aVector) {
         var max = aVector.length - 1;
@@ -84,6 +94,7 @@ var utils = (function () {
     
     /*********************************************************************************************
      * Convert a binary string to a hex string
+     * @param str a string composed of 0 and 1 (multiple of 4)
      *********************************************************************************************/
     _utils.bin2hex = function(str){
         var retval = "";
@@ -115,6 +126,9 @@ var utils = (function () {
     
     /*********************************************************************************************
      * Convert a binary string to a hex string
+     * @param _pad string origional string
+     * @param str string the string used to pad
+     * @param padLeft boolean pad to left or to right
      *********************************************************************************************/
     _utils.pad = function (_pad, str, padLeft) {
         if (typeof str === 'undefined') return _pad;
