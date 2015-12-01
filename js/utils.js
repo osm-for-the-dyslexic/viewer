@@ -137,7 +137,116 @@ var utils = (function () {
         } else {
             return (str + _pad).substring(0, _pad.length);
        }
-    }  
+    }
+    
+    /*********************************************************************************************
+     * From points to 3 uuids
+     * @param points 7x7 point extracted from an idcanvas
+     *********************************************************************************************/
+     _utils.fromPoints2uuids = function(points){
+        var uuids = null;
+        try{
+            var k = 0;
+            var found = false;
+            var foundI = 0;
+            var foundJ = 0;
+            for (var i=0; i<7&&!found;i++){
+                for (var j=0;j<7&&!found;j++){
+                    // start index
+                    k = (i*7+j)*4;
+                    var redChannel = _utils.pad("00000000",points.data[k].toString(2),true)
+                    if (redChannel[0] === '1'){
+                        foundI = i;
+                        foundJ = j;
+                        found = true;
+                    }
+                }
+            }
+            if (found){
+                var bitstring = ""
+                for (var i = foundI; i<foundI+4;i++){
+                    for (var j = foundJ; j<foundJ+4;j++){
+                        k = (i*7+j)*4;
+                        //var r = utils.pad("000",points.data[k].toString(10),true)
+                        //var g = utils.pad("000",points.data[k+1].toString(10),true)
+                        //var b = utils.pad("000",points.data[k+2].toString(10),true)
+                        //message += "" +r + "-" + g + "-" + b +"\n";
+                        bitstring += _utils.pad("00000000",points.data[k].toString(2),true)
+                        bitstring += _utils.pad("00000000",points.data[k+1].toString(2),true)
+                        bitstring += _utils.pad("00000000",points.data[k+2].toString(2),true)
+                    }
+                }
+                // from bitstring to interesting bits
+                var counterBin = bitstring.substring(1,3);
+                var counter = parseInt(counterBin,2);
+                
+                var i = 3;
+                var j = 8;
+                var k = 0;
+                var interestingBits = bitstring.substring(i,j);
+                for (var k=1; k<48;k++){
+                    i=j;
+                    j+=8;
+                    if (k%3 === 0){
+                        interestingBits += bitstring.substring(i+1,j);
+                    }else{
+                        interestingBits += bitstring.substring(i,j);
+                    }
+                }
+                //message += "Found " + counter + " features, len:" + interestingBits.length; ;
+                if (counter > 0){
+                    //message += "IDENTIFIED " + counter + " FEATURE" + (counter===1 ? '':'S') + "\n";
+                    // from interesting bits to binRepresentation
+                    var binRepresentation = "";
+                    binRepresentation += interestingBits.substring(0,48);
+                    binRepresentation += "0100";
+                    binRepresentation += interestingBits.substring(48,60);
+                    binRepresentation += "10";  // this is constant part
+                    binRepresentation += interestingBits.substring(60,122);
+
+                    binRepresentation += interestingBits.substring(122+0,122+48);
+                    binRepresentation += "0100";
+                    binRepresentation += interestingBits.substring(122+48,122+60);
+                    binRepresentation += "10";
+                    binRepresentation += interestingBits.substring(122+60,122+122);
+
+                    binRepresentation += interestingBits.substring(122+122+0,122+122+48);
+                    binRepresentation += "0100";
+                    binRepresentation += interestingBits.substring(122+122+48,122+122+60);
+                    binRepresentation += "10";
+                    binRepresentation += interestingBits.substring(122+122+60,122+122+122);
+                    
+                    // from binRepresentation to 3 UUID version 4
+                    var uuid1bin = binRepresentation.substring(0,128);
+                    var uuid2bin = binRepresentation.substring(128,256);
+                    var uuid3bin = binRepresentation.substring(256,384);
+                    
+                    var uuid1 = _utils.bin2hex(uuid1bin);
+                    var uuid2 = _utils.bin2hex(uuid2bin);
+                    var uuid3 = _utils.bin2hex(uuid3bin);
+                    
+                    uuid1 = uuid1.substring(0,8) + "-" + uuid1.substring(8,12) + "-" + uuid1.substring(12,16) + "-" + uuid1.substring(16,20) + "-" + uuid1.substring(20,32);
+                    uuid2 = uuid2.substring(0,8) + "-" + uuid2.substring(8,12) + "-" + uuid2.substring(12,16) + "-" + uuid2.substring(16,20) + "-" + uuid2.substring(20,32);
+                    uuid3 = uuid3.substring(0,8) + "-" + uuid3.substring(8,12) + "-" + uuid3.substring(12,16) + "-" + uuid3.substring(16,20) + "-" + uuid3.substring(20,32);
+                    
+                    if (counter === 1){
+                        uuids = [uuid1];
+                    }else if (counter === 2){
+                        uuids = [uuid1,uuid2];
+                    }else if (counter === 3){
+                        uuids = [uuid1,uuid2,uuid3];
+                    }
+                }else{
+                    // counter = 0, simpley return uuids which is null
+                }
+            } else {
+                // if not found, simply return uuids, which is null
+            }
+        } catch(e) {
+                // to nothing, simply return uuids, which is null
+        }
+        return uuids;
+     }
     
     /*********************************************************************************************
      * Return utils

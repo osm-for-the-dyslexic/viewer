@@ -23,14 +23,55 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     -webkit-backface-visibility: hidden;
     background:#11FF11;
     outline: 0;
+    overflow:hidden;
 }
-/*
-#div-whereami{
-    position: absolute; 
-    -webkit-backface-visibility: hidden;
-    background:#999999;
-    outline: 0;
-}*/
+
+#div-go-back > div{
+    overflow-y:scroll;
+    overflow-x:hidden;
+    height:100%;
+    width:100%;
+    margin: 0px;
+    padding: 0px;
+    outline: 0;    
+}
+
+#div-go-back table{
+    width:100%;
+    margin: 0px;
+    padding: 0px;
+    overflow:hidden;    
+}
+#div-go-back table th {
+    color: white;
+    background-color: red;
+    padding: 15px;
+    overflow:hidden;
+}
+
+#div-go-back table td {
+    padding: 8px;
+    overflow:hidden;    
+}
+
+.image {
+    font-weight: bold;
+    color: red;
+}
+ 
+.image img {
+    height:64px;
+}
+
+#div-go-back table tr:nth-child(even) {
+    background-color: #eee;
+    padding: 2px;
+}
+#div-go-back table tr:nth-child(odd) {
+    background-color: #fff;
+    padding: 2px;
+}
+
 
 #div-data{
     position: absolute; 

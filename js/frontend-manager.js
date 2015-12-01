@@ -11,6 +11,7 @@
     var buttonData = null;
     var buttonVoice = null;
     var divGoBack = null;
+    var divGoBackChild = null;
     //var divWhereAmI = null;
     var intoWhereAmI = false;
     var divData = null;
@@ -47,12 +48,51 @@
     var tileCacheLength = 0;
     var tileCacheMaxLength = 150;
     var canvasMessage = "";
+    
+    var locationHistoryData = [];
+    var locationHistoryMaxLength = 10;
+    var locationHistoryTimer;    
 
     function initializeMap(){
         // a 256x256 png r=173 g=222 b=255  #ADDEFF same as osm color for ocean
         defaultImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAMhSURBVHhe7dQxAcAwDMCwbPyplNKoZE9ZWHrMwM/5dgdIem+BIAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOArJkfkUEFibeMV7cAAAAASUVORK5CYII=";
+        for(var i=0; i<locationHistoryMaxLength;i++){
+            locationHistoryData[i] = null;
+        }
+        locationHistoryTimer = window.setInterval(updateLoctionHistory, 2000);
     }
-
+    
+    function updateLoctionHistory(){
+        var currentZ = zoomLevel;
+        var currentX = xTile;
+        var currentY = yTile;
+        var currentXpos = xPosIntoTile;
+        var currentYpos = yPosIntoTile;
+        var max = Math.pow(2,currentZ) - 1;
+        currentX = ((currentX%(max+1)+max+1)%(max+1));
+        if ((!(currentY < 0))&&(!(currentY > max))){
+            if (
+                (locationHistoryData[0] === null) ||
+                (locationHistoryData[0]['z'] !== currentZ) || 
+                (locationHistoryData[0]['x'] !== currentX) || 
+                (locationHistoryData[0]['y'] !== currentY)
+            ) {
+                for (var i=locationHistoryMaxLength-1; i>0; i--){
+                    locationHistoryData[i] = locationHistoryData[i-1];
+                }
+                locationHistoryData[0] = {};
+                locationHistoryData[0]['z'] = currentZ;
+                locationHistoryData[0]['x'] = currentX;
+                locationHistoryData[0]['y'] = currentY;
+                locationHistoryData[0]['xpos'] = currentXpos;
+                locationHistoryData[0]['ypos'] = currentYpos;
+                if (utils.isVisible(divGoBack)){
+                    populateHistoryDiv();
+                }                
+            }
+        }
+    }
+    
     /**
      * Cleanup tile cache using proximity as parameter
      */
@@ -152,7 +192,7 @@
             }
             // mandatory set it before src
             imgElement.setAttribute('crossOrigin','anonymous');
-            imgElement.src = utils.getRandomElement(baseUrls) + tileName + ".png" ;        
+            imgElement.src = utils.getRandomElement(baseUrls) + tileName + ".png" ;
             //imgElement.crossOrigin = "Anonymous";
             return null;
         }
@@ -251,121 +291,54 @@
         if ((canvasPosY < 3) || (canvasPosY > idHeight - 3)) {return;}
         var message = "";
         try {
-            var points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7); 
-            // find the starting point
-            // message += "points.data.length = " + points.data.length + "\n";
-            // each point has 4 bytes RGBA (A unused for us)
-            var k = 0;
-            var found = false;
-            var foundI = 0;
-            var foundJ = 0;
-            for (var i=0; i<7&&!found;i++){
-                for (var j=0;j<7&&!found;j++){
-                    // start index
-                    k = (i*7+j)*4;
-                    var redChannel = utils.pad("00000000",points.data[k].toString(2),true)
-                    if (redChannel[0] === '1'){
-                        foundI = i;
-                        foundJ = j;
-                        found = true;
-                    }
-                }
-            }
-            if (found){
-                var bitstring = ""
-                for (var i = foundI; i<foundI+4;i++){
-                    for (var j = foundJ; j<foundJ+4;j++){
-                        k = (i*7+j)*4;
-                        //var r = utils.pad("000",points.data[k].toString(10),true)
-                        //var g = utils.pad("000",points.data[k+1].toString(10),true)
-                        //var b = utils.pad("000",points.data[k+2].toString(10),true)
-                        //message += "" +r + "-" + g + "-" + b +"\n";
-                        bitstring += utils.pad("00000000",points.data[k].toString(2),true)
-                        bitstring += utils.pad("00000000",points.data[k+1].toString(2),true)
-                        bitstring += utils.pad("00000000",points.data[k+2].toString(2),true)
-                    }
-                }
-                // from bitstring to interesting bits
-                var counterBin = bitstring.substring(1,3);
-                var counter = parseInt(counterBin,2);
-                
-                var i = 3;
-                var j = 8;
-                var k = 0;
-                var interestingBits = bitstring.substring(i,j);
-                for (var k=1; k<48;k++){
-                    i=j;
-                    j+=8;
-                    if (k%3 === 0){
-                        interestingBits += bitstring.substring(i+1,j);
-                    }else{
-                        interestingBits += bitstring.substring(i,j);
-                    }
-                }
-                //message += "Found " + counter + " features, len:" + interestingBits.length; ;
-                if (counter > 0){
-                    message += "IDENTIFIED " + counter + " FEATURE" + (counter===1 ? '':'S') + "\n";
-                    // from interesting bits to binRepresentation
-                    var binRepresentation = "";
-                    binRepresentation += interestingBits.substring(0,48);
-                    binRepresentation += "0100";
-                    binRepresentation += interestingBits.substring(48,60);
-                    binRepresentation += "10";  // this is constant part
-                    binRepresentation += interestingBits.substring(60,122);
-
-                    binRepresentation += interestingBits.substring(122+0,122+48);
-                    binRepresentation += "0100";
-                    binRepresentation += interestingBits.substring(122+48,122+60);
-                    binRepresentation += "10";
-                    binRepresentation += interestingBits.substring(122+60,122+122);
-
-                    binRepresentation += interestingBits.substring(122+122+0,122+122+48);
-                    binRepresentation += "0100";
-                    binRepresentation += interestingBits.substring(122+122+48,122+122+60);
-                    binRepresentation += "10";
-                    binRepresentation += interestingBits.substring(122+122+60,122+122+122);
-                    
-                    // from binRepresentation to 3 UUID version 4
-                    var uuid1bin = binRepresentation.substring(0,128);
-                    var uuid2bin = binRepresentation.substring(128,256);
-                    var uuid3bin = binRepresentation.substring(256,384);
-                    
-                    var uuid1 = utils.bin2hex(uuid1bin);
-                    var uuid2 = utils.bin2hex(uuid2bin);
-                    var uuid3 = utils.bin2hex(uuid3bin);
-                    
-                    uuid1 = uuid1.substring(0,8) + "-" + uuid1.substring(8,12) + "-" + uuid1.substring(12,16) + "-" + uuid1.substring(16,20) + "-" + uuid1.substring(20,32);
-                    uuid2 = uuid2.substring(0,8) + "-" + uuid2.substring(8,12) + "-" + uuid2.substring(12,16) + "-" + uuid2.substring(16,20) + "-" + uuid2.substring(20,32);
-                    uuid3 = uuid3.substring(0,8) + "-" + uuid3.substring(8,12) + "-" + uuid3.substring(12,16) + "-" + uuid3.substring(16,20) + "-" + uuid3.substring(20,32);
-                    
-                    var uuids;
-                    if (counter === 1){
-                        uuids = [uuid1];
-                        // test
-                        //uuids = [uuid1,uuid1,uuid1];
-                    }else if (counter === 2){
-                        uuids = [uuid1,uuid2];
-                    }else if (counter === 3){
-                        uuids = [uuid1,uuid2,uuid3];
-                    }
-                    populateDataDiv(uuids,0);
-                    
-                }else{
-                    message += "NOTHING HERE\n";
-                    printMessageOnMapCanvas(message);
-                }
-            } else {
-                // if not found
+            var points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7);
+            var uuids = utils.fromPoints2uuids(points);
+            if ((uuids !== null) && (uuids.length > 0)){
+                message += "IDENTIFIED " + uuids.length + " FEATURE" + (uuids.length===1 ? '':'S') + "\n";
+                populateDataDiv(uuids,0);
+            }else{
                 message += "NOTHING HERE\n";
-                printMessageOnMapCanvas(message);
             }
-            
+            printMessageOnMapCanvas(message);
         } catch(e) {
             message = "Exception" + e;
             printMessageOnMapCanvas(message);
         }
-        //printMessageOnMapCanvas(message);
     }
+    
+    function populateHistoryDiv(){
+        divGoBackChild.innerHTML = "";
+        while (divGoBackChild.hasChildNodes()) {
+            divGoBackChild.removeChild(divGoBackChild.lastChild);
+        }
+        var tempDiv = document.createElement("div");
+        var newHtml = "";
+
+        newHtml += "<table>";
+        newHtml += "<thead><tr><th colspan=\"2\">HISTORY</th></tr></thead><tbody>";
+        
+        for(var i=0; i<locationHistoryMaxLength;i++){
+            if (locationHistoryData[i] !== null){
+                var historyData = locationHistoryData[i];
+                var z = historyData['z'];
+                var x = historyData['x'];
+                var y = historyData['y'];
+                //var max = Math.pow(2,z) - 1;
+                // questo controllo metterlo nell'atro metodo
+                //x = ((x%(max+1)+max+1)%(max+1));
+                //if ((!(y < 0))&&(!(y > max))){
+                    var tileName = "" + z + "/" + x + "/" + y;
+                    var imgElementSrc = utils.getRandomElement(tileMapBaseUrls) + tileName + ".png" ;
+                    newHtml += "<tr><td class=\"image\"><img src=\"" + imgElementSrc + "\"></td><td>" + z + "/" + x + "/" + y +  "</td></tr>";
+                //}
+                
+            }
+        }
+        newHtml += "</tbody></table>";        
+        tempDiv.innerHTML = newHtml;
+        divGoBackChild.appendChild(tempDiv);
+    }
+    
     
     function populateDataDiv(uuids,index){
         //	console.log("request start");
@@ -454,6 +427,9 @@
     function onButton(buttonId){
         switch(buttonId) {
             case "button-go-back":
+                if (!utils.isVisible(divGoBack)){
+                    populateHistoryDiv();
+                }
                 utils.switchVisible(divGoBack);
                 //utils.setVisible(divWhereAmI,false);
                 utils.setVisible(divData,false);
@@ -515,10 +491,10 @@
         mainElement.appendChild(mapCanvas);
         divGoBack = document.createElement("div");
         divGoBack.id = "div-go-back";
+        divGoBackChild = document.createElement("div");
+        divGoBackChild.innerHTML = "EMPTY HISTORY";
+        divGoBack.appendChild(divGoBackChild);
         utils.setVisible(divGoBack,false);
-        //divWhereAmI = document.createElement("div");
-        //divWhereAmI.id = "div-whereami";
-        //utils.setVisible(divWhereAmI,false);
         divData = document.createElement("div");
         divData.id = "div-data";
         divDataChild = document.createElement("div");
