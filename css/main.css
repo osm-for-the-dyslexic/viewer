@@ -51,7 +51,9 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 
 #div-go-back table td {
     padding: 8px;
-    overflow:hidden;    
+    overflow:hidden;
+    white-space:pre;
+    vertical-align:top;
 }
 
 .image {

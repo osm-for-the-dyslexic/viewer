@@ -59,10 +59,11 @@
         for(var i=0; i<locationHistoryMaxLength;i++){
             locationHistoryData[i] = null;
         }
-        locationHistoryTimer = window.setInterval(updateLoctionHistory, 2000);
+        locationHistoryTimer = window.setInterval(updateLoctionHistory, 5000); // fire every 5 sec
     }
     
     function updateLoctionHistory(){
+        if (intoWhereAmI) {return;}
         var currentZ = zoomLevel;
         var currentX = xTile;
         var currentY = yTile;
@@ -86,9 +87,11 @@
                 locationHistoryData[0]['y'] = currentY;
                 locationHistoryData[0]['xpos'] = currentXpos;
                 locationHistoryData[0]['ypos'] = currentYpos;
-                if (utils.isVisible(divGoBack)){
-                    populateHistoryDiv();
-                }                
+                // async call to identify, first uuid
+                var context = mapCanvas.getContext("2d");
+                var halfWidth = parseInt(""+mapCanvas.width/2,10);
+                var halfHeight = parseInt(""+mapCanvas.height/2,10);
+                onIdentifyInternal(halfWidth,halfHeight,false);
             }
         }
     }
@@ -283,7 +286,33 @@
     }
     
     function onIdentify(canvasPosX,canvasPosY){
-        redrawMapCanvas("onIdentify");
+        onIdentifyInternal(canvasPosX,canvasPosY,true)    
+    }
+    
+    function getInfoForHistory(uuids){
+        // only info for first uuid
+        var requestUrl = utils.getRandomElement(dataBaseUrls);
+        requestUrl += (""+uuids[0]).substring(0,3) + "/";
+        requestUrl += uuids[0] + ".json";
+        var request = new Http.Get(requestUrl, true);  // true = async
+        request.start().then(function(response) {
+            var newTitle = "";
+            try{
+                newTitle += (""+response["Name"]).toUpperCase();
+            }catch(err){
+                newTitle += " (NO NAME PROVIDED)";
+            }
+            newTitle += (": "+response["table_name"]).toUpperCase();
+            locationHistoryData[0]['title'] = newTitle;
+            if (utils.isVisible(divGoBack)){
+                populateHistoryDiv();
+            }
+        });
+    }    
+    
+    
+    function onIdentifyInternal(canvasPosX,canvasPosY,isUserIdentify){
+        //redrawMapCanvas("onIdentify");
         var idContext = idCanvas.getContext("2d");
         var idWidth = idCanvas.width;
         var idHeight = idCanvas.height;
@@ -295,11 +324,29 @@
             var uuids = utils.fromPoints2uuids(points);
             if ((uuids !== null) && (uuids.length > 0)){
                 message += "IDENTIFIED " + uuids.length + " FEATURE" + (uuids.length===1 ? '':'S') + "\n";
-                populateDataDiv(uuids,0);
+                if (isUserIdentify){
+                    populateDataDiv(uuids,0);
+                }else{
+                    locationHistoryData[0]['title'] = "(SOMETHING)";
+                    if (utils.isVisible(divGoBack)){
+                        populateHistoryDiv();
+                    }
+                    getInfoForHistory(uuids);
+                }                
             }else{
-                message += "NOTHING HERE\n";
+                if (isUserIdentify){
+                    message += "NOTHING HERE\n";
+                }else{
+                    locationHistoryData[0]['title'] = "(NOTHING)";
+                }
             }
-            printMessageOnMapCanvas(message);
+            if (isUserIdentify){
+                printMessageOnMapCanvas(message);
+            }else{
+                if (utils.isVisible(divGoBack)){
+                    populateHistoryDiv();
+                }
+            }
         } catch(e) {
             message = "Exception" + e;
             printMessageOnMapCanvas(message);
@@ -323,22 +370,15 @@
                 var z = historyData['z'];
                 var x = historyData['x'];
                 var y = historyData['y'];
-                //var max = Math.pow(2,z) - 1;
-                // questo controllo metterlo nell'atro metodo
-                //x = ((x%(max+1)+max+1)%(max+1));
-                //if ((!(y < 0))&&(!(y > max))){
-                    var tileName = "" + z + "/" + x + "/" + y;
-                    var imgElementSrc = utils.getRandomElement(tileMapBaseUrls) + tileName + ".png" ;
-                    newHtml += "<tr><td class=\"image\"><img src=\"" + imgElementSrc + "\"></td><td>" + z + "/" + x + "/" + y +  "</td></tr>";
-                //}
-                
+                var tileName = "" + z + "/" + x + "/" + y;
+                var imgElementSrc = utils.getRandomElement(tileMapBaseUrls) + tileName + ".png" ;
+                newHtml += "<tr><td class=\"image\"><img src=\"" + imgElementSrc + "\"></td><td>" + historyData['title'] + "\nAT ZOOM LEVEL " + z + "</td></tr>";
             }
         }
         newHtml += "</tbody></table>";        
         tempDiv.innerHTML = newHtml;
         divGoBackChild.appendChild(tempDiv);
     }
-    
     
     function populateDataDiv(uuids,index){
         //	console.log("request start");
