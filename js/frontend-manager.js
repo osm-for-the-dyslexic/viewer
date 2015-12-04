@@ -140,6 +140,54 @@
         console.log("after cleanup tilecache went from " + originalTileCacheLength + " to "+ tileCacheLength + " - max is " + tileCacheMaxLength + " actual grid is " + tilesNumCols + "x"+ tilesNumRows);
     }
     
+    function renderTileReplacement(mapType,z,x,y,mapContext,currentPosXonCanvas,currentPosYonCanvas){
+        var max = Math.pow(2,z) - 1;
+        x = ((x%(max+1)+max+1)%(max+1));
+        if (y < 0) {
+            mapContext.drawImage(defaultImage, currentPosXonCanvas, currentPosYonCanvas,256,256);
+            return;
+        }
+        if (y > max) {
+            mapContext.drawImage(defaultImage, currentPosXonCanvas, currentPosYonCanvas,256,256);
+            return;
+        }
+        var upperX = parseInt(""+x/2,10);
+        var upperY = parseInt(""+y/2,10);
+        var tileName = "" + (z-1) + "/" + upperX + "/" + upperY;
+        //console.log("x:" + x);
+        //console.log("tileCacheLength: " + tileCacheLength);
+        // to clean an image just set the object to null
+        var imgElement = tileCache[""+mapType+"_"+tileName];
+        if (typeof imgElement === "undefined") {
+            var lowerX = 2*x;
+            var lowerY = 2*y;
+            for (var i=0;i<2;i++){
+                for (var j=0;j<2;j++){
+                    tileName = "" + (z+2) + "/" + lowerX + "/" + lowerY;
+                    var imgElement = tileCache[""+mapType+"_"+tileName];
+                    if (typeof imgElement === "undefined") {
+                        // current tile as composition of defaultImage
+                        mapContext.drawImage(defaultImage, 0, 0, 256, 256, currentPosXonCanvas+(i*128), currentPosYonCanvas+(j*128), 128, 128);
+                    }else{
+                        // current tile as composition of lower tiles
+                        mapContext.drawImage(imgElement, 0, 0, 256, 256, currentPosXonCanvas+(i*128), currentPosYonCanvas+(j*128), 128, 128);
+                    }
+                }
+            }
+        }else{
+            // current tile as strecth of upper tile
+            var startingPosX = 0;
+            var startingPosY = 0;
+            if (x%2 === 1){
+                var startingPosX = 128;
+            }
+            if (y%2 === 1){
+                var startingPosY = 128;
+            }
+            mapContext.drawImage(imgElement, startingPosX, startingPosY, 128, 128, currentPosXonCanvas, currentPosYonCanvas, 256, 256);
+        }
+    }
+    
     /**
      * Load a tile asyncronously into the tile cache
      */
@@ -312,7 +360,7 @@
     
     
     function onIdentifyInternal(canvasPosX,canvasPosY,isUserIdentify){
-        //redrawMapCanvas("onIdentify");
+        redrawMapCanvas("onIdentify");
         var idContext = idCanvas.getContext("2d");
         var idWidth = idCanvas.width;
         var idHeight = idCanvas.height;
@@ -856,7 +904,8 @@
                 imageTile = getTileImage("MAP",zoomLevel,(currentXtile+j),(currentYtile+i));
                 if (imageTile === null){
                     // render the replacement
-                    mapContext.drawImage(defaultImage, currentPosXonCanvas, currentPosYonCanvas,256,256);
+                    // TODO test if can derivate the image from upper image or lower images
+                    renderTileReplacement("MAP",zoomLevel,(currentXtile+j),(currentYtile+i),mapContext,currentPosXonCanvas,currentPosYonCanvas);
                 }else{
                     // render the tile for Map Canvas
                     mapContext.drawImage(imageTile, currentPosXonCanvas, currentPosYonCanvas,256,256);
