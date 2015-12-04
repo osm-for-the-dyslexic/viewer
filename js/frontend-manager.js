@@ -1,6 +1,7 @@
 (function(window, document, exportName, undefined) {
     "use strict";
     // http://www.movable-type.co.uk/scripts/latlong.html - some functions on latlog and distance
+    // http://www.voicerss.org/api/
     
     // Html elements of the page
     var mapCanvas = null;
@@ -250,6 +251,16 @@
         return imgElement;
     }
     
+    function panToZXY(z,x,y,posx,posy){
+        zoomLevel = z;
+        xTile = x;
+        yTile = y;
+        xPosIntoTile = posx;
+        yPosIntoTile = posy;
+        redrawMapCanvas("panToZXY");
+    }
+    
+    
     function onPan(deltaX,deltaY){
         //if (intoWhereAmI) {return;}
         xPosIntoTile -= deltaX;
@@ -348,9 +359,10 @@
             try{
                 newTitle += (""+response["Name"]).toUpperCase();
             }catch(err){
-                newTitle += " (NO NAME PROVIDED)";
+                newTitle += "(NO NAME) FOR" + (""+response["table_name"]).toUpperCase();
+                //newTitle += (": "+response["table_name"]).toUpperCase();
             }
-            newTitle += (": "+response["table_name"]).toUpperCase();
+            //newTitle += (": "+response["table_name"]).toUpperCase();
             locationHistoryData[0]['title'] = newTitle;
             if (utils.isVisible(divGoBack)){
                 populateHistoryDiv();
@@ -358,46 +370,36 @@
         });
     }    
     
-    
     function onIdentifyInternal(canvasPosX,canvasPosY,isUserIdentify){
         redrawMapCanvas("onIdentify");
-        var idContext = idCanvas.getContext("2d");
-        var idWidth = idCanvas.width;
-        var idHeight = idCanvas.height;
-        if ((canvasPosX < 3) || (canvasPosX > idWidth - 3)) {return;}
-        if ((canvasPosY < 3) || (canvasPosY > idHeight - 3)) {return;}
+        var precision = 1;
+        if (!isUserIdentify){
+            precision = 10;
+        }
         var message = "";
-        try {
-            var points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7);
-            var uuids = utils.fromPoints2uuids(points);
-            if ((uuids !== null) && (uuids.length > 0)){
+        var uuids = utils.identifyLocation(canvasPosX,canvasPosY,idCanvas,precision);
+        if ((uuids !== null) && (uuids.length > 0)){
+            if(isUserIdentify){
                 message += "IDENTIFIED " + uuids.length + " FEATURE" + (uuids.length===1 ? '':'S') + "\n";
-                if (isUserIdentify){
-                    populateDataDiv(uuids,0);
-                }else{
-                    locationHistoryData[0]['title'] = "(SOMETHING)";
-                    if (utils.isVisible(divGoBack)){
-                        populateHistoryDiv();
-                    }
-                    getInfoForHistory(uuids);
-                }                
+                printMessageOnMapCanvas(message);
+                populateDataDiv(uuids,0);
             }else{
-                if (isUserIdentify){
-                    message += "NOTHING HERE\n";
-                }else{
-                    locationHistoryData[0]['title'] = "(NOTHING)";
+                locationHistoryData[0]['title'] = "(GETTING THE NAME)";
+                if (utils.isVisible(divGoBack)){
+                    populateHistoryDiv();
                 }
+                getInfoForHistory(uuids);
             }
-            if (isUserIdentify){
+        }else{
+            if(isUserIdentify){
+                message += "NOTHING HERE\n";
                 printMessageOnMapCanvas(message);
             }else{
+                locationHistoryData[0]['title'] = "(NOTHING)";
                 if (utils.isVisible(divGoBack)){
                     populateHistoryDiv();
                 }
             }
-        } catch(e) {
-            message = "Exception" + e;
-            printMessageOnMapCanvas(message);
         }
     }
     
@@ -420,7 +422,7 @@
                 var y = historyData['y'];
                 var tileName = "" + z + "/" + x + "/" + y;
                 var imgElementSrc = utils.getRandomElement(tileMapBaseUrls) + tileName + ".png" ;
-                newHtml += "<tr><td class=\"image\"><img src=\"" + imgElementSrc + "\"></td><td>" + historyData['title'] + "\nAT ZOOM LEVEL " + z + "</td></tr>";
+                newHtml += "<tr><td class=\"image\"><img src=\"" + imgElementSrc + "\"></td><td>GO TO " + historyData['title'] + "\nAT ZOOM LEVEL " + z + "</td></tr>";
             }
         }
         newHtml += "</tbody></table>";        

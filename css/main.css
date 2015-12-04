@@ -21,7 +21,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 #div-go-back{
     position: absolute; 
     -webkit-backface-visibility: hidden;
-    background:#11FF11;
+    background:#FFFFFF;
     outline: 0;
     overflow:hidden;
 }

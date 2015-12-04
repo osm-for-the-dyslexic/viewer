@@ -140,10 +140,66 @@ var utils = (function () {
     }
     
     /*********************************************************************************************
+     * Squared spiral identification
+     * @param originalCanvasPosX
+     * @param originalCanvasPosY
+     * @param idCanvas
+     * @param precision put 0 to identify only one time
+     *********************************************************************************************/
+    _utils.identifyLocation = function(originalCanvasPosX,originalCanvasPosY,idCanvas,precision){
+        var idContext = idCanvas.getContext("2d");
+        var idWidth = idCanvas.width;
+        var idHeight = idCanvas.height;
+
+        var x = 0;
+        var y = 0;
+        var dx = 0;
+        var dy = -1;
+        var temp = 0;
+        var canvasPosX = null;
+        var canvasPosY = null;
+        var points = null;
+        var uuids = null;
+        var sparseFactor = 3;
+        
+        // squared spiral identification
+        try {
+            for(var i =0;i<(Math.pow(precision,2));i++){
+                if( ((-precision/2)<x) && (x<=(precision/2)) && ((-precision/2)<y) && (y<=(precision/2)) ){
+                    canvasPosX = originalCanvasPosX + ((x*4)*sparseFactor);
+                    canvasPosY = originalCanvasPosY + ((y*4)*sparseFactor);
+                    if ((canvasPosX < 3) || (canvasPosX > idWidth - 3) || (canvasPosY < 3) || (canvasPosY > idHeight - 3)) {
+                        // out of canvas, do nothing
+                    }else{
+                        // identify
+                        points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7);
+                        uuids = _utils.fromPoints2uuids(points);
+                        if ((uuids !== null) && (uuids.length > 0)){
+                            // return identified uuids
+                            return uuids;
+                        }
+                    }
+                }
+                if ( (x===y) || ((x<0) && (x=== -y)) || ((x>0) && (x === 1-y)) ){
+                    temp = dx;
+                    dx = -dy;
+                    dy = temp;
+                }
+                x += dx;
+                y += dy;
+            }
+        } catch(e){
+            // todo log an excepion
+            return null;
+        }
+        return null;
+    }    
+    
+    /*********************************************************************************************
      * From points to 3 uuids
      * @param points 7x7 point extracted from an idcanvas
      *********************************************************************************************/
-     _utils.fromPoints2uuids = function(points){
+    _utils.fromPoints2uuids = function(points){
         var uuids = null;
         try{
             var k = 0;
