@@ -2,7 +2,7 @@
     "use strict";
     
     /*********************************************************************************************
-     *
+     * Private variables
      *********************************************************************************************/
     var mapCanvas = null;
     var onZoomFunction = null;
@@ -98,10 +98,10 @@
         onButton(ev.target.id);
     }
     
-    /**
-     * GestureManager initializer
-     * @param map canvas id
-     */
+    /*********************************************************************************************
+     * GestureManager (initializer)
+     * @param _mapCanvas canvas of the map
+     *********************************************************************************************/
     function GestureManager(_mapCanvas,_onPan,_onZoom,_onIdentify,_buttons,_onButton) {
         mapCanvas = _mapCanvas;
         onPanFunction = _onPan;
