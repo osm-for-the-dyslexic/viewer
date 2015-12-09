@@ -3,6 +3,9 @@
     // http://www.movable-type.co.uk/scripts/latlong.html - some functions on latlog and distance
     // http://www.voicerss.org/api/
     
+    /*********************************************************************************************
+     * Private variables
+     *********************************************************************************************/
     // Html elements of the page
     var mapCanvas = null;
     var idCanvas = null;
@@ -13,11 +16,13 @@
     var buttonVoice = null;
     var divGoBack = null;
     var divGoBackChild = null;
-    //var divWhereAmI = null;
-    var intoWhereAmI = false;
     var divData = null;
     var divDataChild = null;
     var divVoice = null;
+    
+    var audioPlayer = null;
+    var voiceLanguage = "";
+    var voiceLanguageSelect = null;
 
     // characteristics of the viewport
     var viewportWidth = null;
@@ -37,9 +42,7 @@
     var yPosIntoTile = 128;
     
     // URLs for tiles
-    // var tileMapBaseUrls = ["http://www.develost.com/maps/osm4dys/"];
     var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/basemap/osm4dys/"];
-    //var tileIdBaseUrls = ["http://www.develost.com/maps/osm4dys_id/"];
     var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
     var dataBaseUrls = ["http://osm-for-the-dyslexic.github.io/data/"];
 
@@ -48,8 +51,12 @@
     var tileCache = {};
     var tileCacheLength = 0;
     var tileCacheMaxLength = 150;
-    var canvasMessage = "";
     
+    // utility variables
+    var canvasMessage = "";
+    var intoWhereAmI = false;
+    
+    // Location history
     var locationHistoryData = [];
     var locationHistoryMaxLength = 10;
     var locationHistoryTimer;    
@@ -61,6 +68,15 @@
             locationHistoryData[i] = null;
         }
         locationHistoryTimer = window.setInterval(updateLoctionHistory, 5000); // fire every 5 sec
+    }
+    
+    function text2speech(text){
+        if (voiceLanguage !== ""){
+            text = text.replace(/\n/g," . . . ");
+            var speed = 0;
+            var url = "https://api.voicerss.org/?key=968701308bba4ce19a33b14001491005&src=" + text + "&hl=" + voiceLanguage + "&r=" + speed; // + "&rnd=" + Math.random();
+            audioPlayer.src = url;
+        }
     }
     
     function updateLoctionHistory(){
@@ -157,7 +173,6 @@
         var tileName = "" + (z-1) + "/" + upperX + "/" + upperY;
         //console.log("x:" + x);
         //console.log("tileCacheLength: " + tileCacheLength);
-        // to clean an image just set the object to null
         var imgElement = tileCache[""+mapType+"_"+tileName];
         if (typeof imgElement === "undefined") {
             var lowerX = 2*x;
@@ -185,7 +200,11 @@
             if (y%2 === 1){
                 var startingPosY = 128;
             }
-            mapContext.drawImage(imgElement, startingPosX, startingPosY, 128, 128, currentPosXonCanvas, currentPosYonCanvas, 256, 256);
+            try {
+                mapContext.drawImage(imgElement, startingPosX, startingPosY, 128, 128, currentPosXonCanvas, currentPosYonCanvas, 256, 256);
+            } catch (e) {
+                // happens when the tile is not present, do nothing
+            }
         }
     }
     
@@ -394,6 +413,7 @@
             if(isUserIdentify){
                 message += "NOTHING HERE\n";
                 printMessageOnMapCanvas(message);
+                text2speech(message);
             }else{
                 locationHistoryData[0]['title'] = "(NOTHING)";
                 if (utils.isVisible(divGoBack)){
@@ -483,6 +503,7 @@
             }else{
                 // print final message on canvas
                 printMessageOnMapCanvas(canvasMessage);
+                text2speech(canvasMessage);
             }
         });
     }
@@ -597,7 +618,50 @@
         mainElement.appendChild(divGoBack);
         //mainElement.appendChild(divWhereAmI);
         mainElement.appendChild(divData);
+        
+        audioPlayer = document.createElement("audio");
+        audioPlayer.autoplay = true;
+        
+        var languages = [
+            "ca-es","zh-cn","zh-hk","zh-tw","da-dk","nl-nl","en-au","en-ca","en-gb","en-in","en-us",
+            "fi-fi","fr-ca","fr-fr","de-de","it-it","ja-jp","ko-kr","nb-no","pl-pl","pt-br","pt-pt",
+            "ru-ru","es-mx","es-es","sv-se"
+        ];
+        
+        var languagesDescription = ["Catalan","Chinese (China)","Chinese (HongKong)",
+            "Chinese (Taiwan)","Danish","Dutch","English (Australia)","English (Canada)",
+            "English (GreatBritain)","English (India)","English (UnitedStates)","Finnish",
+            "French (Canada)","French (France)","German","Italian","Japanese","Korean","Norwegian",
+            "Polish","Portuguese (Brazil)","Portuguese (Portugal)","Russian","Spanish (Mexico)",
+            "Spanish (Spain)","Swedish (Sweden)"
+        ];
+        
+        var labelLanguage = document.createElement("label");
+        labelLanguage.innerHTML = 'TEXT TO SPEECH LANGUAGE';
+        labelLanguage.htmlFor = "languageselected";
+        
+        voiceLanguageSelect = document.createElement("select");
+        voiceLanguageSelect.name = "languageselected";
+        voiceLanguageSelect.addEventListener('change',function(){voiceLanguage = voiceLanguageSelect.value;},false);
+        
+        var tempOption = document.createElement("option");
+        tempOption.text = "DISABLED";
+        tempOption.label = "DISABLED";
+        tempOption.selected = true;
+        tempOption.value = "";
+        voiceLanguageSelect.appendChild(tempOption);
+        for (var i = 0; i<languages.length;i++){
+            tempOption = document.createElement("option");
+            tempOption.text = languagesDescription[i].toUpperCase();
+            tempOption.label = languagesDescription[i].toUpperCase();
+            tempOption.selected = false;
+            tempOption.value = languages[i];
+            voiceLanguageSelect.appendChild(tempOption);            
+        }
+        divVoice.appendChild(labelLanguage);
+        divVoice.appendChild(voiceLanguageSelect);
         mainElement.appendChild(divVoice);
+        mainElement.appendChild(audioPlayer);
     }
     
     /**
