@@ -23,6 +23,9 @@
     var audioPlayer = null;
     var voiceLanguage = "";
     var voiceLanguageSelect = null;
+    var voiceSpeedSelect = null;
+    var voiceSpeed = "0";
+    
 
     // characteristics of the viewport
     var viewportWidth = null;
@@ -73,10 +76,23 @@
     function text2speech(text){
         if (voiceLanguage !== ""){
             text = text.replace(/\n/g," . . . ");
-            var speed = 0;
-            var url = "https://api.voicerss.org/?key=968701308bba4ce19a33b14001491005&src=" + text + "&hl=" + voiceLanguage + "&r=" + speed; // + "&rnd=" + Math.random();
+            var url = "https://api.voicerss.org/?key=968701308bba4ce19a33b14001491005&src=" + text + "&hl=" + voiceLanguage + "&r=" + voiceSpeed; // + "&rnd=" + Math.random();
             audioPlayer.src = url;
         }
+    }
+    
+    function extractTextFromDiv(element){
+        var outText = "";
+        if (element.childNodes.length > 0) {
+            for (var i = 0; i < element.childNodes.length; i++) {
+                outText += extractTextFromDiv(element.childNodes[i]);
+            }
+        }
+
+        if (element.nodeType == Node.TEXT_NODE && /\S/.test(element.nodeValue)) {
+            outText += element.nodeValue + " ";
+        }
+        return outText;
     }
     
     function updateLoctionHistory(){
@@ -503,7 +519,9 @@
             }else{
                 // print final message on canvas
                 printMessageOnMapCanvas(canvasMessage);
-                text2speech(canvasMessage);
+                if (!utils.isVisible(divData)) {
+                    text2speech(canvasMessage);
+                }
             }
         });
     }
@@ -540,6 +558,9 @@
             case "button-go-back":
                 if (!utils.isVisible(divGoBack)){
                     populateHistoryDiv();
+                    text2speech(extractTextFromDiv(divGoBack));
+                }else{
+                    audioPlayer.src = "";
                 }
                 utils.switchVisible(divGoBack);
                 //utils.setVisible(divWhereAmI,false);
@@ -555,15 +576,33 @@
             break;
             case "button-data":
                 utils.setVisible(divGoBack,false);
+                if (!utils.isVisible(divData)){
+                    text2speech(extractTextFromDiv(divData));
+                }else{
+                    audioPlayer.src = "";                    
+                }                
                 //utils.setVisible(divWhereAmI,false);
                 utils.switchVisible(divData);
                 utils.setVisible(divVoice,false);
             break;
             case "button-voice":
-                utils.setVisible(divGoBack,false);
-                //utils.setVisible(divWhereAmI,false);
-                utils.setVisible(divData,false);
-                utils.switchVisible(divVoice);
+                if (voiceLanguage === ""){
+                    utils.setVisible(divGoBack,false);
+                    utils.setVisible(divData,false);
+                    audioPlayer.src = "";
+                    utils.switchVisible(divVoice);
+                } else {
+                    if (utils.isVisible(divGoBack)){
+                        text2speech(extractTextFromDiv(divGoBack)); 
+                    } else if (utils.isVisible(divData)){
+                        text2speech(extractTextFromDiv(divData)); 
+                    } else { 
+                        utils.setVisible(divGoBack,false);
+                        utils.setVisible(divData,false);
+                        audioPlayer.src = "";
+                        utils.switchVisible(divVoice);
+                    }
+                }
             break;
             default:
                 // should never happen - all invisible
@@ -637,7 +676,7 @@
         ];
         
         var labelLanguage = document.createElement("label");
-        labelLanguage.innerHTML = 'TEXT TO SPEECH LANGUAGE';
+        labelLanguage.innerHTML = "TEXT TO SPEECH LANGUAGE";
         labelLanguage.htmlFor = "languageselected";
         
         voiceLanguageSelect = document.createElement("select");
@@ -656,10 +695,57 @@
             tempOption.label = languagesDescription[i].toUpperCase();
             tempOption.selected = false;
             tempOption.value = languages[i];
-            voiceLanguageSelect.appendChild(tempOption);            
+            voiceLanguageSelect.appendChild(tempOption);
         }
         divVoice.appendChild(labelLanguage);
         divVoice.appendChild(voiceLanguageSelect);
+        
+        var labelSpeed =  document.createElement("label");
+        labelSpeed.innerHTML = "TEXT TO SPEECH SPEED";
+        labelSpeed.htmlFor = "speechspeed";
+        voiceSpeedSelect = document.createElement("select");
+        voiceSpeedSelect.name = "speechspeed";
+        voiceSpeedSelect.addEventListener('change',function(){voiceSpeed = voiceSpeedSelect.value;},false);
+        
+        // -10
+        tempOption = document.createElement("option");
+        tempOption.text = "SLOWEST";
+        tempOption.label = "SLOWEST";
+        tempOption.selected = false;
+        tempOption.value = "-10";
+        voiceSpeedSelect.appendChild(tempOption);
+        // -5
+        tempOption = document.createElement("option");
+        tempOption.text = "SLOW";
+        tempOption.label = "SLOW";
+        tempOption.selected = false;
+        tempOption.value = "-5";
+        voiceSpeedSelect.appendChild(tempOption);
+        // 0
+        tempOption = document.createElement("option");
+        tempOption.text = "NORMAL";
+        tempOption.label = "NORMAL";
+        tempOption.selected = true;
+        tempOption.value = "0";
+        voiceSpeedSelect.appendChild(tempOption);
+        // 5
+        tempOption = document.createElement("option");
+        tempOption.text = "FAST";
+        tempOption.label = "FAST";
+        tempOption.selected = false;
+        tempOption.value = "5";
+        voiceSpeedSelect.appendChild(tempOption);
+        // 10
+        tempOption = document.createElement("option");
+        tempOption.text = "FASTEST";
+        tempOption.label = "FASTEST";
+        tempOption.selected = false;
+        tempOption.value = "10";
+        voiceSpeedSelect.appendChild(tempOption);
+        
+        divVoice.appendChild(labelSpeed);
+        divVoice.appendChild(voiceSpeedSelect);
+        
         mainElement.appendChild(divVoice);
         mainElement.appendChild(audioPlayer);
     }
