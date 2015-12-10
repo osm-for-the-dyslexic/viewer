@@ -491,7 +491,7 @@
             }
             for (var key in response) {
                 if (response.hasOwnProperty(key)) {
-                    if (key !== 'table_name'){
+                    if ((key !== 'table_name') && (key !== 'id')){
                         content = ""+response[key];
                         if ( (content !== null) && (content !== 'null') && (content !== "" )){
                             newHtml += "<tr><td class=\"key\">" + (""+key).toUpperCase() + "</td><td>" + content.toUpperCase() + "</td></tr>";
@@ -648,7 +648,8 @@
         divData = document.createElement("div");
         divData.id = "div-data";
         divDataChild = document.createElement("div");
-        divDataChild.innerHTML = "YOU HAVEN'T IDENTIFIED ANYTHING YET"; // hack to precharge font
+        //divDataChild.innerHTML = "YOU HAVEN'T IDENTIFIED ANYTHING YET"; // hack to precharge font
+        divDataChild.innerHTML = "<div><table><thead><tr><th colspan=\"2\">IDENTIFICATION</th></tr></thead><tbody><tr><td colspan=\"2\">YOU HAVEN'T IDENTIFIED</td></tr><tr><td colspan=\"2\">ANYTHING YET</td></tr></tbody></table></div>";
         divData.appendChild(divDataChild);
         utils.setVisible(divData,false);
         divVoice = document.createElement("div");
@@ -675,77 +676,37 @@
             "Spanish (Spain)","Swedish (Sweden)"
         ];
         
-        var labelLanguage = document.createElement("label");
-        labelLanguage.innerHTML = "TEXT TO SPEECH LANGUAGE";
-        labelLanguage.htmlFor = "languageselected";
+        var speed = ["-10","-5","0","5","10"];
+        var speedDescription = ["SLOWEST","SLOW","NORMAL","FAST","FASTEST"];
         
-        voiceLanguageSelect = document.createElement("select");
-        voiceLanguageSelect.name = "languageselected";
-        voiceLanguageSelect.addEventListener('change',function(){voiceLanguage = voiceLanguageSelect.value;},false);
-        
-        var tempOption = document.createElement("option");
-        tempOption.text = "DISABLED";
-        tempOption.label = "DISABLED";
-        tempOption.selected = true;
-        tempOption.value = "";
-        voiceLanguageSelect.appendChild(tempOption);
+        var tempDiv = document.createElement("div");
+        var newHtml = "<table>";
+        newHtml += "<thead><tr><th colspan=\"2\">TEXT TO SPEECH</th></tr></thead><tbody><tr>";
+        newHtml += "<td class=\"key\">LANGUAGE</td>";
+        newHtml += "<td class=\"value\">";
+        newHtml += "<select id=\"languageselected\">";
+        newHtml += "<option value=\"\" selected>DISABLED</option>";
         for (var i = 0; i<languages.length;i++){
-            tempOption = document.createElement("option");
-            tempOption.text = languagesDescription[i].toUpperCase();
-            tempOption.label = languagesDescription[i].toUpperCase();
-            tempOption.selected = false;
-            tempOption.value = languages[i];
-            voiceLanguageSelect.appendChild(tempOption);
+            newHtml += "<option value=\""+ languages[i] +"\">"+ languagesDescription[i].toUpperCase() +"</option>";
         }
-        divVoice.appendChild(labelLanguage);
-        divVoice.appendChild(voiceLanguageSelect);
-        
-        var labelSpeed =  document.createElement("label");
-        labelSpeed.innerHTML = "TEXT TO SPEECH SPEED";
-        labelSpeed.htmlFor = "speechspeed";
-        voiceSpeedSelect = document.createElement("select");
-        voiceSpeedSelect.name = "speechspeed";
-        voiceSpeedSelect.addEventListener('change',function(){voiceSpeed = voiceSpeedSelect.value;},false);
-        
-        // -10
-        tempOption = document.createElement("option");
-        tempOption.text = "SLOWEST";
-        tempOption.label = "SLOWEST";
-        tempOption.selected = false;
-        tempOption.value = "-10";
-        voiceSpeedSelect.appendChild(tempOption);
-        // -5
-        tempOption = document.createElement("option");
-        tempOption.text = "SLOW";
-        tempOption.label = "SLOW";
-        tempOption.selected = false;
-        tempOption.value = "-5";
-        voiceSpeedSelect.appendChild(tempOption);
-        // 0
-        tempOption = document.createElement("option");
-        tempOption.text = "NORMAL";
-        tempOption.label = "NORMAL";
-        tempOption.selected = true;
-        tempOption.value = "0";
-        voiceSpeedSelect.appendChild(tempOption);
-        // 5
-        tempOption = document.createElement("option");
-        tempOption.text = "FAST";
-        tempOption.label = "FAST";
-        tempOption.selected = false;
-        tempOption.value = "5";
-        voiceSpeedSelect.appendChild(tempOption);
-        // 10
-        tempOption = document.createElement("option");
-        tempOption.text = "FASTEST";
-        tempOption.label = "FASTEST";
-        tempOption.selected = false;
-        tempOption.value = "10";
-        voiceSpeedSelect.appendChild(tempOption);
-        
-        divVoice.appendChild(labelSpeed);
-        divVoice.appendChild(voiceSpeedSelect);
-        
+        newHtml += "</select>";
+        newHtml += "</td>";
+        newHtml += "</tr><tr>";
+        newHtml += "<td class=\"key\">SPEED</td>";
+        newHtml += "<td class=\"value\">";
+        newHtml += "<select id=\"speedselected\">";
+        for (var i = 0; i<speed.length;i++){
+            newHtml += "<option value=\""+ speed[i] +"\"";
+            if (speed[i] === "0"){
+                newHtml += " selected";
+            }
+            newHtml +=">"+ speedDescription[i].toUpperCase() +"</option>";
+        }
+        newHtml += "</select>";
+        newHtml += "</td>";
+        newHtml += "</tr></tbody></table>";
+        tempDiv.innerHTML = newHtml;
+        divVoice.appendChild(tempDiv);
         mainElement.appendChild(divVoice);
         mainElement.appendChild(audioPlayer);
     }

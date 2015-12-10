@@ -78,7 +78,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 #div-data{
     position: absolute; 
     -webkit-backface-visibility: hidden;
-    background:#EEEEEE;
+    background:#FFFFFF;
     outline: 0;
     overflow:hidden;
 }
@@ -116,7 +116,11 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     font-weight: bold;
     color: red;
 }
- 
+
+.value > select{
+    font-size: 120%;
+    width: 150px;
+}
 
 #div-data table tr:nth-child(even) {
     background-color: #eee;
@@ -131,8 +135,48 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 #div-voice{
     position: absolute; 
     -webkit-backface-visibility: hidden;
-    background:#CCCCCC;
+    background:#FFFFFF;
     outline: 0;
+}
+
+#div-voice > div{
+    overflow-y:scroll;
+    overflow-x:hidden;
+    height:100%;
+    width:100%;
+    margin: 0px;
+    padding: 0px;
+    outline: 0;    
+}
+
+#div-voice table{
+    width:100%;
+    margin: 0px;
+    padding: 0px;
+    overflow:hidden;    
+}
+#div-voice table th {
+    color: white;
+    background-color: red;
+    padding: 15px;
+    overflow:hidden;
+}
+
+#div-voice table td {
+    padding: 8px;
+    overflow:hidden;
+    white-space:pre;
+    vertical-align:top;
+}
+
+
+#div-voice table tr:nth-child(even) {
+    background-color: #eee;
+    padding: 2px;
+}
+#div-voice table tr:nth-child(odd) {
+    background-color: #fff;
+    padding: 2px;
 }
 
 #buttons-div{
