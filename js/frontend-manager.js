@@ -709,6 +709,12 @@
         divVoice.appendChild(tempDiv);
         mainElement.appendChild(divVoice);
         mainElement.appendChild(audioPlayer);
+        
+        voiceLanguageSelect = document.getElementById("languageselected");
+        voiceLanguageSelect.addEventListener('change',function(){voiceLanguage = voiceLanguageSelect.value;},false);
+        voiceSpeedSelect = document.getElementById("speedselected");
+        voiceSpeedSelect.addEventListener('change',function(){voiceSpeed = voiceSpeedSelect.value;},false);
+        
     }
     
     /**
