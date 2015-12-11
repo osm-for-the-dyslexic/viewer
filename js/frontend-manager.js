@@ -515,7 +515,7 @@
                 var y = historyData['y'];
                 var tileName = "" + z + "/" + x + "/" + y;
                 var imgElementSrc = utils.getRandomElement(tileMapBaseUrls) + tileName + ".png" ;
-                newHtml += "<tr><td class=\"image pos"+ i +"\"><img class=\"pos"+ i +"\" src=\"" + imgElementSrc + "\"></td><td class=\"pos"+i+"\">GO TO " + historyData['title'] + "\nAT ZOOM LEVEL " + z + "</td></tr>";
+                newHtml += "<tr class=\"pos"+i+"\"><td class=\"image pos"+ i +"\"><img class=\"pos"+ i +"\" src=\"" + imgElementSrc + "\"></td><td class=\"pos"+i+"\">GO TO " + historyData['title'] + "\nAT ZOOM LEVEL " + z + "</td></tr>";
             }
         }
         newHtml += "</tbody></table>";        

@@ -109,6 +109,7 @@
             console.log("onPressHistory - try");
             var classNames = "" + ev.target.className;
             var strPos = classNames.indexOf("pos");
+            console.log("onPressHistory - classNames " + classNames);
             if (strPos > -1){
                 console.log("onPressHistory - strpos > 1");
                 var position = parseInt(""+classNames.substring(strPos+3),10);
