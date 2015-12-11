@@ -23,3 +23,6 @@
     </ol>
 </div>
 
+
+
+adb logcat *:I | find "browser"

@@ -106,14 +106,18 @@
     function onPressHistory(ev){
         console.log("onPressHistory");
         try{
+            console.log("onPressHistory - try");
             var classNames = "" + ev.target.className;
             var strPos = classNames.indexOf("pos");
             if (strPos > -1){
+                console.log("onPressHistory - strpos > 1");
                 var position = parseInt(""+classNames.substring(strPos+3),10);
+                console.log("onPressHistory - position is " + position);
                 onPressHistoryEntryFunction(position);
+                
             }
         } catch(e){
-        
+            console.log("onPressHistory - catch " + e.message);
         }
     }
     
