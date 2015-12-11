@@ -27,8 +27,9 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 }
 
 #div-go-back > div{
-    overflow-y:scroll;
-    overflow-x:hidden;
+    /*overflow-y:hidden;
+    overflow-x:hidden;*/
+    overflow:hidden;
     height:100%;
     width:100%;
     margin: 0px;
@@ -40,7 +41,7 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
     width:100%;
     margin: 0px;
     padding: 0px;
-    overflow:hidden;    
+    overflow:hidden;
 }
 #div-go-back table th {
     color: white;
