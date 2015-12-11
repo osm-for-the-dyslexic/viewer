@@ -429,6 +429,7 @@
             }
             //newTitle += (": "+response["table_name"]).toUpperCase();
             locationHistoryData[0]['title'] = newTitle;
+            printMessageOnMapCanvas("YOU ARE LOOKING AT " + newTitle + "\n" );
             if (utils.isVisible(divGoBack)){
                 populateHistoryDiv();
             }
