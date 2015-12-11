@@ -5,10 +5,12 @@
      * Private variables
      *********************************************************************************************/
     var mapCanvas = null;
+    var historyDiv = null;
     var onZoomFunction = null;
     var onIdentifyFunction = null;
     var onPanFunction = null;
     var onButton = null;
+    var onPressHistoryEntryFunction = null;
     var deltaX = 0;
     var deltaY = 0;
     var zoomCounter = 0;
@@ -97,17 +99,35 @@
     function onPressButton(ev){
         onButton(ev.target.id);
     }
+
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
+    function onPressHistory(ev){
+        try{
+            var classNames = "" + ev.target.className;
+            var strPos = classNames.indexOf("pos");
+            if (strPos > -1){
+                var position = parseInt(""+classNames.substring(strPos+3),10);
+                onPressHistoryEntryFunction(position);
+            }
+        } catch(e){
+        
+        }
+    }
     
     /*********************************************************************************************
      * GestureManager (initializer)
      * @param _mapCanvas canvas of the map
      *********************************************************************************************/
-    function GestureManager(_mapCanvas,_onPan,_onZoom,_onIdentify,_buttons,_onButton) {
+    function GestureManager(_mapCanvas,_historyDiv,_onPan,_onZoom,_onIdentify,_buttons,_onButton,_onPressHistoryEntry) {
         mapCanvas = _mapCanvas;
+        historyDiv = _historyDiv;
         onPanFunction = _onPan;
         onZoomFunction = _onZoom;
         onIdentifyFunction = _onIdentify;
         onButton = _onButton;
+        onPressHistoryEntryFunction = _onPressHistoryEntry;
         
         var mc = new Hammer.Manager(mapCanvas,{
             transform_always_block: true,
@@ -133,6 +153,16 @@
             // IE 6/7/8
             mapCanvas.attachEvent("onmousewheel", mouseWheelHandler);
         }
+        
+        var mcHistory = new Hammer.Manager(historyDiv,{
+            transform_always_block: true,
+            transform_min_scale: 1,
+            drag_block_horizontal: true,
+            drag_block_vertical: true,
+            drag_min_distance: 0        
+        });
+        mcHistory.add(new Hammer.Press({ threshold: 10 }));
+        mcHistory.on("press", onPressHistory);        
         
         for (var i = 0; i<_buttons.length ; i++){
             var mcButtons = new Hammer.Manager(_buttons[i],{

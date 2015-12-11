@@ -64,6 +64,9 @@
     var locationHistoryMaxLength = 10;
     var locationHistoryTimer;    
 
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function initializeMap(){
         // a 256x256 png r=173 g=222 b=255  #ADDEFF same as osm color for ocean
         defaultImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAMhSURBVHhe7dQxAcAwDMCwbPyplNKoZE9ZWHrMwM/5dgdIem+BIAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOAMAOArJkfkUEFibeMV7cAAAAASUVORK5CYII=";
@@ -73,6 +76,9 @@
         locationHistoryTimer = window.setInterval(updateLoctionHistory, 5000); // fire every 5 sec
     }
     
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function text2speech(text){
         if (voiceLanguage !== ""){
             text = text.replace(/\n/g," . . . ");
@@ -81,6 +87,9 @@
         }
     }
     
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function extractTextFromDiv(element){
         var outText = "";
         if (element.childNodes.length > 0) {
@@ -95,6 +104,9 @@
         return outText;
     }
     
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function updateLoctionHistory(){
         if (intoWhereAmI) {return;}
         var currentZ = zoomLevel;
@@ -129,9 +141,9 @@
         }
     }
     
-    /**
-     * Cleanup tile cache using proximity as parameter
-     */
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function cleanupTileCache(){
         var originalTileCacheLength = tileCacheLength;
         //console.log("before cleanup tilecache is "+ tileCacheLength + " of " + tileCacheMaxLength + "- actual grid is " + tilesNumCols + "x"+ tilesNumRows);
@@ -172,7 +184,10 @@
         }
         console.log("after cleanup tilecache went from " + originalTileCacheLength + " to "+ tileCacheLength + " - max is " + tileCacheMaxLength + " actual grid is " + tilesNumCols + "x"+ tilesNumRows);
     }
-    
+
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function renderTileReplacement(mapType,z,x,y,mapContext,currentPosXonCanvas,currentPosYonCanvas){
         var max = Math.pow(2,z) - 1;
         x = ((x%(max+1)+max+1)%(max+1));
@@ -224,9 +239,10 @@
         }
     }
     
-    /**
+    
+    /*********************************************************************************************
      * Load a tile asyncronously into the tile cache
-     */
+     *********************************************************************************************/
     function getTileImage(mapType,z,x,y){
         // check if tile id is valid
         // X goes from 0 to 2^zoom − 1 
@@ -285,7 +301,10 @@
         }
         return imgElement;
     }
-    
+
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function panToZXY(z,x,y,posx,posy){
         zoomLevel = z;
         xTile = x;
@@ -295,7 +314,9 @@
         redrawMapCanvas("panToZXY");
     }
     
-    
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function onPan(deltaX,deltaY){
         //if (intoWhereAmI) {return;}
         xPosIntoTile -= deltaX;
@@ -324,7 +345,10 @@
         }
         redrawMapCanvas("onPan");
     }
-    
+
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function onZoom(deltaZ){
         var targetZoomLevel = zoomLevel + deltaZ;
         if ((targetZoomLevel < minZoomLevel ) || (targetZoomLevel>maxZoomLevel)){
@@ -378,11 +402,17 @@
         }
         redrawMapCanvas(operation);
     }
-    
+
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function onIdentify(canvasPosX,canvasPosY){
         onIdentifyInternal(canvasPosX,canvasPosY,true)    
     }
     
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function getInfoForHistory(uuids){
         // only info for first uuid
         var requestUrl = utils.getRandomElement(dataBaseUrls);
@@ -403,8 +433,29 @@
                 populateHistoryDiv();
             }
         });
-    }    
+    }
     
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
+    function onPressHistoryEntry(position){
+        if ((position >= 0) && (position < locationHistoryMaxLength)){
+            var historyData = locationHistoryData[position];
+            if (historyData !== null){
+                var message = "WENT TO " + historyData['title'] + "\nAT ZOOM LEVEL " + historyData['z'] + "\n";
+                panToZXY(historyData['z'],historyData['x'],historyData['y'],historyData['xpos'],historyData['ypos']);
+                audioPlayer.src = "";
+                utils.setVisible(divGoBack,false);
+                utils.setVisible(divData,false);
+                utils.setVisible(divVoice,false);
+                printMessageOnMapCanvas(message);
+            }
+        }
+    }
+    
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function onIdentifyInternal(canvasPosX,canvasPosY,isUserIdentify){
         redrawMapCanvas("onIdentify");
         var precision = 1;
@@ -438,7 +489,10 @@
             }
         }
     }
-    
+
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function populateHistoryDiv(){
         divGoBackChild.innerHTML = "";
         while (divGoBackChild.hasChildNodes()) {
@@ -458,14 +512,17 @@
                 var y = historyData['y'];
                 var tileName = "" + z + "/" + x + "/" + y;
                 var imgElementSrc = utils.getRandomElement(tileMapBaseUrls) + tileName + ".png" ;
-                newHtml += "<tr><td class=\"image\"><img src=\"" + imgElementSrc + "\"></td><td>GO TO " + historyData['title'] + "\nAT ZOOM LEVEL " + z + "</td></tr>";
+                newHtml += "<tr><td class=\"image pos"+ i +"\"><img class=\"pos"+ i +"\" src=\"" + imgElementSrc + "\"></td><td class=\"pos"+i+"\">GO TO " + historyData['title'] + "\nAT ZOOM LEVEL " + z + "</td></tr>";
             }
         }
         newHtml += "</tbody></table>";        
         tempDiv.innerHTML = newHtml;
         divGoBackChild.appendChild(tempDiv);
     }
-    
+
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function populateDataDiv(uuids,index){
         //	console.log("request start");
         var requestUrl = utils.getRandomElement(dataBaseUrls);
@@ -525,7 +582,10 @@
             }
         });
     }
-    
+
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function onButtonWhereAmI(){
         if (intoWhereAmI){
             intoWhereAmI = false;
@@ -543,6 +603,9 @@
         }
     }
     
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function printWhereAmIRectangleOnMapCanvas(){
         var context = mapCanvas.getContext("2d");
         var halfWidth = parseInt(""+mapCanvas.width/2,10);
@@ -553,6 +616,9 @@
         context.fillRect(halfWidth-partWidth,halfHeight-partHeight,partWidth*2,partHeight*2);
     }
     
+    /*********************************************************************************************
+     *
+     *********************************************************************************************/
     function onButton(buttonId){
         switch(buttonId) {
             case "button-go-back":
@@ -613,9 +679,9 @@
         }
     }
     
-    /**
+    /*********************************************************************************************
      * Create Map canvas, Id canvas, buttons and other html elements
-     */
+     *********************************************************************************************/
     function createChilds(mainElementId){
         var mainElement = document.getElementById(mainElementId);
         mapCanvas = document.createElement("canvas");
@@ -717,9 +783,10 @@
         
     }
     
-    /**
+    
+    /*********************************************************************************************
      * Resize Map and id canvas to full screen
-     */
+     *********************************************************************************************/
     function arrangeGui(){
         var buttonsDimension = 100; // now dynamic
         viewportWidth = parseInt(""+utils.viewport().width,10);
@@ -1003,9 +1070,9 @@
         }
     }
     
-    /**
+    /*********************************************************************************************
      * Method to repaint map and Id canvas
-     */
+     *********************************************************************************************/
     function redrawMapCanvas(operation){
         // operation not used yet
         var mapContext = mapCanvas.getContext("2d");
@@ -1049,9 +1116,9 @@
         }
     }
     
-    /**
+    /*********************************************************************************************
      * Calculate rows and cols for the tile map using viewport as parameter
-     */
+     *********************************************************************************************/
     function configureTileMap(){
         // to be called always after arrangeGui()
         var nCols = Math.ceil(viewportWidth/256)+1;
@@ -1061,18 +1128,18 @@
         tileCacheMaxLength = Math.max((tilesNumCols+4)*(tilesNumRows+4)*3,50);
     }
     
-    /**
+    /*********************************************************************************************
      * Called at the beginning and after eache page resize (viewport resize)
-     */
+     *********************************************************************************************/
     function onResize(){
         arrangeGui();
         configureTileMap();
         redrawMapCanvas("onResize");
     }
     
-    /**
-     * Support method to write a (debug) message on map canvas
-     */
+    /*********************************************************************************************
+     * Support method to write a message on map canvas
+     *********************************************************************************************/
     function printMessageOnMapCanvas(message){
         var lines = message.split("\n");
         var context = mapCanvas.getContext("2d");
@@ -1086,19 +1153,21 @@
         }
     }
     
-    /**
+    /*********************************************************************************************
      * Main method of the module FrontendManager
-     */
+     *********************************************************************************************/
     function FrontendManager(mainElementId) {
         createChilds(mainElementId);
         initializeMap();
         onResize();
         window.addEventListener("resize", onResize);
-        GestureManager(mapCanvas,onPan,onZoom,onIdentify,[buttonGoBack,buttonWhereAmI,buttonData,buttonVoice],onButton);
+        GestureManager(mapCanvas,divGoBack,onPan,onZoom,onIdentify,[buttonGoBack,buttonWhereAmI,buttonData,buttonVoice],onButton,onPressHistoryEntry);
         return;
     }
     
-    // export
+    /*********************************************************************************************
+     * Export
+     *********************************************************************************************/
     if (typeof define == "function" && define.amd) {
         define(function() {
             return FrontendManager;
