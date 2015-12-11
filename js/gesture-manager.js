@@ -115,7 +115,16 @@
                 var position = parseInt(""+classNames.substring(strPos+3),10);
                 console.log("onPressHistory - position is " + position);
                 onPressHistoryEntryFunction(position);
-                
+            } else {
+                var newEv = document.elementFromPoint(ev.center.x,ev.center.y);
+                classNames = "" + newEv.className;
+                strPos = classNames.indexOf("pos");
+                if (strPos > -1){
+                    console.log("onPressHistory2 - strpos > 1");
+                    var position = parseInt(""+classNames.substring(strPos+3),10);
+                    console.log("onPressHistory2 - position is " + position);
+                    onPressHistoryEntryFunction(position);
+                }
             }
         } catch(e){
             console.log("onPressHistory - catch " + e.message);
