@@ -13,7 +13,7 @@ A GIS application to make OpenStreetMap more accessible for dyslexics, mitigatin
 
 # License
 
-The app is published under the European Union Public License (EUPL) Version 1.1. See [LICENSE.MD(./LICENSE.MD)] file.
+The app is published under the European Union Public License (EUPL) Version 1.1. See LICENSE.MD file.
 
 # Funding
 
