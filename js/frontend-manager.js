@@ -108,6 +108,7 @@
      *
      *********************************************************************************************/
     function updateLoctionHistory(){
+        console.log("updateLoctionHistory");
         if (intoWhereAmI) {return;}
         var currentZ = zoomLevel;
         var currentX = xTile;

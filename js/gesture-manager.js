@@ -104,6 +104,7 @@
      *
      *********************************************************************************************/
     function onPressHistory(ev){
+        console.log("onPressHistory");
         try{
             var classNames = "" + ev.target.className;
             var strPos = classNames.indexOf("pos");
