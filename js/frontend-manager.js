@@ -449,6 +449,7 @@
                 utils.setVisible(divData,false);
                 utils.setVisible(divVoice,false);
                 printMessageOnMapCanvas(message);
+                text2speech(message);
             }
         }
     }
