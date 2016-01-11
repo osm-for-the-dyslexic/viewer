@@ -419,6 +419,7 @@
         var requestUrl = utils.getRandomElement(dataBaseUrls);
         requestUrl += (""+uuids[0]).substring(0,3) + "/";
         requestUrl += uuids[0] + ".json";
+        /* -- removed library http
         var request = new Http.Get(requestUrl, true);  // true = async
         request.start().then(function(response) {
             var newTitle = "";
@@ -435,6 +436,26 @@
                 populateHistoryDiv();
             }
         });
+        */
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var response = JSON.parse(xmlhttp.responseText);
+                var newTitle = "";
+                try{
+                    newTitle += (""+response["Name"]).toUpperCase();
+                }catch(err){
+                    newTitle += "(NO NAME) FOR" + (""+response["table_name"]).toUpperCase();
+                }
+                locationHistoryData[0]['title'] = newTitle;
+                printMessageOnMapCanvas("YOU ARE LOOKING AT " + newTitle + "\n" );
+                if (utils.isVisible(divGoBack)){
+                    populateHistoryDiv();
+                }                
+            }
+        };
+        xmlhttp.open("GET", requestUrl, true);
+        xmlhttp.send();
     }
     
     /*********************************************************************************************
@@ -532,6 +553,7 @@
         requestUrl += (""+uuids[index]).substring(0,3) + "/";
         requestUrl += uuids[index] + ".json";
         var tempDiv = document.createElement("div");
+        /*
         var request = new Http.Get(requestUrl, true);  // true = async
         request.start().then(function(response) {
             var newHtml = "";
@@ -584,6 +606,64 @@
                 }
             }
         });
+        */
+        
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var response = JSON.parse(xmlhttp.responseText);
+                var newHtml = "";
+                var content = "";
+                newHtml += "<table>";
+                newHtml += "<thead><tr><th colspan=\"2\">" + (""+response["table_name"]).toUpperCase() + "</th></tr></thead><tbody>";
+                var newMessage = (""+response["table_name"]).toUpperCase();
+                try{
+                    content = ""+response["Name"];
+                    if ( (content !== null) && (content !== 'null') && (content !== "" )){
+                        newMessage += ": " + content.toUpperCase();   
+                    }else{
+                        newMessage += " (NO NAME PROVIDED)";
+                    }
+                }catch(err){
+                    newMessage += " (NO NAME PROVIDED)";
+                }
+                for (var key in response) {
+                    if (response.hasOwnProperty(key)) {
+                        if ((key !== 'table_name') && (key !== 'id')){
+                            content = ""+response[key];
+                            if ( (content !== null) && (content !== 'null') && (content !== "" )){
+                                newHtml += "<tr><td class=\"key\">" + (""+key).toUpperCase() + "</td><td>" + content.toUpperCase() + "</td></tr>";
+                            }
+                        }
+                    }
+                }
+                newHtml += "</tbody></table>";
+                tempDiv.innerHTML = newHtml;
+                if (index===0){
+                    // this is a new request, clear old data
+                    divDataChild.innerHTML = "";
+                    while (divDataChild.hasChildNodes()) {
+                        divDataChild.removeChild(divDataChild.lastChild);
+                    }
+                    canvasMessage = "";
+                }
+                divDataChild.appendChild(tempDiv);
+                //console.log("request arrived");
+                canvasMessage += newMessage + "\n";
+                if (uuids.length > index + 1){
+                    // recursive
+                    populateDataDiv(uuids,index+1)
+                }else{
+                    // print final message on canvas
+                    printMessageOnMapCanvas(canvasMessage);
+                    if (!utils.isVisible(divData)) {
+                        text2speech(canvasMessage);
+                    }
+                }
+            }
+        };
+        xmlhttp.open("GET", requestUrl, true);
+        xmlhttp.send();        
     }
 
     /*********************************************************************************************
