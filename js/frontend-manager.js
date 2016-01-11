@@ -612,7 +612,7 @@
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.overrideMimeType("application/json");
         xmlhttp.onreadystatechange = function() {
-            alert("state " + xmlhttp.readyState + " status " + xmlhttp.status);
+            alert("state: " + xmlhttp.readyState + " status: " + xmlhttp.status + " requestUrl: " + requestUrl);
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var response = JSON.parse(xmlhttp.responseText);
                 var newHtml = "";
