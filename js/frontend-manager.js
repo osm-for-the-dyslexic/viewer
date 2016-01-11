@@ -45,7 +45,7 @@
     var yPosIntoTile = 128;
     
     // URLs for tiles
-    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/basemap/osm4dys/"];
+    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
     var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
     var dataBaseUrls = ["http://osm-for-the-dyslexic.github.io/data/"];
 
