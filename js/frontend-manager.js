@@ -610,8 +610,8 @@
         
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
+            alert("state " + xmlhttp.readyState + " status " + xmlhttp.status);
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                alert("ok");
                 var response = JSON.parse(xmlhttp.responseText);
                 var newHtml = "";
                 var content = "";
