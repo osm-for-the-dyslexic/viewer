@@ -173,6 +173,10 @@ var utils = (function () {
                     }else{
                         // identify
                         points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7);
+                        if (points.data.length !== 196){
+                            // hack
+                            points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7-1, 7-1);
+                        }
                         alert("points data len = " + points.data.length);
                         uuids = _utils.fromPoints2uuids(points);
                         if ((uuids !== null) && (uuids.length > 0)){
