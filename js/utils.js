@@ -173,7 +173,7 @@ var utils = (function () {
                     }else{
                         // identify
                         points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7);
-                        alert("point len = " + points.length);
+                        alert("points data len = " + points.data.length);
                         uuids = _utils.fromPoints2uuids(points);
                         if ((uuids !== null) && (uuids.length > 0)){
                             // return identified uuids
