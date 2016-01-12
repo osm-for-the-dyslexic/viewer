@@ -226,7 +226,7 @@ var utils = (function () {
                         var r = utils.pad("000",points.data[k].toString(10),true);
                         var g = utils.pad("000",points.data[k+1].toString(10),true);
                         var b = utils.pad("000",points.data[k+2].toString(10),true);
-                        var message = "" + r + "-" + g + "-" + b + "\n";
+                        var message = "k:"+ k + " " + r + "-" + g + "-" + b + "\n";
                         alert(message);
                         bitstring += _utils.pad("00000000",points.data[k].toString(2),true)
                         bitstring += _utils.pad("00000000",points.data[k+1].toString(2),true)
