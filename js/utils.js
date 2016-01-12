@@ -223,10 +223,11 @@ var utils = (function () {
                 for (var i = foundI; i<foundI+4;i++){
                     for (var j = foundJ; j<foundJ+4;j++){
                         k = (i*7+j)*4;
-                        //var r = utils.pad("000",points.data[k].toString(10),true)
-                        //var g = utils.pad("000",points.data[k+1].toString(10),true)
-                        //var b = utils.pad("000",points.data[k+2].toString(10),true)
-                        //message += "" +r + "-" + g + "-" + b +"\n";
+                        var r = utils.pad("000",points.data[k].toString(10),true);
+                        var g = utils.pad("000",points.data[k+1].toString(10),true);
+                        var b = utils.pad("000",points.data[k+2].toString(10),true);
+                        var message = "" + r + "-" + g + "-" + b + "\n";
+                        alert(message);
                         bitstring += _utils.pad("00000000",points.data[k].toString(2),true)
                         bitstring += _utils.pad("00000000",points.data[k+1].toString(2),true)
                         bitstring += _utils.pad("00000000",points.data[k+2].toString(2),true)
