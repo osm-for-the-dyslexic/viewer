@@ -86,9 +86,17 @@
         var e = window.event || e; // old IE support
         var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
         if (delta < 0) {
-            onZoomFunction(-1);
+            if (zoomEnabled) {
+                zoomEnabled = false;
+                onZoomFunction(-1);
+                zoomEnabledTimer = setTimeout(enableZoom, 1000);
+            }
         }else{
-            onZoomFunction(1);
+            if (zoomEnabled) {
+                zoomEnabled = false;
+                onZoomFunction(1);
+                zoomEnabledTimer = setTimeout(enableZoom, 1000);
+            }
         }
         return false;
     }
