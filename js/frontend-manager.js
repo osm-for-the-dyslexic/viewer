@@ -1168,6 +1168,7 @@
     function redrawMapCanvas(operation){
         if (onIdentifyG) {return;}
         onRedraw = true;
+        alert("redrawMapCanvas");
         // operation not used yet
         var mapContext = mapCanvas.getContext("2d");
         var idContext = idCanvas.getContext("2d");
