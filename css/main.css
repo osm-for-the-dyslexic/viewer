@@ -190,34 +190,39 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 
 #button-go-back{
     position: absolute; 
-    background-image: url(High-contrast-go-previous.svg);
+    /*background-image: url(High-contrast-go-previous.svg);*/
+    background-image: url(arrow-left.svg);
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 70%;
+    background-position:center;
     outline: 0;
 }
 
 #button-whereami{
     position: absolute; 
-    background-image: url(High-contrast-applications-system.svg);
+    background-image: url(preview.svg);
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 80%;
+    background-position:center;
     outline: 0;
 }
 
 #button-data{
     position: absolute; 
-    background-image: url(High-contrast-help-browser.svg);
+    /*background-image: url(High-contrast-help-browser.svg);*/
+    background-image: url(information.svg);
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 80%;
+    background-position:center;
     outline: 0;
 }
 
 #button-voice{
     position: absolute; 
-    background-image: url(High-contrast-audio-volume-high.svg);
-    /*background-image: url(High-contrast-audio-volume-muted.svg);*/
+    background-image: url(volume-full.svg);
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 70%;
+    background-position:center;
     outline: 0;
 }
 
