@@ -174,7 +174,7 @@ var utils = (function () {
                         // identify
                         points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7, 7);
                         if (points.data.length !== 196){
-                            // hack
+                            // hack - on chrome for mobile returns more points!
                             points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7-1, 7-1);
                         }
                         alert("points data len = " + points.data.length);
@@ -220,7 +220,7 @@ var utils = (function () {
                         foundI = i;
                         foundJ = j;
                         found = true;
-                        alert("found i: " + foundI + " j: "+ foundJ);
+                        //alert("found i: " + foundI + " j: "+ foundJ);
                     }
                 }
             }
@@ -229,11 +229,11 @@ var utils = (function () {
                 for (var i = foundI; i<foundI+4;i++){
                     for (var j = foundJ; j<foundJ+4;j++){
                         k = (i*7+j)*4;
-                        var r = utils.pad("000",points.data[k].toString(10),true);
-                        var g = utils.pad("000",points.data[k+1].toString(10),true);
-                        var b = utils.pad("000",points.data[k+2].toString(10),true);
-                        var message = "k:"+ k + " " + r + "-" + g + "-" + b + "\n";
-                        alert(message);
+                        //var r = utils.pad("000",points.data[k].toString(10),true);
+                        //var g = utils.pad("000",points.data[k+1].toString(10),true);
+                        //var b = utils.pad("000",points.data[k+2].toString(10),true);
+                        //var message = "k:"+ k + " " + r + "-" + g + "-" + b + "\n";
+                        //alert(message);
                         bitstring += _utils.pad("00000000",points.data[k].toString(2),true)
                         bitstring += _utils.pad("00000000",points.data[k+1].toString(2),true)
                         bitstring += _utils.pad("00000000",points.data[k+2].toString(2),true)

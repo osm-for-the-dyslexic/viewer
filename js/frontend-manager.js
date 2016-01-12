@@ -45,7 +45,7 @@
     var yPosIntoTile = 128;
     
     // URLs for tiles
-    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
+    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/basemap/osm4dys/"];
     var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
     var dataBaseUrls = ["http://osm-for-the-dyslexic.github.io/data/"];
 
@@ -111,7 +111,7 @@
      *********************************************************************************************/
     function updateLoctionHistory(){
         console.log("updateLoctionHistory");
-        return;
+        //return;
         if (intoWhereAmI) {return;}
         var currentZ = zoomLevel;
         var currentX = xTile;
@@ -618,7 +618,7 @@
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.overrideMimeType("application/json");
         xmlhttp.onreadystatechange = function() {
-            alert("state: " + xmlhttp.readyState + " status: " + xmlhttp.status + " requestUrl: " + requestUrl);
+            //alert("state: " + xmlhttp.readyState + " status: " + xmlhttp.status + " requestUrl: " + requestUrl);
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 var response = JSON.parse(xmlhttp.responseText);
                 var newHtml = "";
@@ -1168,7 +1168,7 @@
     function redrawMapCanvas(operation){
         if (onIdentifyG) {return;}
         onRedraw = true;
-        alert("redrawMapCanvas");
+        //alert("redrawMapCanvas");
         // operation not used yet
         var mapContext = mapCanvas.getContext("2d");
         var idContext = idCanvas.getContext("2d");
