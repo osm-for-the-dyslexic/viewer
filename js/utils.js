@@ -177,7 +177,10 @@ var utils = (function () {
                             // hack - on chrome for mobile returns more points!
                             points = idContext.getImageData(canvasPosX-3, canvasPosY-3, 7-1, 7-1);
                         }
-                        alert("points data len = " + points.data.length);
+                        if (points.data.length !== 196){
+                            alert("WARN: points.data.length different from 196: " + points.data.length  );
+                        }
+                        //alert("points data len = " + points.data.length);
                         uuids = _utils.fromPoints2uuids(points);
                         if ((uuids !== null) && (uuids.length > 0)){
                             // return identified uuids
