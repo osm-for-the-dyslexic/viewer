@@ -215,6 +215,7 @@ var utils = (function () {
                         foundI = i;
                         foundJ = j;
                         found = true;
+                        alert("found i: " + foundI + " j: "+ foundJ);
                     }
                 }
             }
