@@ -58,11 +58,13 @@
     // utility variables
     var canvasMessage = "";
     var intoWhereAmI = false;
+    var onRedraw = false;
+    var onIdentifyG = false;
     
     // Location history
     var locationHistoryData = [];
     var locationHistoryMaxLength = 10;
-    var locationHistoryTimer;    
+    var locationHistoryTimer; 
 
     /*********************************************************************************************
      *
@@ -483,6 +485,8 @@
      *
      *********************************************************************************************/
     function onIdentifyInternal(canvasPosX,canvasPosY,isUserIdentify){
+        if (onRedraw) {return;}
+        onIdentifyG = true;
         redrawMapCanvas("onIdentify");
         var precision = 1;
         if (!isUserIdentify){
@@ -514,6 +518,7 @@
                 }
             }
         }
+        onIdentifyG = false;
     }
 
     /*********************************************************************************************
@@ -1161,6 +1166,8 @@
      * Method to repaint map and Id canvas
      *********************************************************************************************/
     function redrawMapCanvas(operation){
+        if (onIdentifyG) {return;}
+        onRedraw = true;
         // operation not used yet
         var mapContext = mapCanvas.getContext("2d");
         var idContext = idCanvas.getContext("2d");
@@ -1201,6 +1208,7 @@
         if (intoWhereAmI){
             printWhereAmIRectangleOnMapCanvas();
         }
+        onRedraw = false;
     }
     
     /*********************************************************************************************
