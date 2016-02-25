@@ -45,6 +45,9 @@
     var yPosIntoTile = 128;
     
     // URLs for tiles
+    // var tileMapBaseUrls = ["http://www.osm4dys.org/demobasemap/osm4dys/"];
+    // var tileIdBaseUrls = ["http://www.osm4dys.org/demoidmap/osm4dys/"];
+    // var dataBaseUrls = ["http://www.osm4dys.org/demodata/"];
     var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/basemap/osm4dys/"];
     var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
     var dataBaseUrls = ["http://osm-for-the-dyslexic.github.io/data/"];
@@ -84,8 +87,12 @@
     function text2speech(text){
         if (voiceLanguage !== ""){
             text = text.replace(/\n/g," . . . ");
-            var url = "https://api.voicerss.org/?key=968701308bba4ce19a33b14001491005&src=" + text + "&hl=" + voiceLanguage + "&r=" + voiceSpeed; // + "&rnd=" + Math.random();
-            audioPlayer.src = url;
+            try {
+                android.speak(text);
+            } catch(err) {
+                var url = "https://api.voicerss.org/?key=968701308bba4ce19a33b14001491005&src=" + text + "&hl=" + voiceLanguage + "&r=" + voiceSpeed; // + "&rnd=" + Math.random();
+                audioPlayer.src = url;
+            }              
         }
     }
     
@@ -869,7 +876,14 @@
         mainElement.appendChild(audioPlayer);
         
         voiceLanguageSelect = document.getElementById("languageselected");
-        voiceLanguageSelect.addEventListener('change',function(){voiceLanguage = voiceLanguageSelect.value;},false);
+        voiceLanguageSelect.addEventListener('change',
+        function(){
+            try {
+                android.setSpeachLanguage(voiceLanguageSelect.value);
+            } catch(err) {
+                voiceLanguage = voiceLanguageSelect.value;
+            }            
+        },false);
         voiceSpeedSelect = document.getElementById("speedselected");
         voiceSpeedSelect.addEventListener('change',function(){voiceSpeed = voiceSpeedSelect.value;},false);
         
