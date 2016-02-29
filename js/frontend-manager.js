@@ -45,12 +45,12 @@
     var yPosIntoTile = 128;
     
     // URLs for tiles
-    // var tileMapBaseUrls = ["http://www.osm4dys.org/demobasemap/osm4dys/"];
-    // var tileIdBaseUrls = ["http://www.osm4dys.org/demoidmap/osm4dys/"];
-    // var dataBaseUrls = ["http://www.osm4dys.org/demodata/"];
-    var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/basemap/osm4dys/"];
-    var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
-    var dataBaseUrls = ["http://osm-for-the-dyslexic.github.io/data/"];
+    var tileMapBaseUrls = ["http://www.osm4dys.org/demobasemap/osm4dys/"];
+    var tileIdBaseUrls = ["http://www.osm4dys.org/demoidmap/osm4dys/"];
+    var dataBaseUrls = ["http://www.osm4dys.org/demodata/"];
+    //var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/basemap/osm4dys/"];
+    //var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
+    //var dataBaseUrls = ["http://osm-for-the-dyslexic.github.io/data/"];
 
     // TileCache
     var defaultImage = new Image();
@@ -881,8 +881,9 @@
             try {
                 android.setSpeachLanguage(voiceLanguageSelect.value);
             } catch(err) {
-                voiceLanguage = voiceLanguageSelect.value;
-            }            
+                
+            }
+            voiceLanguage = voiceLanguageSelect.value;
         },false);
         voiceSpeedSelect = document.getElementById("speedselected");
         voiceSpeedSelect.addEventListener('change',function(){voiceSpeed = voiceSpeedSelect.value;},false);
