@@ -886,7 +886,15 @@
             voiceLanguage = voiceLanguageSelect.value;
         },false);
         voiceSpeedSelect = document.getElementById("speedselected");
-        voiceSpeedSelect.addEventListener('change',function(){voiceSpeed = voiceSpeedSelect.value;},false);
+        voiceSpeedSelect.addEventListener('change',
+        function(){
+            try {
+                android.setSpeachSpeed(voiceSpeedSelect.value);
+            } catch(err) {
+                
+            }
+            voiceSpeed = voiceSpeedSelect.value;
+        },false);
         
     }
     
