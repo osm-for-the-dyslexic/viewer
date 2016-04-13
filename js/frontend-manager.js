@@ -33,7 +33,7 @@
     
     // characteristics of the map
     var minZoomLevel = 0;
-    var maxZoomLevel = 6;
+    var maxZoomLevel = 15;
     var tilesNumCols = 1;
     var tilesNumRows = 1;
     
@@ -45,9 +45,9 @@
     var yPosIntoTile = 128;
     
     // URLs for tiles
-    var tileMapBaseUrls = ["http://www.osm4dys.org/demobasemap/osm4dys/"];
-    var tileIdBaseUrls = ["http://www.osm4dys.org/demoidmap/osm4dys/"];
-    var dataBaseUrls = ["http://www.osm4dys.org/demodata/"];
+    var tileMapBaseUrls = ["http://www.osm4dys.org/basemap/"];
+    var tileIdBaseUrls = ["http://www.osm4dys.org/idmap/"];
+    var dataBaseUrls = ["http://www.osm4dys.org/data/"];
     //var tileMapBaseUrls = ["http://osm-for-the-dyslexic.github.io/basemap/osm4dys/"];
     //var tileIdBaseUrls = ["http://osm-for-the-dyslexic.github.io/idmap/osm4dys/"];
     //var dataBaseUrls = ["http://osm-for-the-dyslexic.github.io/data/"];
@@ -86,7 +86,7 @@
      *********************************************************************************************/
     function text2speech(text){
         if (voiceLanguage !== ""){
-            text = text.replace(/\n/g," . . . ");
+            text = text.replace(/\n/g," . ");
             try {
                 android.speak(text);
             } catch(err) {
