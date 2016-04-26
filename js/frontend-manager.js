@@ -814,9 +814,10 @@
         divData.id = "div-data";
         divDataChild = document.createElement("div");
         //divDataChild.innerHTML = "YOU HAVEN'T IDENTIFIED ANYTHING YET"; // hack to precharge font
-        divDataChild.innerHTML = "<div><table><thead><tr><th colspan=\"2\">IDENTIFICATION</th></tr></thead><tbody><tr><td colspan=\"2\">YOU HAVEN'T IDENTIFIED</td></tr><tr><td colspan=\"2\">ANYTHING YET</td></tr></tbody></table></div>";
+        //divDataChild.innerHTML = "<div><table><thead><tr><th colspan=\"2\">IDENTIFICATION</th></tr></thead><tbody><tr><td colspan=\"2\">YOU HAVEN'T IDENTIFIED</td></tr><tr><td colspan=\"2\">ANYTHING YET</td></tr></tbody></table></div>";
+        divDataChild.innerHTML = "<div><table><thead><tr><th colspan=\"2\">ABOUT</th></tr></thead><tbody><tr><td colspan=\"2\">LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA. UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS NISI UT ALIQUIP EX EA COMMODO CONSEQUAT. DUIS AUTE IRURE DOLOR IN REPREHENDERIT IN VOLUPTATE VELIT ESSE CILLUM DOLORE EU FUGIAT NULLA PARIATUR. EXCEPTEUR SINT OCCAECAT CUPIDATAT NON PROIDENT, SUNT IN CULPA QUI OFFICIA DESERUNT MOLLIT ANIM ID EST LABORUM</td></tr></tbody></table><table><thead><tr><th colspan=\"2\">ACKNOWLEDGEMENTS</th></tr></thead><tbody><tr><td colspan=\"2\">LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA. UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS NISI UT ALIQUIP EX EA COMMODO CONSEQUAT. DUIS AUTE IRURE DOLOR IN REPREHENDERIT IN VOLUPTATE VELIT ESSE CILLUM DOLORE EU FUGIAT NULLA PARIATUR. EXCEPTEUR SINT OCCAECAT CUPIDATAT NON PROIDENT, SUNT IN CULPA QUI OFFICIA DESERUNT MOLLIT ANIM ID EST LABORUM</td></tr></tbody></table></div>";
         divData.appendChild(divDataChild);
-        utils.setVisible(divData,false);
+        utils.setVisible(divData,true);
         divVoice = document.createElement("div");
         divVoice.id = "div-voice";
         utils.setVisible(divVoice,false);
