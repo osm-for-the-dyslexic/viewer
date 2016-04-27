@@ -429,24 +429,6 @@
         var requestUrl = utils.getRandomElement(dataBaseUrls);
         requestUrl += (""+uuids[0]).substring(0,3) + "/";
         requestUrl += uuids[0] + ".json";
-        /* -- removed library http
-        var request = new Http.Get(requestUrl, true);  // true = async
-        request.start().then(function(response) {
-            var newTitle = "";
-            try{
-                newTitle += (""+response["Name"]).toUpperCase();
-            }catch(err){
-                newTitle += "(NO NAME) FOR" + (""+response["table_name"]).toUpperCase();
-                //newTitle += (": "+response["table_name"]).toUpperCase();
-            }
-            //newTitle += (": "+response["table_name"]).toUpperCase();
-            locationHistoryData[0]['title'] = newTitle;
-            printMessageOnMapCanvas("YOU ARE LOOKING AT " + newTitle + "\n" );
-            if (utils.isVisible(divGoBack)){
-                populateHistoryDiv();
-            }
-        });
-        */
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.overrideMimeType("application/json");
         xmlhttp.onreadystatechange = function() {
@@ -567,61 +549,6 @@
         requestUrl += (""+uuids[index]).substring(0,3) + "/";
         requestUrl += uuids[index] + ".json";
         var tempDiv = document.createElement("div");
-        /*
-        var request = new Http.Get(requestUrl, true);  // true = async
-        request.start().then(function(response) {
-            var newHtml = "";
-            var content = "";
-            newHtml += "<table>";
-            newHtml += "<thead><tr><th colspan=\"2\">" + (""+response["table_name"]).toUpperCase() + "</th></tr></thead><tbody>";
-            var newMessage = (""+response["table_name"]).toUpperCase();
-            try{
-                content = ""+response["Name"];
-                if ( (content !== null) && (content !== 'null') && (content !== "" )){
-                    newMessage += ": " + content.toUpperCase();   
-                }else{
-                    newMessage += " (NO NAME PROVIDED)";
-                }
-            }catch(err){
-                newMessage += " (NO NAME PROVIDED)";
-            }
-            for (var key in response) {
-                if (response.hasOwnProperty(key)) {
-                    if ((key !== 'table_name') && (key !== 'id')){
-                        content = ""+response[key];
-                        if ( (content !== null) && (content !== 'null') && (content !== "" )){
-                            newHtml += "<tr><td class=\"key\">" + (""+key).toUpperCase() + "</td><td>" + content.toUpperCase() + "</td></tr>";
-                        }
-                    }
-                }
-            }
-            newHtml += "</tbody></table>";
-            tempDiv.innerHTML = newHtml;
-            if (index===0){
-                // this is a new request, clear old data
-                divDataChild.innerHTML = "";
-                while (divDataChild.hasChildNodes()) {
-                    divDataChild.removeChild(divDataChild.lastChild);
-                }
-                canvasMessage = "";
-            }
-            
-            divDataChild.appendChild(tempDiv);
-            //console.log("request arrived");
-            canvasMessage += newMessage + "\n";
-            if (uuids.length > index + 1){
-                // recursive
-                populateDataDiv(uuids,index+1)
-            }else{
-                // print final message on canvas
-                printMessageOnMapCanvas(canvasMessage);
-                if (!utils.isVisible(divData)) {
-                    text2speech(canvasMessage);
-                }
-            }
-        });
-        */
-        
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.overrideMimeType("application/json");
         xmlhttp.onreadystatechange = function() {
@@ -813,9 +740,17 @@
         divData = document.createElement("div");
         divData.id = "div-data";
         divDataChild = document.createElement("div");
-        //divDataChild.innerHTML = "YOU HAVEN'T IDENTIFIED ANYTHING YET"; // hack to precharge font
-        //divDataChild.innerHTML = "<div><table><thead><tr><th colspan=\"2\">IDENTIFICATION</th></tr></thead><tbody><tr><td colspan=\"2\">YOU HAVEN'T IDENTIFIED</td></tr><tr><td colspan=\"2\">ANYTHING YET</td></tr></tbody></table></div>";
-        divDataChild.innerHTML = "<div><table><thead><tr><th colspan=\"2\">ABOUT</th></tr></thead><tbody><tr><td colspan=\"2\">LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA. UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS NISI UT ALIQUIP EX EA COMMODO CONSEQUAT. DUIS AUTE IRURE DOLOR IN REPREHENDERIT IN VOLUPTATE VELIT ESSE CILLUM DOLORE EU FUGIAT NULLA PARIATUR. EXCEPTEUR SINT OCCAECAT CUPIDATAT NON PROIDENT, SUNT IN CULPA QUI OFFICIA DESERUNT MOLLIT ANIM ID EST LABORUM</td></tr></tbody></table><table><thead><tr><th colspan=\"2\">ACKNOWLEDGEMENTS</th></tr></thead><tbody><tr><td colspan=\"2\">LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA. UT ENIM AD MINIM VENIAM, QUIS NOSTRUD EXERCITATION ULLAMCO LABORIS NISI UT ALIQUIP EX EA COMMODO CONSEQUAT. DUIS AUTE IRURE DOLOR IN REPREHENDERIT IN VOLUPTATE VELIT ESSE CILLUM DOLORE EU FUGIAT NULLA PARIATUR. EXCEPTEUR SINT OCCAECAT CUPIDATAT NON PROIDENT, SUNT IN CULPA QUI OFFICIA DESERUNT MOLLIT ANIM ID EST LABORUM</td></tr></tbody></table></div>";
+        divDataChild.innerHTML = "<div><table>"+
+                                 "<thead><tr><th colspan=\"2\">ABOUT</th></tr></thead>" +
+                                 "<tbody>"+
+                                 "<tr><td colspan=\"2\">THE PRIMARY OBJECTIVE OF OSM FOR THE DYSLEXIC IS TO MITIGATE TYPICAL READING ERRORS DYSLEXIC PEOPLE DO WHEN READING AND BROWSING OPENSTREETMAP</td></tr>" +
+                                 "<tr><td colspan=\"2\" align=\"center\">PRESS <b class=\"key\">i</b> TO START</td></tr>" +
+                                 "<tr><td colspan=\"2\">OUR TEAM IS MADE OF TWO PEOPLE: A PROFESSIONAL FREELANCE TEACHER (MARTINA BATTAN) AND A FULL STACK GIS DEVELOPER (MASSIMILIANO BERNABÉ)</td></tr>" +
+                                 "</tbody></table>" +
+                                 "<table>" +
+                                 "<thead><tr><th colspan=\"2\">ACKNOWLEDGEMENTS</th></tr></thead>" +
+                                 "<tbody>" +
+                                 "<tr><td><img src=\"./favicons/mygeoss.png\" alt=\"MyGeoss\"></td><td>THIS APPLICATION HAS BEEN DEVELOPED WITHIN THE MYGEOSS PROJECT, WHICH HAS RECEIVED FUNDING FROM THE EUROPEAN UNION'S HORIZON 2020 RESEARCH AND INNOVATION PROGRAMME.<br><br><img src=\"./favicons/european_commission.jpg\" alt=\"European Commission\"></td></tr></tbody></table></div>";
         divData.appendChild(divDataChild);
         utils.setVisible(divData,true);
         divVoice = document.createElement("div");

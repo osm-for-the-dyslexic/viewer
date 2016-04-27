@@ -109,7 +109,8 @@ body{position: relative;height:100px;width:100px;overflow:hidden;outline: 0;font
 
 #div-data table td {
     padding: 15px;
-    overflow:hidden;    
+    overflow:hidden;
+    vertical-align: top;    
 }
 
 .key {
