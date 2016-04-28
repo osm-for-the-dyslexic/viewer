@@ -744,7 +744,7 @@
                                  "<thead><tr><th colspan=\"2\">ABOUT</th></tr></thead>" +
                                  "<tbody>"+
                                  "<tr><td colspan=\"2\">THE PRIMARY OBJECTIVE OF OSM FOR THE DYSLEXIC IS TO MITIGATE TYPICAL READING ERRORS DYSLEXIC PEOPLE DO WHEN READING AND BROWSING OPENSTREETMAP</td></tr>" +
-                                 "<tr><td colspan=\"2\" align=\"center\">PRESS <b class=\"key\">i</b> TO START</td></tr>" +
+                                 "<tr><td colspan=\"2\" align=\"center\">PRESS <b class=\"key\">THE MENU BAR</b> TO START</td></tr>" +
                                  "<tr><td colspan=\"2\">OUR TEAM IS MADE OF TWO PEOPLE: A PROFESSIONAL FREELANCE TEACHER (MARTINA BATTAN) AND A FULL STACK GIS DEVELOPER (MASSIMILIANO BERNABÉ)</td></tr>" +
                                  "</tbody></table>" +
                                  "<table>" +
