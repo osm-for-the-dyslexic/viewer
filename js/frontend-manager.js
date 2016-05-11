@@ -750,7 +750,10 @@
                                  "<table>" +
                                  "<thead><tr><th colspan=\"2\">ACKNOWLEDGEMENTS</th></tr></thead>" +
                                  "<tbody>" +
-                                 "<tr><td><img src=\"./favicons/mygeoss.png\" alt=\"MyGeoss\"></td><td>THIS APPLICATION HAS BEEN DEVELOPED WITHIN THE MYGEOSS PROJECT, WHICH HAS RECEIVED FUNDING FROM THE EUROPEAN UNION'S HORIZON 2020 RESEARCH AND INNOVATION PROGRAMME.<br><br><img src=\"./favicons/european_commission.jpg\" alt=\"European Commission\"></td></tr></tbody></table></div>";
+                                 "<tr><td><img src=\"./favicons/mygeoss.png\" alt=\"MyGeoss\"></td><td>THIS APPLICATION HAS BEEN DEVELOPED WITHIN THE MYGEOSS PROJECT, WHICH HAS RECEIVED FUNDING FROM THE EUROPEAN UNION'S HORIZON 2020 RESEARCH AND INNOVATION PROGRAMME.</td></tr></tbody></table>" +
+                                 "<table>" + "<tbody>" +
+                                 "<tr><td colspan=\"2\" align=\"center\"><img src=\"./favicons/european_commission.jpg\" alt=\"European Commission\"></td></tr></tbody></table>" + 
+                                 "</div>";
         divData.appendChild(divDataChild);
         utils.setVisible(divData,true);
         divVoice = document.createElement("div");
