@@ -8,7 +8,7 @@ _/    _/       _/ _/      _/       _/   _/    _/     _/           _/     _/    _
 ```
 # Viewer
 
-OpenStreetMap for Dyslexics by Sinergis S.r.l. & Associazione Culturale "lo Studiolo"
+OpenStreetMap for Dyslexics by Associazione Culturale "lo Studiolo"
 
 A GIS application to make OpenStreetMap more accessible for dyslexics, mitigating common reading errors
 
